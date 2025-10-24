@@ -1,0 +1,47 @@
+<div class="bg-surface-card p-6 rounded-lg">
+  <div class="mb-6 border-b border-surface-200 pb-4">
+    <h2 class="text-2xl font-bold">📈 Análise de Atividade dos Processos</h2>
+    <p class="text-surface-600 dark:text-surface-400">Visão geral baseada no histórico de eventos</p>
+  </div>
+
+  <!-- Estado de Carregamento -->
+  <div *ngIf="isLoading" class="flex justify-center items-center h-96">
+    <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
+  </div>
+
+  <!-- Estado de Erro -->
+  <div *ngIf="error && !isLoading">
+    <p-message severity="error" [text]="error"></p-message>
+  </div>
+
+  <!-- Conteúdo do Dashboard -->
+  <div *ngIf="!isLoading && !error">
+
+    <!-- Layout para os gráficos -->
+    <div *ngIf="timelineChartData && processActivityChartData; else noData" class="grid grid-cols-12 gap-6">
+
+      <!-- Gráfico de Linha: Atividade por Dia -->
+      <div class="col-span-12 lg:col-span-8">
+        <div class="bg-surface-section p-6 rounded-lg shadow-md h-full">
+          <h5 class="text-xl font-semibold mb-4 text-center">Linha do Tempo de Atividade</h5>
+          <p-chart type="line" [data]="timelineChartData" [options]="timelineChartOptions" height="400px"></p-chart>
+        </div>
+      </div>
+
+      <!-- Gráfico de Rosca: Processos Mais Ativos -->
+      <div class="col-span-12 lg:col-span-4">
+        <app-top-5-processos/>
+      </div>
+
+    </div>
+
+    <!-- Mensagem para quando não há dados -->
+    <ng-template #noData>
+      <div class="text-center p-4">
+        <p-message severity="info" text="Nenhum dado de histórico de eventos foi encontrado para análise."></p-message>
+      </div>
+    </ng-template>
+
+  </div>
+</div>
+

@@ -1,0 +1,14 @@
+  <p-fluid>
+    <div class="flex-col p-4 gap-6 w-full">
+        <div class="flex flex-col gap-4 flex-grow">
+          <div class="flex flex-col gap-2 w-full">
+            <label for="nome" class="required">Nome da mensagem</label>
+            <p-select [options]="sinais" [(ngModel)]="mensagem" [loading]="load" optionLabel="nome" optionValue="nome" placeholder="Seleciona a mensagem" class="w-full" />
+          </div>
+        </div>
+        <div class="flex gap-2 mt-6">
+          <p-button label="Publicar sinal" (onClick)="publicar(true)" [raised]="true" severity="success" />
+          <p-button label="Publicar mensagem" (onClick)="publicar(false)" [raised]="true" severity="help" />
+        </div>
+    </div>
+  </p-fluid>

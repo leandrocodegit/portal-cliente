@@ -1,0 +1,39 @@
+<div class="card">
+   <div class="mb-4 box-header-titulo">
+    <div class="flex gap-2">
+      <input type="month" [(ngModel)]="selectedMonth" (change)="onMonthChange($event)" class="border rounded p-2" />
+      <app-avancar
+      (voltarEmit)="mesAnterior()"
+      (atualEmit)="atual()"
+      (avancarEmit)="proximoMes()"></app-avancar>
+    </div>
+      <p-button label="Nova agenda" icon="pi pi-plus"></p-button>
+
+  </div>
+  <p-fluid>
+    <div class="box-card-agenda">
+      <p-fieldset [legend]="(selectedMonth | date : 'MMMM')?.toUpperCase()">
+      <div class="grid grid-cols-7 gap-4" style="max-width: 950px;">
+        <div routerLink="/painel/agendamentos/agenda/{{d.day}}" *ngFor="let d of daysInMonth"
+          class="p-4 rounded shadow text-center box-calendar-day relative" style="min-width: 110px;" [ngClass]="{
+        'bg-weekend': isWeekend(d.date),
+        'bg-disponivel': disponivel(d.date),
+        'bg-indisponivel': !disponivel(d.date)
+     }">
+          <div class="box-select-agenda">
+            <p>{{disponivel(d.date) ? 'Agendar' : 'Indisponivel'}}</p>
+          </div>
+          <span class="badge-livre">1 vaga</span>
+          <p style="font-size: 18px;font-weight: bold;">{{ d.day }}</p>
+          <small class="text-gray-500">{{ d.date | date:'EEEE' }}</small>
+
+        </div>
+      </div>
+    </p-fieldset>
+      <div class="" style="margin: 15px 30px;">
+        <app-ocupacao-agenda></app-ocupacao-agenda>
+      </div>
+    </div>
+
+  </p-fluid>
+</div>

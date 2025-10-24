@@ -1,0 +1,8 @@
+<div class="flex gap-2 flex-wrap lg:flex-nowrap">
+  @if(horario){
+  <p-tag [value]="horario" severity="success"></p-tag>
+  }
+  @for(dia of dias; track $index){
+   <p-badge [value]="dia" [severity]="dia != 'DOM' ? 'info' : 'warn'"></p-badge>
+  }
+</div>

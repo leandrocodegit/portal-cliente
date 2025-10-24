@@ -1,0 +1,82 @@
+<div class="flex">
+  <app-edit-tools #tool [formulario]="formulario" class="pt-8" (voltarEmit)="voltar()" (onDownloadSvg)=handleDownloadSvg()
+    (onDownloadXml)=handleDownloadXml() (onRedo)=handleRedo() (onSave)="viewSalvar = true" (onUndo)=handleUndo()
+    (onZoomIn)=handleZoom(0.1) (onZoomOut)=handleZoom(-0.1) (onZoomReset)=resetZoom() (onViewXml)="viewXml = true"
+    (onImportXml)="viewImport = true" (updateVersao)="buscarFormulario($event)"/>
+  <div class="flex w-full painel-bpmn" style="padding-left: 0;padding-top: 0;">
+    <div #canvas class="box-bpmn" style="z-index: 0;"></div>
+  </div>
+  <div class="p-4 bg-white dark:bg-transparent" style="width: 520px;" #properties></div>
+</div>
+
+<p-dialog header="Candidatos" [modal]="true" [(visible)]="visible" [style]="{ 'min-width': '50%' }">
+  @if(visible){
+  @if(tipoEventoEditor.includes('LIST')){
+  <app-seletor-grupo-usuarios [assignee]="assignee" [tipoEventoEditor]="tipoEventoEditor"
+    [canditatosSelecionados]="candidatos" (addEmit)="addCandidado($event)" (voltarEmit)="visible = false" />
+  }
+  @else if(tipoEventoEditor == 'DUE_DATE_TASK'){
+  <p-datepicker class="w-full" [(ngModel)]="dueDate" [inline]="true" [showTime]="true"
+    [style]="{ 'min-width': '99%' }" />
+  <div class="flex flex-col gap-2 w-full mt-4">
+    <label>Expressão</label>
+    <div class="flex gap-4  w-full">
+      <input [(ngModel)]="expressao" placeholder="${ expressão }" pInputText type="text" class="w-full" />
+      <p-button icon="pi pi-eraser" (click)="expressao = ''" severity="warn" [outlined]="true" />
+    </div>
+  </div>
+  <div class="flex justify-end gap-2 mt-4">
+    <p-button label="Ok" (click)="setDate()" />
+  </div>
+
+  }@else if(tipoEventoEditor == 'FOLLWO_DATE_TASK'){
+  <p-datepicker [disabled]="expressao" class="w-full" [(ngModel)]="followDate" [inline]="true" [showTime]="true"
+    [style]="{ 'min-width': '99%' }" />
+  <div class="flex flex-col gap-2 w-full mt-4">
+    <label>Expressão</label>
+    <div class="flex gap-4 w-full">
+      <input [(ngModel)]="expressao" placeholder="${ expressão }" pInputText type="text" class="w-full" />
+      <p-button icon="pi pi-eraser" (click)="expressao = ''" severity="warn" [outlined]="true" />
+    </div>
+  </div>
+  <div class="flex justify-end gap-2 mt-4">
+    <p-button label="Ok" (click)="setDate()" />
+  </div>
+  }
+  }
+</p-dialog>
+
+<p-drawer [(visible)]="viewXml" header="Diagrama xml" position="bottom">
+  @if(viewXml){
+  <pre class="bg-gray-50 dark:bg-gray-900" style="white-space: pre-wrap; word-break: break-word; padding:15px;">
+{{ diagram }}
+</pre>
+  }
+</p-drawer>
+
+<p-dialog header="Importar modelo" [modal]="true" [(visible)]="viewImport" [style]="{ 'min-width': '50%' }">
+  <div class="flex flex-col gap-2 w-full mb-4">
+    <label for="firstname" class="required">Arquivo modelo</label>
+    <p-fileupload #fu mode="basic" name="demo[]" [customUpload]="true" mode="advanced"
+      chooseLabel="Selecione um arquivo" chooseIcon="pi pi-upload" accept=".xml, .bpmn" maxFileSize="1000000"
+      chooseIcon="pi pi-folder" cancelLabel="Limpar" uploadLabel="Importar"
+      (uploadHandler)="importarModeloXml($event)" />
+  </div>
+  <p-button label="Ok" (click)="viewImport = false" />
+</p-dialog>
+
+<p-dialog header="Salvar alterações" [modal]="true" [(visible)]="viewSalvar" [style]="{ 'min-width': '50%' }">
+  <p-message severity="warn">Ao salvar como versão, é necessário atualizar a implantação.</p-message>
+  <br>
+  <div class="flex justify-end gap-2">
+    <p-button severity="secondary" label="Cancelar" variant="outlined" (click)="viewSalvar = false" />
+    <p-button severity="primary" label="Salvar" (click)="handleSave(false)" />
+        @if(!formulario?.formularioBase){
+    <p-button severity="primary" label="Salvar e versionar" (click)="handleSave(true)" >
+      @if(loadVersao){
+      <i class="pi pi-spin pi-spinner" style="font-size: 1rem"></i>
+      }
+    </p-button>
+    }
+  </div>
+</p-dialog>

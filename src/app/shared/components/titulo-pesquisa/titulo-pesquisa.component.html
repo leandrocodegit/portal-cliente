@@ -1,0 +1,45 @@
+<div class="font-semibold text-3xl mb-4 text-primary">{{value.titulo}}</div>
+<div class="flex gap-2 my-4 flex-wrap-reverse lg:flex-nowrap justify-between lg:justify-start">
+  <div class="flex gap-3 items-center grow">
+    @if(!value?.hideBack){
+    <div (click)="voltar()"
+      class="flex items-center px-2 justify-center bg-gray-100 dark:bg-gray-400/10 border border-gray rounded-lg cursor-pointer"
+      style="width: 2.5rem; height: 2.4rem">
+      <i class="pi pi-arrow-left text-gray-500 !text-mediun"></i>
+    </div>
+    }
+    <p-iconfield iconPosition="left" [style]="{'width': '100%', 'max-width': '400px'}">
+      <input pInputText type="text" #input (input)="pesquisar(input.value)" placeholder="Pesquisar"
+        style="width: 100%;max-width: 400px;" />
+      <p-inputicon class="pi pi-search" />
+    </p-iconfield>
+    @if(value?.showAtivos){
+    <p-togglebutton (onChange)="filtrarAtivos()" [(ngModel)]="ativos" [onIcon]="'pi pi-lock'" offIcon="pi pi-lock-open"
+      [style]="{width: '100%', 'max-width': '300px'}" [onLabel]="!isMobile ? 'Todos' : ''"
+      [offLabel]="!isMobile ? 'Ativos' : ''" />
+    }
+    @if(value?.showCustomAtivos){
+    <p-togglebutton (onChange)="ativosEmit.emit(ativos)" [(ngModel)]="ativos" [onIcon]="'pi pi-lock'"
+      offIcon="pi pi-lock-open" [style]="{width: '100%', 'max-width': '300px'}"
+      [onLabel]="!isMobile ? value?.ativosLabel[0] : ''" [offLabel]="!isMobile ? value?.ativosLabel[1] : ''" />
+    }
+    @if(value?.showAdd){
+    <p-button [pTooltip]="isMobile ? value?.botaoAdd : '' " tooltipPosition="top" [routerLink]="value?.routerLink"
+      [label]="!isMobile ? value?.botaoAdd : ''" icon="pi pi-plus" (click)="customAdd.emit()"
+      [style]="{'min-width': '20px'}"></p-button>
+    }
+    @if(value?.showCustom){
+    <p-button [pTooltip]="!isMobile ? value?.customLabel : '' " tooltipPosition="top"
+      [label]="!isMobile ? value?.customLabel : ''" icon="pi {{value.customIcon ?? 'pi-plus'}}" (click)="customEmit.emit()"
+      [style]="{'min-width': '20px'}"></p-button>
+    }
+    @if(value?.showAdicional){
+    <p-button (click)="adicionalEmit.emit()" [pTooltip]="isMobile ? value?.adicionalLabel : '' " tooltipPosition="top"
+      [label]="!isMobile ? value?.adicionalLabel : ''" icon="pi {{value?.adicionalIcon ?? ''}}"></p-button>
+    }
+    @if(value?.showPrint){
+    <app-imprimir (printEmit)="printEmit.emit($event)" />
+    }
+  </div>
+</div>
+<br>

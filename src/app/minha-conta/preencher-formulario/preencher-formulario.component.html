@@ -1,0 +1,9 @@
+<div class="card !p-2">
+  @if(formulario && variaveis){
+  <app-visao-formulario [tarefa]="tarefa" [schema]="formulario" [data]="variaveis" [apenasBotaoEnviar]="true"
+    (dataEmit)="enviarFormulario($event)" />
+  }@else {
+  <p-message severity="error">Não há tarefas pendentes no momento.</p-message>
+  }
+</div>
+

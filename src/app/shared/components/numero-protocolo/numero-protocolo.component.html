@@ -1,0 +1,10 @@
+<p-splitbutton #splitbutton severity="info" [text]="true" [plain]="false" size="large" [appendTo]="'body'"
+  [label]="instancia?.businessKey" [model]="items" text (onClick)="handleMainClick($event)"
+  (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()" dropdownIcon="pi pi-ellipsis-v"
+  [classList]="text ? 'text-numero-protocolo bt-numero-protocolo' : isTable ? 'bt-numero-protocolo-table' : 'bt-numero-protocolo'" />
+
+<p-dialog header="Publicar mesagem de processo" [modal]="true" [(visible)]="visible">
+  @if(visible){
+  <app-publicar-mensagem-signal [instancia]="instancia" (voltarEmit)="visible = false" />
+  }
+</p-dialog>

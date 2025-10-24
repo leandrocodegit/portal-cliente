@@ -1,0 +1,18 @@
+@if(!noIcone){
+<div [pTooltip]="getStyle()?.tooltip" [autoHide]="false" tooltipPosition="top" (click)="toggle($event, $event)"
+  [class]="getStyle()?.class" [style.width]="width" [style.height]="width">
+  <i class="pi {{getStyle()?.icon}} cursor-pointer"></i>
+</div>
+}@else{
+<p-button [disabled]="disabled" [style]="{'padding': '3px 15px'}" [severity]="severity" (click)="toggle($event, $event)"
+  [className]="'grow lg:flex-none w-full-b'" icon="pi pi-user-plus" />
+}
+<p-popover dismissable="true" #op>
+  @if(tarefaSelect){
+  <app-task-assignment [apenasAtribuir]="apenasAtribuir" [assignee]="tipo == 'OWNER' ? tarefa?.owner : tarefa?.assignee"
+    (assigneeEmit)="atribuirUsuario(tarefa.id, $event)" />
+  }@else if(filtroSelecionado){
+  <app-task-assignment [isFiltro]="true" (assigneeEmit)="assumirTodas($event)"
+    (unssigneeEmit)="assumirTodas($event, true)" />
+  }
+</p-popover>

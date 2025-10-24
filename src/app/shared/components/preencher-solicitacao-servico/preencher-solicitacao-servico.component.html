@@ -1,0 +1,45 @@
+<div class="card !h-[100%]">
+  @if(servico && !protocolo?.protocolo){
+  <div
+    class="bg-white dark:bg-gray-800 mx-3 shadow rounded-lg p-5 hover:shadow-md transition-shadow duration-300 flex flex-col">
+    <div>
+      <div [style.background]="servico.color"
+        class="float-left mr-4 flex items-center justify-center dark:bg-indigo-500/20 rounded-xl w-12 h-12 shrink-0">
+        <span class="material-symbols-outlined !text-white dark:text-indigo-400 text-3xl">
+          {{servico.icon}}
+        </span>
+      </div>
+      <h4 class="m-0 text-lg font-semibold text-gray-800 dark:text-gray-200">
+        {{servico.nome}}
+      </h4>
+      <p class="m-0 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+        {{servico.descricao}}
+      </p>
+      <div class="clear-both"></div>
+    </div>
+  </div>
+}
+  @if(mensagem?.erro){
+  <p-message severity="error">{{mensagem?.erro}}</p-message>
+  }
+  @if(mensagem?.info){
+  <p-message severity="info">{{mensagem?.info}}</p-message>
+  }
+  @if(loadService.isLoad && !noLoad){
+  <div class="flex flex-col gap-4 items-center justify-center w-full h-full m-auto">
+    <app-preload />
+    <p class="text-center font-bold text-primary">Enviando...</p>
+  </div>
+  }
+  @if(schema && !protocolo?.protocolo){
+  <app-visao-formulario [schema]="schema" [formKey]="formulario.id" [apenasBotaoEnviar]="true" [readonly]="false"
+    (dataEmit)="dataEmit.emit($event); loadService.show()" />
+  }@else if(protocolo?.protocolo) {
+  <app-mensagem-sucesso [text]="{
+      info: protocolo.protocolo.numeroProtocolo,
+      descricao: 'Protocolo emitido com sucesso!',
+      link: 'Acompanhe sua solicitação.',
+      href: redirect
+    }" />
+  }
+</div>

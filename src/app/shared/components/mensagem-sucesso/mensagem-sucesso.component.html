@@ -1,0 +1,10 @@
+<div class="flex bg-white dark:bg-transparent items-center justify-between h-[90vh] lg:h-[100%] w-full">
+  <div class="felx flex-col items-center justify-between m-auto max-w-[280px] ">
+    <img src="assets/icons/sucesso.png" class="m-auto">
+    <h3 class="text-center m-0 tracking-wider">{{text?.info}}</h3>
+    <p class="text-center tracking-wider">
+      {{text?.descricao}}
+      <a [href]="text?.href" class="text-green-600 tracking-wider">{{text?.link}} <b class="!text-orange-400"> {{text?.href && text?.href != '' && text?.href != null && text?.href != 'null' ? ' Clique aqui para ser redirecionado.' : '' }}</b></a>
+    </p>
+  </div>
+</div>

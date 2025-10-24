@@ -1,0 +1,66 @@
+<div class="layout-topbar">
+
+  <div class="layout-topbar-logo-container">
+    @if(!noToogle){
+    <button class="layout-menu-button layout-topbar-action" (click)="sideBarOpen()">
+      <i class="pi pi-bars"></i>
+    </button>
+  }
+    <a class="layout-topbar-logo" routerLink="/">
+      <span>SIMOD</span>
+    </a>
+  </div>
+
+  <div class="layout-topbar-actions">
+    <div class="layout-config-menu">
+      <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
+        <i
+          [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme() }"></i>
+      </button>
+      <div class="relative">
+        <button class="layout-topbar-action" pStyleClass="@next" enterFromClass="hidden"
+          enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout"
+          [hideOnOutsideClick]="true">
+          <i class="pi pi-palette"></i>
+        </button>
+        <app-configurator />
+      </div>
+      <div class="relative hidden lg:block">
+        <button class="layout-topbar-action" pStyleClass="@next" enterFromClass="hidden"
+          enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout"
+          [hideOnOutsideClick]="true">
+          <i class="pi pi-user"></i>
+        </button>
+        <app-perfil-bar />
+      </div>
+    </div>
+
+    <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next" enterFromClass="hidden"
+      enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout"
+      [hideOnOutsideClick]="true">
+      <i class="pi pi-ellipsis-v"></i>
+    </button>
+
+    <div class="layout-topbar-menu hidden lg:block gap-4">
+      <div class="layout-topbar-menu-content">
+        @if (isLogin) {
+        <div class="block lg:hidden">
+          <a type="button" routerLink="/painel/conta/meus-dados" class="layout-topbar-action mb-1 block">
+            <i class="pi pi-user dark:text-white"></i>
+            <span>Minha conta</span>
+          </a>
+        </div>
+        <button (click)="logout()" type="button" class="layout-topbar-action">
+          <i class="pi pi-sign-out"></i>
+          <span>Sair</span>
+        </button>
+        }@else {
+        <button (click)="login()" type="button" class="layout-topbar-action">
+          <i class="pi pi-sign-in"></i>
+          <span>Login</span>
+        </button>
+        }
+      </div>
+    </div>
+  </div>
+</div>

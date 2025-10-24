@@ -1,0 +1,126 @@
+<div class="px-4">
+  <p-fluid>
+    <div class="flex" style="max-width: 900px;">
+      <div class="flex-col gap-6 w-full">
+        <div class="flex flex-auto flex-wrap gap-6 py-4 overflow-x-auto" style="max-height: 600px">
+          <div class="flex flex-col gap-4 flex-grow">
+            <div class="grid grid-cols-12 gap-4 grow w-full">
+              <div class="col-span-8 lg:col-span-10 flex flex-wrap gap-2 w-full">
+                <label for="nome" class="required">Nome</label>
+                <input [class.border-error]="conector.nome== ''" [(ngModel)]="conector.nome" pInputText type="text" />
+              </div>
+              <div class="col-span-4 lg:col-span-2 flex flex-wrap gap-2 w-full">
+                <label for="nome" class="required">Prefixo variável</label>
+                <input [(ngModel)]="conector.prefixo" pInputText type="text" />
+              </div>
+            </div>
+            <div class="grid grid-cols-12 gap-4 grow w-full">
+              <div class="col-span-12 lg:col-span-6 flex flex-col gap-2 w-full">
+                <label for="url" class="required">Url</label>
+                <input [class.border-error]="conector.url== ''" [(ngModel)]="conector.url" pInputText type="text" />
+              </div>
+              <div class="col-span-8 lg:col-span-4 flex flex-col gap-2 w-full">
+                <label for="endpoint" class="required">Enpoint</label>
+                <input [class.border-error]="conector.endpoint== ''" [(ngModel)]="conector.endpoint" pInputText
+                  type="text" />
+              </div>
+              <div class="col-span-4 lg:col-span-2 flex flex-col gap-2">
+                <label for="metodo" class="required">Metodo</label>
+                <p-select [options]="metodos" [(ngModel)]="conector.metodo" placeholder="Selecione o metodo" appendTo="body"/>
+              </div>
+            </div>
+            @if(!conector.conectorAuth){
+            <div class="col-span-2 flex flex-col gap-2 w-full">
+              <label for="metodo" class="required">Fazer autenticação</label>
+              <p-select [options]="conectoresAuth" (onChange)="selecionarConectorToken()" showClear="true" appendTo="body" [(ngModel)]="conector.authId" optionValue="id" dataKey="id" optionLabel="nome" placeholder="Selecione o metodo"
+                class="w-full md:w-56" />
+            </div>
+            }
+            @else{
+            <div class="col-span-2 flex flex-col gap-2 w-full">
+              <label for="metodo" class="required">Variável token</label>
+              <p-select [options]="conector?.keys" [(ngModel)]="conector.varToken" placeholder="Selecione o metodo" appendTo="body"
+                class="w-full md:w-56" />
+            </div>
+            }
+          </div>
+          <p-tabs [value]="tab" [classList]="'h-full w-full'" [scrollable]="true" (valueChange)="selectTab($event)">
+            <p-tablist>
+              <p-tab value="payload">
+                <i class="pi pi-credit-card mr-3"></i>
+                <span>Payload</span>
+              </p-tab>
+              <p-tab value="json">
+                <i class="pi pi-code mr-3"></i>
+                <span>Json</span>
+              </p-tab>
+            </p-tablist>
+            <p-tabpanels>
+              <p-tabpanel value="payload">
+                <div class="p-4">
+                  <p-treetable [value]="configuracao" [columns]="cols" [scrollable]="true"
+                    [tableStyle]="{ 'width': '100%'}">
+                    <ng-template #caption>
+                      <div class="text-xl font-bold">Configurações</div>
+                    </ng-template>
+                    <ng-template #header let-columns>
+                      <tr>
+                        <th *ngFor="let col of columns">
+                          {{ col.header }}
+                        </th>
+                      </tr>
+                    </ng-template>
+                    <ng-template #body let-rowNode let-rowData="rowData" let-columns="columns">
+                      <tr [ttRow]="rowNode">
+                        <td *ngFor="let col of columns; let i = index; let last = last">
+                          <p-treetable-toggler [rowNode]="rowNode" *ngIf="i === 0" />
+                          {{ rowData[col.field] }}
+                          <ng-container *ngIf="last">
+                            <div class="flex justify-end gap-2">
+                              @if(rowNode.parent){
+                              <i class="pi pi-trash cursor-pointer" (click)="removeSelectedNode(rowNode)"></i>
+                              @if(rowNode?.parent?.data?.key != 'headers'){
+                              <i class="pi pi-plus cursor-pointer" (click)="novo(rowNode)"></i>
+                              }
+                              }@else if(rowNode?.parent?.data?.key != 'headers'){
+                              <i class="pi pi-plus cursor-pointer" (click)="novo(rowNode)"></i>
+                              }
+                            </div>
+                          </ng-container>
+                        </td>
+                      </tr>
+                    </ng-template>
+                  </p-treetable>
+                </div>
+              </p-tabpanel>
+              <p-tabpanel value="json">
+                <div style="min-height: 450px;">
+                  @if(conector?.build){
+                  <app-editor-json [editavel]="true" [json]="conector.build" (jsonUpdate)="setBuild($event)"/>
+                  }<!--
+                  <json-editor #jsonEditor [options]="editorOptions" [data]="conector.build"
+                    (change)="atualizarJson($event)" /> -->
+                </div>
+              </p-tabpanel>
+            </p-tabpanels>
+          </p-tabs>
+        </div>
+        <app-voltar-salvar (salvarEmit)="salvar()" [cancel]="true" (voltarEmit)="fechar()" />
+      </div>
+    </div>
+  </p-fluid>
+</div>
+
+<p-dialog header="Edit Profile" [modal]="true" [(visible)]="visible">
+  <div class="flex flex-col gap-4 flex-grow">
+    <div class="flex flex-col gap-2 w-full">
+      <label for="chave" class="required">Chave</label>
+      <input [class.border-error]="obj.chave== ''" [(ngModel)]="obj.chave" pInputText type="text" />
+    </div>
+    <div class="flex flex-col gap-2 w-full">
+      <label for="valor" class="required">Valor</label>
+      <input [class.border-error]="obj.valor== ''" [(ngModel)]="obj.valor" pInputText type="text" />
+    </div>
+  </div>
+  <app-voltar-salvar (salvarEmit)="adicionar()" [cancel]="true" (voltarEmit)="visible = false" />
+</p-dialog>

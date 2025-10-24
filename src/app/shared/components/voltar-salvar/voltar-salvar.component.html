@@ -1,0 +1,9 @@
+<div class="flex mt-8 gap-2 justify-center w-[85%] mb-4">
+  @if(viewCancel){
+  <p-button [label]="cancel ? 'Cancelar' : 'Voltar'" icon="pi pi-times" [className]="'grow lg:flex-none w-full-b'" text (click)="voltar()" />
+  }
+  @if(view){
+    <p-button [disabled]="disable" label="Visualizar" [className]="'grow lg:flex-none w-full-b'" icon="pi pi-eye" (click)="visualizar()" />
+    }
+  <p-button [disabled]="disable" [label]="label ?? 'Salvar'" [className]="'grow lg:flex-none w-full-b'" icon="pi pi-check" (click)="salvar()" />
+</div>

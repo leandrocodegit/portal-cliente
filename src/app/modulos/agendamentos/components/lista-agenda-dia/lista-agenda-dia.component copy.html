@@ -1,0 +1,136 @@
+<div class="card">
+  <div class="font-semibold text-xl mb-4">Agendas dia 1</div>
+  <p-table
+      #dt1
+      [value]="horarios"
+      dataKey="id"
+      [rows]="10"
+      [loading]="loading"
+      [rowHover]="true"
+      [showGridlines]="true"
+      [paginator]="true"
+      [globalFilterFields]="['name', 'country.name', 'representative.name', 'situacao']"
+      responsiveLayout="scroll"
+  >
+      <ng-template #caption>
+          <div class="flex justify-between items-center flex-column sm:flex-row">
+              <button pButton label="Clear" class="p-button-outlined mb-2" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
+              <p-iconfield iconPosition="left" class="ml-auto">
+                  <p-inputicon>
+                      <i class="pi pi-search"></i>
+                  </p-inputicon>
+                  <input pInputText type="text" (input)="onGlobalFilter(dt1, $event)" placeholder="Search keyword" />
+              </p-iconfield>
+          </div>
+      </ng-template>
+      <ng-template #header>
+          <tr>
+              <th style="min-width: 12rem">
+                  <div class="flex justify-between items-center">
+                      Dia
+                      <p-columnFilter type="text" field="name" display="menu" placeholder="Search by name"></p-columnFilter>
+                  </div>
+              </th>
+              <th style="min-width: 10rem">
+                <div class="flex justify-between items-center">
+                    Horário
+                    <p-columnFilter type="date" field="date" display="menu" placeholder="mm/dd/yyyy"></p-columnFilter>
+                </div>
+            </th>
+            <th style="min-width: 12rem">
+              <div class="flex justify-between items-center">
+                  Dia da semana
+                  <p-columnFilter type="text" field="name" display="menu" placeholder="Search by name"></p-columnFilter>
+              </div>
+          </th>
+              <th style="min-width: 12rem">
+                  <div class="flex justify-between items-center">
+                      Mês
+                      <p-columnFilter type="text" field="country.name" display="menu" placeholder="Search by country"></p-columnFilter>
+                  </div>
+              </th>
+              <th style="min-width: 10rem">
+                  <div class="flex justify-between items-center">
+                     Profissional
+                      <p-columnFilter type="numeric" field="balance" display="menu" currency="USD"></p-columnFilter>
+                  </div>
+              </th>
+              <th style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                  Situacao
+                   <p-columnFilter type="numeric" field="balance" display="menu" currency="USD"></p-columnFilter>
+               </div>
+              </th>
+              <th style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                  Vagas
+                   <p-columnFilter type="numeric" field="balance" display="menu" currency="USD"></p-columnFilter>
+               </div>
+              </th>
+              <th style="min-width: 12rem">
+                  <div class="flex justify-between items-center">
+                    Ocupação
+                      <p-columnFilter field="activity" matchMode="between" display="menu" [showMatchModes]="false" [showOperator]="false" [showAddButton]="false">
+                          <ng-template #filter let-filter="filterCallback">
+                              <p-slider [ngModel]="activityValues" [range]="true" (onSlideEnd)="filter($event.values)" styleClass="m-3" [style]="{ 'min-width': '12rem' }"></p-slider>
+                              <div class="flex items-center justify-between px-2">
+                                  <span>{{ activityValues[0] }}</span>
+                                  <span>{{ activityValues[1] }}</span>
+                              </div>
+                          </ng-template>
+                      </p-columnFilter>
+                  </div>
+              </th>
+              <th style="min-width: 12rem">
+                <div class="flex justify-between items-center">
+                  Status
+                   <p-columnFilter type="numeric" field="balance" display="menu" currency="USD"></p-columnFilter>
+               </div>
+              </th>
+          </tr>
+
+      </ng-template>
+      <ng-template #body let-horario>
+          <tr>
+              <td>
+                  {{ horario.horario | date: 'dd'}}
+              </td>
+              <td>
+                {{ horario.horario | date: 'HH:mm' }}
+            </td>
+            <td>
+              {{ horario.horario | date: 'EEEE'}}
+          </td>
+              <td>
+                {{ (horario.horario | date: 'MMMM')?.toUpperCase() }}
+              </td>
+              <td>
+                {{ horario.profissional }}
+              </td>
+              <td>
+                  <p-tag [value]="horario.situacao.toLowerCase()" [severity]="getSeverity(horario.situacao.toLowerCase())" styleClass="dark:!bg-surface-900" />
+              </td>
+              <td>
+                {{ horario.vagas.livre }}
+              </td>
+              <td>
+                  <p-progressbar [unit]="'%'" [value]="(horario.vagas.ocupadas / horario.vagas.livre) * 100" [showValue]="false" [style]="{ height: '0.5rem' }" />
+                </td>
+              <td class="text-center">
+                  <p-tag [value]="horario.ativo ? 'Ativo' : 'Desativada'" [severity]="horario.ativo ? 'info' : 'danger'" styleClass="dark:!bg-surface-900" />
+              </td>
+          </tr>
+      </ng-template>
+      <ng-template #emptymessage>
+          <tr>
+              <td colspan="8">Nenhum horário definido.</td>
+          </tr>
+      </ng-template>
+      <ng-template #loadingbody>
+          <tr>
+              <td colspan="8">Carregando lista de horários...</td>
+          </tr>
+      </ng-template>
+  </p-table>
+</div>
+

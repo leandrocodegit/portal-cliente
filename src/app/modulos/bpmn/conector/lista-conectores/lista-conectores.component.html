@@ -1,0 +1,61 @@
+<div class="card min-full" style="margin-bottom: 0; padding: 0!important;">
+  <div class="flex flex-col justify-between">
+    <p-tabs [value]="tab" className="h-full" [scrollable]="true" (valueChange)="selectTab($event)">
+      <p-tablist>
+        <p-tab value="chamadas">
+          <i class="pi pi-credit-card mr-3"></i>
+          <span>Chamadas</span>
+        </p-tab>
+        <p-tab value="autenticacao">
+          <i class="pi pi-sitemap mr-3"></i>
+          <span>Auntenticação</span>
+        </p-tab>
+      </p-tablist>
+      <p-tabpanels>
+        <p-tabpanel value="chamadas">
+          <div class="p-4">
+            <app-titulo-pesquisa
+              [value]="{ customLabel: 'Novo conector', routerLink: 'new', showAtivos: true, showCustom: true, }"
+              (customEmit)="novoConector()" />
+
+            <app-tabela [auth]="{config: 'DEPLOY_CREATE', delete: 'DEPLOY_CREATE', play: 'DEPLOY_CREATE'}"
+              [view]="{ play: true, editEvent: true, customConfig: true, delete: true, lock: true, json: true }"
+              [cols]="colsConectores" [itens]="conectores" (editarEmit)="editar($event)"
+              (configEmit)="configurar($event)" (excluirEmit)="remover($event)" (playEmit)="executar($event)"
+              (lockEmit)="habilitar($event)" (jsonEmit)="visualizarCodigoJson($event)" />
+          </div>
+          <p-dialog header="Conectores" [modal]="true" [(visible)]="visible">
+            @if(visible){
+            <app-formulario-conector [conector]="conectorSelecionado" [conectoresAuth]="conectoresAuth"
+              (voltarEmit)="fechar($event)" (updateEmit)="this.listaConectores()" />
+            }
+          </p-dialog>
+        </p-tabpanel>
+        <p-tabpanel value="autenticacao">
+          <div class="p-4">
+            <app-titulo-pesquisa
+              [value]="{ customLabel: 'Novo conector', routerLink: 'new', showAtivos: true, showCustom: true, }"
+              (customEmit)="visible = true" />
+
+            <app-tabela [auth]="{config: 'DEPLOY_CREATE', delete: 'DEPLOY_CREATE', play: 'DEPLOY_CREATE'}"
+              [view]="{ play: true, editEvent: true, customConfig: true, delete: true, lock: true, json: true }"
+              [cols]="colsConectores" [itens]="conectoresAuth" (editarEmit)="editar($event)"
+              (configEmit)="configurar($event)" (excluirEmit)="remover($event)" (playEmit)="executar($event)"
+              (jsonEmit)="visualizarCodigoJson($event)" (lockEmit)="habilitar($event)" />
+          </div>
+          <p-dialog header="Autenticação" [modal]="true" [(visible)]="visible">
+            @if(visible){
+            <app-formulario-conector [isAuth]="true" [conector]="conectorSelecionado" (voltarEmit)="fechar($event)"
+              (updateEmit)="this.listaConectoresAuth()" />
+            }
+          </p-dialog>
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  </div>
+
+  <p-drawer [(visible)]="visualizarJson" position="bottom">
+    @if(visualizarJson){
+    <app-editor-json [json]="json" />
+    }
+  </p-drawer>

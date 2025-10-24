@@ -1,0 +1,63 @@
+<div class="card overflow-y-auto !mb-8" style="max-height: calc(100vh - 279px);">
+  <h2 class="text-2xl font-bold">📝 Tarefas pendentes</h2>
+  <p-table [value]="proximasTarefas" [paginator]="true" [rows]="5" responsiveLayout="scroll">
+    <ng-template #header>
+      <tr>
+        <th>#</th>
+        <th>Nome</th>
+        <th>Protocolo</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-task>
+      <tr>
+        <td style="min-width: 4rem;padding: 5px 0 !important;">
+          @if(task?.vencimento | proxima){
+          <div pTooltip="Tarefa Proxíma do Vencimento"
+            class="w-12 h-12 flex items-center justify-center bg-orange-100 dark:bg-orange-400/10 rounded-full mr-4 shrink-0">
+            <i class="pi pi-stopwatch !text-xl text-orange-500"></i>
+          </div>
+          }@else if(task?.vencimento && (task?.vencimento | vencida)) {
+          <div pTooltip="Tarefa Vencida"
+            class="w-12 h-12 flex items-center justify-center bg-red-100 dark:bg-red-400/10 rounded-full mr-4 shrink-0">
+            <i class="pi pi-calendar-times !text-xl text-red-500"></i>
+          </div>
+          }@else if(task?.delegationState == 'PENDING') {
+          <div pTooltip="Tarefa Delegada Pendente"
+            class="w-12 h-12 flex items-center justify-center bg-yellow-100 dark:bg-yellow-400/10 rounded-full mr-4 shrink-0">
+            <i class="pi pi-address-book !text-xl text-yellow-600"></i>
+          </div>
+          }@else if(task?.delegationState == 'RESOLVED') {
+          <div pTooltip="Tarefa Delegada Resolvida"
+            class="w-12 h-12 flex items-center justify-center bg-green-100 dark:bg-green-400/10 rounded-full mr-4 shrink-0">
+            <i class="pi pi-address-book !text-xl text-green-600"></i>
+          </div>
+          }@else if(task?.owner) {
+          <div pTooltip="Tarefa Supervisionada"
+            class="w-12 h-12 flex items-center justify-center bg-purple-100 dark:bg-purple-400/10 rounded-full mr-4 shrink-0">
+            <i class="pi pi-user !text-xl text-purple-500"></i>
+          </div>
+          }
+          @else {
+          <div pTooltip="Tarefa Dentro do Prazo"
+            class="w-12 h-12 flex items-center justify-center bg-green-100 dark:bg-green-400/10 rounded-full mr-4 shrink-0">
+            <i class="pi pi-calendar-clock !text-xl text-green-500"></i>
+          </div>
+          }
+        </td>
+        <td>{{task.nome}}</td>
+        <td style="min-width: 150px;">
+          @if(identity.getProtocolo(task.description)){
+          <app-numero-protocolo
+            [instancia]="{id: task.processInstanceId, businessKey: identity.getProtocolo(task.description)}"
+            [isTable]="true" />
+          }
+        </td>
+        <td>
+          <button pButton routerLink="/painel/tarefa/detalhes/{{task.id}}" pRipple type="button" icon="pi pi-search"
+            class="p-button p-component p-button-text p-button-icon-only cursor-pointer"></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

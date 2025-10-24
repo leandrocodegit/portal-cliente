@@ -1,0 +1,42 @@
+<p-tabs [scrollable]="true" (valueChange)="selectTab($event)" [value]="tab">
+  <p-tablist>
+    <p-tab value="logs">
+      <i class="pi pi-table mr-3"></i>
+      <span>Logs tarefas externas</span>
+    </p-tab>
+    <p-tab value="logs-identity">
+      <i class="pi pi-users mr-3"></i>
+      <span>Logs atividades</span>
+    </p-tab>
+     <p-tab value="logs-jobs">
+      <i class="pi pi-cog mr-3"></i>
+      <span>Logs trabalhos</span>
+    </p-tab>
+    <p-tab value="eventos">
+      <i class="pi pi-send mr-3"></i>
+      <span>Eventos</span>
+    </p-tab>
+    <p-tab value="incidentes">
+      <i class="pi pi-times mr-3 text-red-500"></i>
+      <span>Incidentes</span>
+    </p-tab>
+  </p-tablist>
+  <p-tabpanels>
+    <p-tabpanel value="logs">
+         <app-tabela [view]="{delete: true}" [auth]="{alert: 'LOG_READ', delete: 'LOG_DELETE'}" (excluirEmit)="excluir($event)"
+          [cols]="colsLogsTaskExternal" [itens]="logsTarefasExternas" />
+     </p-tabpanel>
+    <p-tabpanel value="logs-identity">
+         <app-tabela [view]="{delete: true}" [auth]="{delete: 'LOG_DELETE'}" (excluirEmit)="excluir($event)" [cols]="colsIdentiy" [itens]="logsIdentity" />
+     </p-tabpanel>
+  <p-tabpanel value="logs-jobs">
+         <app-tabela [view]="{delete: true}" [auth]="{delete: 'LOG_DELETE'}" (excluirEmit)="excluir($event)" [cols]="colsLogsJobs" [itens]="logsJobs" />
+     </p-tabpanel>
+     <p-tabpanel value="eventos">
+         <app-tabela [view]="{delete: true}" [auth]="{delete: 'LOG_DELETE'}" (excluirEmit)="excluir($event)" [cols]="colsEvents" [itens]="eventos" />
+     </p-tabpanel>
+     <p-tabpanel value="incidentes">
+         <app-tabela [view]="{delete: true}" [auth]="{delete: 'LOG_DELETE'}" (excluirEmit)="excluir($event)" [cols]="colsIncidentes" [itens]="incidentes" />
+     </p-tabpanel>
+  </p-tabpanels>
+</p-tabs>

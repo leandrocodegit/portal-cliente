@@ -1,0 +1,42 @@
+<p-card styleClass="p-4">
+  @if(showTitulo){
+  <ng-template pTemplate="title">
+    <div class="flex items-center">
+      <i class="pi pi-exclamation-triangle mr-3 text-orange-500"></i>
+      <span>Relatório de Incidentes</span>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="subtitle">
+    Análise do status e dos tipos de incidentes ocorridos nos processos.
+  </ng-template>
+  }
+
+  <ng-template pTemplate="content">
+    <!-- Estado de Carregamento -->
+    <div *ngIf="isLoading" class="flex justify-center items-center h-80">
+      <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
+    </div>
+
+    <!-- Estado de Erro -->
+    <div *ngIf="error && !isLoading" class="mt-4">
+      <p-message severity="error" [text]="error"></p-message>
+    </div>
+
+    <!-- Gráfico -->
+    <div *ngIf="!isLoading && !error">
+      <div *ngIf="pieChartData; else noData">
+           <h4 class="text-xl font-semibold mb-4 text-center">Situação das instâncias</h4>
+          <div class="flex justify-center items-center h-full">
+            <p-chart responsive="true" type="doughnut" [data]="pieChartData" [height]="height" [width]="height" [options]="pieChartOptions"
+              styleClass="max-w-md" [style]="{'max-height': height}"></p-chart>
+         </div>
+      </div>
+
+      <ng-template #noData>
+        <div class="text-center p-4">
+          <p-message severity="info" text="Nenhum dado foi encontrado para análise."></p-message>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+</p-card>

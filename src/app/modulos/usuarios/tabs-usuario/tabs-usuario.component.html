@@ -1,0 +1,23 @@
+<p-tabs [value]="tab" [scrollable]="true" (valueChange)="selectTab($event)">
+  <p-tablist>
+    <p-tab value="contas">
+      <i class="pi pi-database mr-3"></i>
+      <span>Usuários</span>
+    </p-tab>
+    <p-tab value="grupos">
+      <i class="pi pi-play mr-3"></i>
+      <span>Permissões</span>
+    </p-tab>
+    <p-tab value="signatarios">
+      <i class="pi pi-users mr-3"></i>
+      <span>Grupo signatários</span>
+    </p-tab>
+  </p-tablist>
+  <p-tabpanels>
+    <p-tabpanel [value]="tab">
+      <div class="p-4">
+      <router-outlet />
+      </div>
+    </p-tabpanel>
+  </p-tabpanels>
+</p-tabs>

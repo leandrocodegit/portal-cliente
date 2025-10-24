@@ -1,0 +1,47 @@
+<div class="px-2">
+  <p-fluid>
+    <div class="flex">
+      <div class="flex-col gap-6 w-full">
+        <div class="flex flex-auto flex-wrap gap-6 py-4" style="max-width: 400px;">
+          <div class="flex flex-col gap-4 flex-grow">
+            <div class="flex flex-wrap gap-2 w-full">
+              <label class="required">Descrição</label>
+              <input [(ngModel)]="deploy.descricao" pInputText type="text" />
+            </div>
+            <div class="flex flex-wrap gap-2 w-full">
+              <label class="required">Modelo bpmn</label>
+              <p-select [options]="bpmns" (onChange)="atualizarVersoes()" [(ngModel)]="deploy.bpmn.formularioBase"
+                dataKey="id" [loading]="load.bpmn" [checkmark]="true" optionLabel="descricao" [showClear]="true"
+                placeholder="Selecione um motor de fluxo" class="w-full" />
+            </div>
+            <div class="flex flex-wrap gap-2 w-full">
+              <label class="required">Versão bpmn</label>
+              <p-select [options]="versoes" (onChange)="atualizarBase()" [(ngModel)]="deploy.bpmn" dataKey="id"
+                [loading]="load.bpmn" [checkmark]="true" optionLabel="versao" [showClear]="true"
+                placeholder="Selecione um motor de fluxo" class="w-full" />
+            </div>
+            <div class="flex flex-col gap-2 w-full mb-4">
+              <div class="flex items-center justify-between gap-4">
+                <label class="required">Formulários</label>
+              </div>
+              <app-selecionar-versao-formulario (addEmit)="viewFormularios = true" [formularios]="getFormularios()" [view]="true" />
+            </div>
+            <div class="flex flex-wrap gap-2 w-full">
+              <label class="required">Modelo de decisão</label>
+              <p-select [options]="decisoes" [(ngModel)]="deploy.decisao" dataKey="id" [loading]="load.dmn"
+                [checkmark]="true" optionLabel="descricao" [showClear]="true"
+                placeholder="Selecione um modelo de decisão" class="w-full" />
+            </div>
+          </div>
+        </div>
+        <app-voltar-salvar (salvarEmit)="salvar()" [cancel]="true" (voltarEmit)="fechar()" />
+      </div>
+    </div>
+  </p-fluid>
+</div>
+
+<p-dialog header="Versões" [modal]="true" [(visible)]="viewFormularios" [style]="{'min-width': '90%'}">
+  @if(viewFormularios){
+  <app-selecionar-versao-formulario (fecharEmit)="viewFormularios = false" [formulariosSelect]="this.formulariosSelect"/>
+  }
+</p-dialog>

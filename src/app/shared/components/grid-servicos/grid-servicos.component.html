@@ -1,0 +1,42 @@
+<div class="card bg-white">
+  <div class="flex justify-center">
+    <div class="flex items-center gap-2 mb-8 w-full">
+      <div class="w-full grow">
+        <p-iconfield iconPosition="left">
+          <p-inputicon class="pi pi-search" />
+          <input (input)="filtrar(find.value)" #find type="text" pInputText placeholder="Faça uma pesquisa..."
+            class="w-full grow" style="height: 45px; border-radius: 40px;" />
+        </p-iconfield>
+      </div>
+      <app-filtro-categorias (selectEmit)="categoria = $event; filtrar(find.value)" [categorias]="categorias" />
+    </div>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    @for (servico of servicosFiltro; track $index) {
+    <div
+      class="bg-white dark:bg-gray-800 shadow rounded-lg p-5 hover:shadow-md transition-shadow duration-300 flex flex-col">
+      <div>
+        <div [style.background]="servico.color"
+          class="float-left mr-4 flex items-center justify-center dark:bg-indigo-500/20 rounded-xl w-12 h-12 shrink-0">
+          <span class="material-symbols-outlined !text-white dark:text-indigo-400 text-3xl">
+            {{servico.icon}}
+          </span>
+        </div>
+        <h4 class="m-0 text-lg font-semibold text-gray-800 dark:text-gray-200">
+          {{servico.nome}}
+        </h4>
+        <p class="m-0 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+          {{servico.descricao}}
+        </p>
+        <div class="clear-both"></div>
+      </div>
+      <div class="mt-4 flex items-end justify-between">
+        <p class="m-0 text-xs !tracking-wider border border-gray-200 rounded-full px-[7px] py-[2px]">
+          {{servico?.categoria?.nome}}</p>
+        <p-button label="Solicitar" (click)="iniciarServico(servico)" outlined
+          styleClass="!text-cyan-400 !border-cyan-400 hover:!bg-cyan-700" />
+      </div>
+    </div>
+    }
+  </div>
+</div>

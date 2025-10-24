@@ -1,0 +1,26 @@
+<div class="p-2">
+  <p-fluid>
+    <div class="flex">
+      <div class="flex-col gap-6 w-full">
+        <app-titulo-curto [titulo]="{
+        nome: getTitulo().titulo,
+        icone: 'pi-address-book'
+      }" />
+        <div class="flex flex-auto flex-wrap gap-6 py-4" style="max-width: 400px;">
+          <div class="flex flex-col gap-4 flex-grow">
+            <div class="flex flex-wrap gap-2 w-full">
+              <label for="nome" class="required">Nome</label>
+              <input [class.border-error]="formulario.nome== ''" [(ngModel)]="formulario.nome" pInputText type="text" />
+            </div>
+            <div class="flex flex-wrap gap-2 w-full">
+              <label for="descricao" class="required">Descrição</label>
+              <input [class.border-error]="formulario.descricao== ''" [(ngModel)]="formulario.descricao" pInputText
+                type="text" />
+            </div>
+          </div>
+        </div>
+        <app-voltar-salvar (salvarEmit)="salvarFormulario()" [cancel]="true" (voltarEmit)="fechar()"/>
+      </div>
+    </div>
+  </p-fluid>
+</div>

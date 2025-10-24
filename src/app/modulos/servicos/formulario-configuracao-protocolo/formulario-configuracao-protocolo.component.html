@@ -1,0 +1,34 @@
+<p-fluid>
+  <div class="flex">
+    <div class="flex-col gap-6 w-full">
+      <app-titulo-curto [titulo]="{
+        nome: 'Configuração de protocolo',
+        icone: 'pi-ticket'
+      }" />
+      <div class="flex flex-auto flex-wrap gap-6 py-4" style="max-width: 400px;">
+        <div class="flex flex-col gap-4 flex-grow">
+          <div class="flex flex-wrap gap-2 w-full">
+            <label for="descricao" class="required">Descrição</label>
+            <input [(ngModel)]="configuracao.descricao" pInputText type="text" />
+          </div>
+          <div class="flex flex-wrap gap-2 w-full">
+            <label for="prefixo" class="required">Prefixo</label>
+            <input [class.border-error]="configuracao.prefixo == ''" [(ngModel)]="configuracao.prefixo" pInputText
+              type="text" />
+          </div>
+          <div class="flex flex-wrap gap-2 w-full">
+            <label for="prioridade" class="required">Prioridade</label>
+            <p-select [options]="[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]"
+              [(ngModel)]="configuracao.prioridade" [showClear]="true" placeholder="Selecione uma prioridadde"
+              class="w-full" />
+          </div>          
+        </div>
+      </div>
+      <div class="flex mt-8 gap-2 justify-center md:justify-start lg:justify-start w-[85%] mb-4">
+        <p-button label="Voltar" icon="pi pi-times" [className]="'grow lg:flex-none w-full-b'" text
+          (click)="fechar()" />
+        <p-button label="Salvar" [className]="'grow lg:flex-none w-full-b'" icon="pi pi-check" (click)="salvar()" />
+      </div>
+    </div>
+  </div>
+</p-fluid>

@@ -1,0 +1,4 @@
+<div class="image-wrapper flex items-center justify-center h-full w-full">
+  <img *ngIf="loaded" [src]="url" />
+  <app-load *ngIf="!loaded" />
+</div>

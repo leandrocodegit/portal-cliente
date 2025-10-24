@@ -1,0 +1,37 @@
+<p-tabs value="protocolos" [scrollable]="true">
+  <p-tablist>
+    <p-tab value="protocolos">
+      <i class="pi pi-database mr-3"></i>
+      <span>Protocolos</span>
+    </p-tab>
+    <p-tab value="historico">
+      <i class="pi pi-play mr-3"></i>
+      <span>Histórico</span>
+    </p-tab>
+  </p-tablist>
+<p-progressbar *ngIf="loadProtocolo" mode="indeterminate" [style]="{ height: '2px' }" />
+  <p-tabpanels>
+    <p-tabpanel value="protocolos">
+      <div class="card">
+        <app-titulo-pesquisa [value]="{  showCustom: true, customLabel: 'Gerar Protocolo' }"
+          (customEmit)="gerarProtocolo()" />
+        @if(pagina?.paginaInstancia?.totalElements){
+        <app-tabela-paginada [view]="{ customview: true, reopen: true, }" [page]="pagina?.paginaInstancia"
+          [cols]="colsInstancia" (visualizarEmit)="visualizar($event)" [itens]="instancias"
+          (pageEmit)="paginarInstancia($event)" />
+        }@else {
+          <p-message>Nenhuma protocolo aberto</p-message>
+        }
+      </div>
+    </p-tabpanel>
+    <p-tabpanel value="historico">
+      <div class="card">
+        <app-titulo-pesquisa [value]="{  showCustom: true, customLabel: 'Gerar Protocolo' }"
+          (customEmit)="gerarProtocolo()" />
+        <app-tabela-paginada [view]="{ customview: true, reopen: true, }" [page]="pagina?.paginaProtocoloHistorico"
+          [cols]="colsProtocolo" (visualizarEmit)="visualizar($event)" [itens]="protocolosHistorico"
+          (pageEmit)="paginar($event)" />
+      </div>
+    </p-tabpanel>
+  </p-tabpanels>
+</p-tabs>

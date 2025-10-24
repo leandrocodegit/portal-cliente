@@ -1,0 +1,235 @@
+@if (tarefa) {
+<app-titulo-detalhes-tarefa [tarefa]="tarefa" [instancia]="instancia" (assigneeEmit)="atribuirUsuario($event)" />
+}
+<div class="flex flex-col justify-between">
+  <p-tabs value="formulario" [scrollable]="true" (valueChange)="selectTab($event)" [value]="tab">
+    <p-tablist>
+      @if(incidentes?.length){
+      <p-tab value="incidentes" style="background-color: #fc264a;color: white;">
+        <i class="pi pi-refresh mr-3"></i>
+        <span>Incidentes</span>
+      </p-tab>
+      }
+      @if(jobs?.length){
+      <p-tab value="trabalhos" style="background-color: #0ac476;color: white;">
+        <i class="pi pi-refresh mr-3"></i>
+        <span>Processando</span>
+      </p-tab>
+      }
+      <p-tab value="concluir">
+        <i class="pi pi-cleck mr-3"></i>
+        <span>Concluir</span>
+      </p-tab>
+      @if(tarefa?.formKey || tarefa?.camundaFormRef || isTarefaAdicional()){
+      <p-tab value="formulario" class="!bg-primary-400 !text-white">
+        <i class="pi pi-address-book mr-3"></i>
+        <span>Formulário</span>
+      </p-tab>
+      }
+      <p-tab value="historico">
+        <i class="pi pi-history mr-3"></i>
+        <span>Histórico <span class="font-normal">({{historico.length}})</span></span>
+      </p-tab>
+      <p-tab value="comentarios">
+        <i class="pi pi-comment mr-3"></i>
+        <span>Comentários <span class="font-normal">({{comentarios.length}})</span></span>
+      </p-tab>
+      <p-tab value="documentos">
+        <i class="pi pi-file mr-3"></i>
+        <span>Documentos <span class="font-normal">({{quantidadeDocumentos}})</span></span>
+      </p-tab>
+      <p-tab value="anexos">
+        <i class="pi pi-paperclip mr-3"></i>
+        <span>Anexos <span class="font-normal">({{quantidadeAnexos}})</span></span>
+      </p-tab>
+      <p-tab value="diagrama">
+        <i class="pi pi-sitemap mr-3"></i>
+        <span>Diagrama</span>
+      </p-tab>
+    </p-tablist>
+    <p-tabpanels>
+      <p-tabpanel value="concluir">
+        <div class="min">
+          <div
+            class="flex flex-col lg:flex-row mt-8 gap-2 justify-center md:justify-start lg:justify-start lg:w-[85%] m-4">
+            <p-button label="Voltar" icon="pi pi-times" [className]="'grow lg:flex-none w-full-b'" text
+              (click)="voltar()" />
+            <p-button label="Painel de tarefas" routerLink="/painel/tarefa" icon="pi pi-list" severity="warn"
+              [className]="'grow lg:flex-none w-full-b'" text />
+            <p-button label="Concluir tarefa" severity="danger" [className]="'grow lg:flex-none w-full-b'"
+              icon="pi pi-check" (click)="completarTarefa()" />
+            @if(tarefa?.owner){
+            <app-criar-tarefa [instancia]="instancia" [parentTaskId]="tarefa?.id" />
+            }
+          </div>
+        </div>
+      </p-tabpanel>
+      <p-tabpanel value="formulario">
+
+        @if(isTarefaAdicional()){
+        <div class="p-4">
+          <h5 class="m-4 text-orange-300">Tarefa Adicional</h5>
+          @if(formulario && variaveis){
+          <app-visao-formulario [tarefa]="tarefa" [schema]="formulario" [data]="variaveis" [apenasBotaoEnviar]="true"
+            (dataEmit)="enviarFormulario($event)" />
+          }
+        </div>
+        }@else{
+        <div class="{{tarefa?.formKey?.includes('signer') ? '' : 'p-4'}} min">
+          @if(formulario && variaveis){
+          <app-visao-formulario [tarefa]="tarefa" [schema]="formulario" [data]="variaveis" [apenasBotaoEnviar]="true"
+            (dataEmit)="enviarFormulario($event)" />
+          }
+          @if(tarefa?.formKey){
+          @if(tarefa?.formKey?.includes('signer')){
+          @if(viewAssinar){
+          <div class="text-center mt-6">
+            <h1>
+              Assinatura de documentos
+            </h1>
+            <p-button label="Iniciar" severity="danger" [className]="'grow lg:flex-none'" icon="pi pi-play"
+              (click)="assinar()" />
+          </div>
+          }
+          <div id='signature-div'></div>
+          }
+          @else{
+          <iframe [src]="tarefaFormKeySanitized" frameborder="0" class="w-full h-full" style="height: 100vh;"></iframe>]
+          }
+          }
+        </div>
+        }
+      </p-tabpanel>
+      <p-tabpanel value="historico">
+        <div class="p-4 min">
+          <div class="box-lista flex flex-col gap-2 overflow-x-auto">
+            @for (historia of historico; track $index) {
+            <div
+              class="grid grid-cols-12 p-4 shadow-sm hover:border-b-2 hover:border-primary-300 dark:border-b dark:border-gray-700">
+              <div class="col-span-1 hidden lg:block">
+                <div class="flex items-center justify-center bg-gray-100 dark:bg-gray-400/10 rounded-lg"
+                  style="width: 3.5rem; height: 3.5rem">
+                  <i class="pi pi-clock text-gray-300 !text-xl"></i>
+                </div>
+              </div>
+              <div class="col-span-2 hidden lg:flex gap-8">
+                <div class="flex gap-2 flex-col">
+                  <p class="m-0 font-bold">{{identity.getUserName(historia.userId)}}</p>
+                  <p class="font-light text-gray-600 dark:text-gray-300">{{historia.timestamp | date: 'dd/MM/yyy HH:mm:ss'}}</p>
+                </div>
+              </div>
+              <div class="col-span-12 lg:col-span-9 flex gap-2 lg:gap-8 ">
+                <div class="flex gap-2 flex-col">
+                  <p
+                    class="m-0 font-bold text-{{historia?.operationType?.includes('Delete') ? 'orange-500' : 'primary'}}">
+                    {{statusTarefaDescriptions[historia.operationType]}}</p>
+                  @if(historia.property == 'dueDate'){
+                  <p [className]="historia?.orgValue ? 'line-through text-orange-600 dark:text-orange-300' : 'text-gray-600 dark:text-gray-300'"
+                    class="font-normal">{{recuperarNome(historia) | date: 'dd/MM/yyy HH:mm:ss'}}</p>
+                  }@else {
+                  <p [className]="historia?.orgValue ? 'line-through text-orange-600 dark:text-orange-300' : 'text-gray-600 dark:text-gray-300'"
+                    class="font-normal">{{recuperarNome(historia)}}</p>
+
+                  }
+                </div>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </p-tabpanel>
+      <p-tabpanel value="comentarios">
+        <div class="p-4 min">
+          <app-titulo-curto
+            [titulo]="{ nome: 'Comentários da tarefa', icone: 'pi-comment', labelButton: 'Novo comentário' }"
+            (btEmit)="viewComentar = true" />
+          <div class="box-lista flex flex-col gap-2 overflow-x-auto">
+            @for (comentario of comentarios; track $index) {
+            <div class="grid grid-cols-12 p-4 shadow-sm hover:border-primary-300 dark:border-b dark:border-gray-700">
+              <div class="col-span-1 hidden lg:block">
+                <div class="flex items-center justify-center bg-gray-100 dark:bg-gray-400/10 rounded-lg"
+                  style="width: 3.5rem; height: 3.5rem">
+                  <i class="pi pi-clock text-gray-300 !text-xl"></i>
+                </div>
+              </div>
+              <div class="col-span-11 lg:col-span-10 flex gap-8">
+                <div class="flex gap-2 flex-col">
+                  <p class="m-0 font-bold">{{'identity.getUserName(comentario.userId)'}}</p>
+                  <p class="font-light text-gray-600 dark:text-gray-300">{{comentario.time | date: 'dd/MM/yyy HH:mm:ss'}}
+                  </p>
+                </div>
+                <div class="flex gap-2 flex-col">
+                  <p class="m-0 font-bold text-primary">{{comentario.message}}</p>
+                </div>
+              </div>
+              @if(isUsuarioCriacao(comentario.userId)){
+              <div class="flex gap-2">
+                <div class="col-span-1 text-right">
+                  <i (click)="removerComentario(comentario)"
+                    class="pi pi-trash text-orange-500 !text-xl cursor-pointer"></i>
+                </div>
+                <div class="col-span-1 text-right">
+                  <i (click)="comentarioSelect = comentario; viewComentar = true"
+                    class="pi pi-pen-to-square text-gray-500 !text-xl cursor-pointer"></i>
+                </div>
+              </div>
+              }
+            </div>
+            }
+          </div>
+          <p-dialog header="Comentário" [modal]="true" [(visible)]="viewComentar" [style]="{ width: '35rem' }">
+            <div class="flex flex-col gap-4 mb-4">
+              <textarea rows="5" cols="30" [(ngModel)]="comentarioSelect.message" pTextarea></textarea>
+            </div>
+            <div class="flex justify-end gap-2">
+              <p-button label="Fechar" severity="secondary" (click)="viewComentar = false" />
+              <p-button label="Salvar" (click)="criarComentario(); viewComentar = false" />
+            </div>
+          </p-dialog>
+        </div>
+      </p-tabpanel>
+      <p-tabpanel value="documentos">
+        <div class="p-4 min">
+          @if(tarefa && tab == 'documentos'){
+          <app-lista-documentos [isInstance]="true" [tarefa]="tarefa" [grid]="true"
+            [documentos]="true"></app-lista-documentos>
+          }
+        </div>
+      </p-tabpanel>
+      <p-tabpanel value="anexos">
+        <div class="p-4 min">
+          <app-titulo-curto
+            [titulo]="{ nome: 'Documentos anexados a tarefa', icone: 'pi-paperclip', btIcon: 'paperclip', labelButton: 'Novo anexo' }"
+            (btEmit)="anexar()" />
+          @if(tarefa && !viewAnexar && tab == 'anexos'){
+          <app-lista-documentos [grid]="true" [tarefa]="tarefa"></app-lista-documentos>
+          }@else if(viewAnexar){
+          <p-fileupload [customUpload]="true" [multiple]="true" (uploadHandler)="onUpload($event)"
+            (onClear)="viewAnexar = false" maxFileSize="20000000" mode="advanced" cancelLabel="Limpar"
+            chooseIcon="pi pi-folder">
+            <ng-template #empty>
+              <div class="flex justify-between items-center">
+                <div>Arraste e solte os arquivos aqui.</div>
+                <p-button (click)="viewAnexar = false" icon="pi pi-times" [rounded]="true" severity="danger"
+                  [outlined]="true" />
+              </div>
+            </ng-template>
+            <ng-template #content>
+              <ul *ngIf="files.length">
+                <li *ngFor="let file of files">{{ file.name }} - {{ file.size }} bytes</li>
+              </ul>
+            </ng-template>
+          </p-fileupload>
+          }
+        </div>
+      </p-tabpanel>
+      <p-tabpanel value="diagrama">
+        <div class="p-4 min">
+          @if(xml && tab == 'diagrama'){
+          <app-visao-fluxo [xml]="xml" [tarefa]="tarefa"></app-visao-fluxo>
+          }
+        </div>
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
+</div>

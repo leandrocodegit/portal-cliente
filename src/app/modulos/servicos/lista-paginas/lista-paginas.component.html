@@ -1,0 +1,14 @@
+<app-titulo-pesquisa [value]="{ titulo: '', botaoAdd: 'Nova pagina', showAtivos: true, showAdd: true }"
+  (customAdd)="visible = true" />
+<app-tabela [auth]="{edit: 'DEPLOY_CREATE', delete: 'DEPLOY_DELETE'}"
+  [view]="{ editEvent: true, delete: true, lock: true, duplicar: true }" [page]="pagina"
+  (editarEmit)="editarPagina($event)" (excluirEmit)="removerPagina($event)" (duplicarEmit)="duplicarPagina($event)"
+  (lockEmit)="lock($event)" [cols]="colsPagina" [itens]="paginas" />
+
+<p-dialog [modal]="true" appendTo="body" [(visible)]="visible" [style]="{ 'max-width': '70%' }">
+  <div class="px-4">
+    <div class="flex items-center gap-4 mb-6">
+      <app-formulario-paginas [paginaServico]="paginaSelecionada" (voltarEmit)="visible = false" />
+    </div>
+  </div>
+</p-dialog>

@@ -1,0 +1,22 @@
+<div class="card">
+  @if(!base64 || !modelo){
+  <app-titulo-pesquisa
+    [value]="{ customLabel: 'Adicionar', showAtivos: true, showCustom: true }"
+    (customEmit)="viewForm = true; modelo = undefined" />
+  <app-tabela [auth]="{edit: 'ADM', delete: 'ADM', config: 'ADM'}"
+    [view]="{ editEvent: true, delete: true, lock: true, showAtivos: false, customConfig: true }"
+    (excluirEmit)="removerModelo($event)" (lockEmit)="ativarModelo($event)" (editarEmit)="editar($event)" (configEmit)="configurar($event)"
+    [cols]="cols" [itens]="itens" />
+  }@else{
+  <app-posicionar-assinatura [pdfBase64]="base64" [modelo]="modelo" (voltarEmit)="voltar()" />
+  <p-button label="Voltar a lista" icon="pi pi-times" outlined="true" severity="danger"
+    [className]="'grow lg:flex-none w-full-b'" (click)="base64 = undefined" /> }
+</div>
+
+<p-dialog header="Novo signatário" [modal]="true" [(visible)]="viewForm" [responsive]="true">
+  <div class="w-full">
+    @if(viewForm){
+    <app-formulario-modelos [tab]="'signatarios'" [modelo]="modelo" (voltarEmit)="voltar()" (updateEmit)="voltar()" />
+    }
+  </div>
+</p-dialog>

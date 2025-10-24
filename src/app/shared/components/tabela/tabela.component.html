@@ -1,0 +1,178 @@
+<p-table #tabela [columns]="cols" [rows]="page.rows" [paginator]="page.rows > 0" [totalRecords]="120"
+  [rowsPerPageOptions]="[10, 20, 30]" [value]="itens" [scrollable]="true" scrollHeight="calc(100vh - 260px)">
+  <ng-template #header let-columns>
+    <tr>
+      <th *ngFor="let col of columns">
+        {{ col.header }}
+      </th>
+      <th><i *ngIf="view?.plusHead" pTooltip="Adicionar" (click)="headPlus()"
+            class="pi pi-plus-circle text-blue-500 hover cursor-pointer"
+            style="font-size: 1.2rem"></i></th>
+    </tr>
+  </ng-template>
+  <ng-template #body let-rowData let-columns="columns">
+    <tr>
+      <td *ngFor="let col of columns">
+        @if (col.isRun) {
+        @if(!col.isNot && rowData[col.field]){
+        <i class="pi pi-spin pi-cog text-green-500" style="font-size: 1rem"></i>
+        }@else if(col.isNot && !rowData[col.field]){
+        <i class="pi pi-spin pi-cog text-green-500" style="font-size: 1rem"></i>
+        }
+        @else {
+        <i class="pi pi-cog text-red-500" style="font-size: 1rem"></i>
+        }
+        }@else{
+        @if (col.isTag) {
+        <p-tag
+          [severity]="rowData[col.field] && !col.isInvert || (!rowData[col.field] && col.isInvert) ? 'success' : 'warn'"
+          [value]="rowData[col.field] ? 'Sim' : 'Não'"></p-tag>
+        }
+        @else if (col.field == 'status') {
+        @if (col.isStatusHttp) {
+        <p-tag [severity]="getSeverity(rowData[col.field])" [value]="rowData[col.field]"></p-tag>
+        }@else{
+        <p-tag [severity]="rowData[col.field].severity" [value]="rowData[col.field].value"></p-tag>
+        }
+        }
+        @else if (col.field == 'publico') {
+        <p-tag [severity]="rowData[col.field] ? 'success' : 'warn'"
+          [value]="rowData[col.field] ? 'Sim' : 'Não'"></p-tag>
+        }
+        @else if (col.field == 'enabled' || col.field == 'emailVerified' || col.field == 'ended') {
+        <p-tag [severity]="rowData[col.field] ? 'success' : 'warn'"
+          [value]="rowData[col.field] ? 'Sim' : 'Não'"></p-tag>
+        }
+        @else if ( col.field == 'suspended') {
+        <p-tag [severity]="rowData[col.field] ? 'warn' : 'success'"
+          [value]="rowData[col.field] ? 'Sim' : 'Não'"></p-tag>
+        }
+        @else if(col.isSubfield && rowData[col.field] != undefined && rowData[col.field][col.subfield] != undefined){
+        {{ rowData[col.field][col.subfield]}}
+        }
+        @else if(col.isTime || col.field.includes('time') || col.field.includes('Time')){
+        {{ rowData[col.field] | date: 'dd/MM/yy hh:mm:ss' }}
+        }
+        @else if(col.isDate){
+        {{ rowData[col.field] | date: 'dd/MM/yyyy' }}
+
+        }
+        @else if(col.isLog){
+        @if(rowData['creationLog']){
+        <i class="pi pi-bookmark text-teal-500'"></i>
+        }
+        @else if(rowData['deletionLog']){
+        <i class="pi pi-trash text-orange-500'"></i>
+        }@else{
+        <i class="pi {{rowData['successLog'] ? 'pi-check-circle text-teal-500': 'pi-times text-orange-500'}}"></i>
+        }
+        }
+        @else if(col.field == 'check' || col.isFail){
+        <i class="pi {{rowData[col.field] ? 'pi-check-circle text-teal-500': 'pi-times text-orange-500'}}"></i>
+        }@else if (col.isDownload && rowData[col.field] == 'download') {
+        <i *ngIf="view?.downloadcol" (click)="download({id: rowData['id'], value: rowData['value']})"
+          class="pi pi-download hover cursor-pointer" style="font-size: 1.2rem"></i>
+        }@else if (col.field == 'assignee' || col.isUser) {
+        {{identity.getUserName(rowData[col.field])}}
+        }@else if(col.isVerificarDate && rowData['type'] == 'Date'){
+        {{ rowData[col.field] | date: 'dd/MM/yy hh:mm:ss' }}
+        }
+        @else if (col.isVariavel) {
+        @if(col.isColor){
+        <i class="pi pi-circle-fill" [style.color]="rowData[col.field][col.variavel]"></i>
+        }@else {
+        {{rowData[col.field][col.variavel]}}
+        }
+        }
+        @else if(col.isInput){
+        <input pInputText [disabled]="!rowData['editavel']" id="value" [(ngModel)]="rowData[col.field]"
+          class="flex-auto" autocomplete="off" />
+        }
+        @else if(col.isTypeTask){
+        {{statusTarefaDescriptions[rowData[col.field]]}}
+        }
+        @else{
+        {{ (rowData[col.field] && rowData[col.field] != '') ? rowData[col.field] : '-' }}
+        }
+        @if((col.isCopy || (col.field == 'id' || col.field == 'key' || col.field == 'assignee' || col.field ==
+        'processId' || col.field == 'email' || col.field == 'username')) && rowData[col.field] && rowData[col.field] !=
+        ''){
+        <i (click)="copiar()" [cdkCopyToClipboard]="rowData[col.field]" pTooltip="Copiar"
+          class="pi pi-clipboard cursor-pointer text-orange-400 ml-2"></i>
+        }
+        @if(col.isRedirect && rowData[col.field]){
+        <a href="{{rowData[col.field]}}" target="_blank" pTooltip="Redirecionar"
+          class="pi pi-external-link cursor-pointer text-blue-400 ml-2 !text-sm"></a>
+        }
+        }
+      </td>
+      <td>
+        <div class="flex gap-2 justify-end mr-4">
+          <i *ngIf="view?.status" (click)="status(rowData)" class="pi pi-chart-line hover cursor-pointer"
+            style="font-size: 1.2rem" pTooltip="Status"></i>
+          <i *ngIf="view?.stop" (click)="stop(rowData)"
+            class="pi pi-{{rowData['suspended'] ? 'play' : 'pause-circle'}} hover cursor-pointer"
+            style="font-size: 1.2rem" [pTooltip]="rowData['suspended'] ? 'Iníciar' : 'Parar'"></i>
+          <i *ngIf="view?.play" (click)="play(rowData)" class="pi pi-play hover cursor-pointer"
+            style="font-size: 1.2rem" [pTooltip]="rowData['suspended'] ? 'Iníciar' : 'Parar'"></i>
+          <i *ngIf="view?.users && authService.hasGrupo(auth?.users)" pTooltip="Grupos de usuários"
+            (click)="adicionarGrupo(rowData)" class="pi pi-users hover cursor-pointer" style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.deploy" pTooltip="Implantar" (click)="implantar(rowData['id'])"
+            class="pi pi-cloud-upload hover cursor-pointer" style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.duplicar" pTooltip="Clonar" (click)="duplicar(rowData['id'])"
+            class="pi pi-clone hover cursor-pointer" style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.config && authService.hasGrupo(auth?.config)" routerLink="config/{{rowData['id']}}"
+            class="pi pi-cog hover cursor-pointer" style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.customConfig && authService.hasGrupo(auth?.config)" (click)="config(rowData)"
+            class="pi pi-cog hover cursor-pointer" style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.json" (click)="visualizarJson(rowData)" class="pi pi-code hover cursor-pointer"
+            style="font-size: 1.2rem"></i>
+          <i [pTooltip]="view?.refreshTooltip" tooltipPosition="left" *ngIf="view?.refresh && !rowData['check']"
+            (click)="refresh(rowData)" class="pi pi-refresh hover cursor-pointer" style="font-size: 1.2rem"></i>
+          <i [pTooltip]="view?.refreshTooltip" tooltipPosition="left" *ngIf="view?.refreshEvent"
+            (click)="refresh(rowData)" class="pi pi-refresh hover cursor-pointer" style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.logout" (click)="logout(rowData['id'],rowData['firstName'])"
+            class="pi pi-sign-out hover cursor-pointer" style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.view && rowData['taskState'] != 'Completed'" pTooltip="Ver detalhes"
+            routerLink="detalhes/{{rowData['id']}}" class="pi pi-eye hover cursor-pointer"
+            style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.customview && rowData['taskState'] != 'Completed'" pTooltip="Ver detalhes"
+            (click)="visualizar(rowData)" class="pi pi-eye hover cursor-pointer" style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.detail && authService.hasGrupo(auth?.detail)" (click)="detalhes(rowData['id'])"
+            class="pi pi-info-circle hover cursor-pointer" style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.detailEmit && authService.hasGrupo(auth?.detail)" (click)="detalhes(rowData)"
+            class="pi pi-info-circle hover cursor-pointer" style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.lock" [pTooltip]="rowData['enabled'] ? 'Bloquear' : 'Desbloquear'"
+            (click)="lock({id: rowData['id'], value: rowData['firstName']})"
+            class="pi pi-{{rowData['enabled'] ? 'unlock' : 'lock text-orange-500' }} hover cursor-pointer"
+            style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.delete && authService.hasGrupo(auth?.delete)" pTooltip="Remover"
+            (click)="excluir(rowData['id'])" class="pi pi-trash hover cursor-pointer" style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.deleteEvent && authService.hasGrupo(auth?.delete)" pTooltip="Remover"
+            (click)="excluir(rowData)" class="pi pi-trash hover cursor-pointer" style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.edit && authService.hasGrupo(auth?.edit)" routerLink="edit/{{rowData['id']}}"
+            class="pi pi-pen-to-square hover cursor-pointer" style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.plus" pTooltip="Adicionar" (click)="adicionar(rowData)"
+            class="pi pi-{{!rowData['select'] ? 'plus-circle' : 'minus-circle'}} text-{{!rowData['select'] ? 'blue' : 'orange'}}-500 hover cursor-pointer"
+            style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.editEvent && authService.hasGrupo(auth?.edit)" pTooltip="Editar" (click)="editar(rowData)"
+            class="pi pi-pen-to-square hover cursor-pointer" style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.alertEvent && authService.hasGrupo(auth?.alert)" pTooltip="Detalhes erro"
+            (click)="alert(rowData)" class="pi pi-exclamation-triangle hover cursor-pointer text-red-400"
+            style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.download && rowData['type'] == 'download'" pTooltip="Fazer download"
+            (click)="download(rowData)" class="pi pi-download hover cursor-pointer text-orange-500"
+            style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.downloadEvent" pTooltip="Fazer download" (click)="download(rowData)"
+            class="pi pi-download hover cursor-pointer text-orange-500" style="font-size: 1.2rem"></i>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-popover #op>
+  <div class="text-green-500">
+    Texto copiado
+  </div>
+</p-popover>

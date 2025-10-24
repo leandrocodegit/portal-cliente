@@ -1,0 +1,10 @@
+.box-bpmn {
+  width: 100%;
+  height: calc(97vh - 115px);
+  outline: none;
+}
+
+.box-bpmn:focus{
+  outline: none;
+}
+

@@ -1,0 +1,83 @@
+@if(data?.isInstance){
+<p-drawer [(visible)]="data.isInstance" position="bottom">
+  @if(data.isInstance){
+  <ng-template #header>
+    <app-titulo-curto [titulo]="{
+        nome: data?.nome,
+        subnome: data?.subnome,
+        icone: data?.icon ?? 'pi-pause',
+        cursorSubnome: true
+      }" />
+  </ng-template>
+  <app-detalhes-instancia [instanceId]="data?.instanceId" />
+  }
+</p-drawer>
+}
+@if(data?.isReabrirProtocolo){
+<p-drawer [(visible)]="data.isReabrirProtocolo" position="bottom">
+  @if(data.isReabrirProtocolo){
+  <ng-template #header>
+    <app-titulo-curto [titulo]="{
+        nome: data?.nome,
+        subnome: data?.subnome,
+        icone: data?.icon ?? 'pi-pause',
+        cursorSubnome: true
+      }" />
+  </ng-template>
+  <div class="m-4">
+    <app-reabrir-protocolo [instanceId]="data?.instanceId" [viewCancel]="false" />
+  </div>
+  }
+</p-drawer>
+}
+@if(data?.isVisualizarArquivos){
+<p-drawer [(visible)]="data.isVisualizarArquivos" position="bottom">
+  @if(data.isVisualizarArquivos){
+  <ng-template #header>
+    <app-titulo-curto [titulo]="{
+        nome: data?.nome,
+        subnome: data?.subnome,
+        icone: data?.icon ?? 'pi-pause',
+        cursorSubnome: true
+      }" />
+  </ng-template>
+  <app-lista-documentos [tarefa]="{processInstanceId: data?.instanceId}" [isInstance]="true" [grid]="true"
+    [todos]="true" [viewDelete]="false" />
+  }
+</p-drawer>
+}
+@if(data?.isComentarios){
+<p-drawer [(visible)]="data.isComentarios" position="right">
+  @if(data.isComentarios){
+  <p-timeline [value]="comentarios" class="customized-timeline">
+    <ng-template #marker let-event>
+      <span class="flex w-8 h-8 items-center justify-center text-white rounded-full z-10 shadow-sm bg-purple-950">
+        <i class="pi pi-clock"></i>
+      </span>
+    </ng-template>
+    <ng-template #content let-comentario>
+      <div class="flex flex-col gap-2 mb-2">
+        <div class="flex gap-2 flex-col">
+          <p class="m-0 font-normal">{{comentario.message}}</p>
+        </div>
+        <div class="flex flex-col">
+          <p class="m-0 font-bold text-orange-500">{{identityService.getUserName(comentario.userId)}}</p>
+          <p class="font-light text-gray-600 dark:text-gray-300">
+            {{comentario.time | date: 'dd/MM/yyy HH:mm:ss'}}
+          </p>
+        </div>
+      </div>
+    </ng-template>
+  </p-timeline>
+  }
+</p-drawer>
+}
+
+@if(data?.isDetalhesTarefa){
+<p-drawer [(visible)]="data.isDetalhesTarefa" position="left"
+  [header]="identityService.getProtocolo(data?.task?.description)">
+  @if(data.isDetalhesTarefa && data?.task){
+  <app-descricao-tarefa [tarefa]="data.task" />
+  }
+</p-drawer>
+}

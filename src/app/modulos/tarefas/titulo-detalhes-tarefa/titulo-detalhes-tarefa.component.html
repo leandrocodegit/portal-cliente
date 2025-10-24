@@ -1,0 +1,125 @@
+@if (tarefa) {
+<div class="grid grid-cols-2 lg:grid-cols-5  gap-2 lg:gap-4 mb-3" style="width: 100%;">
+  @if (instancia?.businessKey) {
+  <div class="card-small border rounded-border">
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+      <div class="mb-0" style="margin-bottom: 0;">
+        <div class="flex items-center justify-between mb-0">
+          <div>
+            <span class="block text-muted-color font-medium mb-2">Protocolo</span>
+            <app-numero-protocolo [instancia]="instancia" />
+          </div>
+          <div class="hidden lg:flex items-center justify-center bg-indigo-100/30 dark:bg-indigo-400/10 rounded-full"
+            style="width: 3.0rem; height: 3.0rem">
+            <i class="pi pi-ticket text-indigo-500 !text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+  @if(layoutService.isDesktop()){
+  <div class="card-small border rounded-border">
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+      <div class="mb-0" style="margin-bottom: 0;">
+        <div class="flex items-center justify-between mb-0">
+          <div>
+            <span class="block text-muted-color font-medium mb-2">Tarefa</span>
+            <span class="text-indigo-500 font-medium">{{tarefa?.name ? tarefa.name : tarefa.taskDefinitionKey}}</span>
+          </div>
+          <div (click)="selecionarTarefaInfo()"
+            class="cursor-pointer hidden lg:flex items-center justify-center bg-indigo-100/30 dark:bg-indigo-400/10 rounded-full"
+            style="width: 3.0rem; height: 3.0rem">
+            <i class="pi pi-info text-indigo-500 !text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+  @if(tarefa.due){
+  <div class="card-small border rounded-border">
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+      <div class="mb-0" style="margin-bottom: 0;">
+        <div class="flex items-center justify-between mb-1">
+          <div>
+            <span class="block text-muted-color font-medium mb-2">Vencimento</span>
+            <span class="text-orange-500 font-medium">{{tarefa.due | date: 'dd/MM/yyy HH:mm:ss'}}</span>
+          </div>
+          <div class="hidden lg:flex items-center justify-center bg-orange-100/30 dark:bg-orange-400/10 rounded-full"
+            style="width: 3.0rem; height: 3.0rem">
+            <i class="pi pi-calendar-clock text-orange-500 !text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+  @if(false && tarefa.followUp){
+  <div class="card-small border rounded-border">
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+      <div class="mb-0" style="margin-bottom: 0;">
+        <div class="flex items-center justify-between mb-0">
+          <div>
+            <span class="block text-muted-color font-medium mb-3">Data de acompanhamento</span>
+            <span class="text-blue-500 font-medium">{{tarefa.followUp | date: 'dd/MM/yyy HH:mm:ss'}}</span>
+          </div>
+          <div class="hidden lg:flex items-center justify-center bg-blue-100/30 dark:bg-blue-400/10 rounded-full"
+            style="width: 3.0rem; height: 3.0rem">
+            <i class="pi pi-calendar-plus text-blue-500 !text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+  <div class="card-small border rounded-border">
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+      <div class="mb-0" style="margin-bottom: 0;">
+        <div class="flex items-center justify-between mb-0">
+          <div>
+            <span class="block text-muted-color font-medium mb-3">Responsável</span>
+            <span
+              class="text-{{tarefa?.assignee ? 'green' : 'orange'}}-500 font-medium">{{identityService.getUserName(tarefa?.assignee)}}</span>
+          </div>
+          <app-task-user-assignee [width]="'3rem'" [tarefa]="tarefa" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-small col-span-2 border rounded-border" (click)="listaGrupos($event)">
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+      <div class="mb-0" style="margin-bottom: 0;">
+        <div class="flex items-center justify-between mb-0">
+          <div>
+            <span class="block text-muted-color font-medium mb-3">Departamento</span>
+            <span class="text-green-500 font-medium">{{getInfoGrupo()}}</span>
+          </div>
+          <div
+            class="cursor-pointer flex items-center justify-center bg-purple-100/30 dark:bg-purple-400/10 rounded-full"
+            style="width: 3.0rem; height: 3.0rem">
+            <i class="pi pi-th-large text-purple-500 !text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+<p-popover #op>
+  <div class="flex flex-col gap-4">
+    <div>
+      <ul class="list-none p-0 m-0 flex flex-col">
+        <li *ngFor="let member of grupos" (click)="adicionarDepartamento(member)"
+          class="flex items-center gap-2 px-4 py-3 hover:bg-emphasis cursor-pointer rounded-border">
+          <i class="pi pi-{{contemDepartamento(member) ? 'check-' : ''}}circle text-primary"></i>
+          <div>
+            <span class="font-medium">{{ member.description }}</span>
+            <div class="text-sm text-surface-500 dark:text-surface-400">{{ member.email }}</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</p-popover>

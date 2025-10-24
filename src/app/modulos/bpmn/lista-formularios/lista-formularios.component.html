@@ -1,0 +1,31 @@
+<div class="p-4">
+  @if(tipo == 'conectores'){
+  <app-lista-conectores />
+  }@else {
+  <app-titulo-pesquisa
+    [value]="{ titulo: getTitulo().titulo, customLabel: getTitulo().bt, routerLink: 'new', showAtivos: true, showCustom: true, }"
+    (customEmit)="adicionar()" />
+  <app-tabela [auth]="{config: 'DEPLOY_CREATE', delete: 'DEPLOY_CREATE', lock: 'DEPLOY_CREATE', edit: 'DEPLOY_CREATE'}"
+    [view]="{ editEvent: true, lock: true, customConfig: true, delete: true, }" [cols]="cols" [itens]="formularios"
+    (editarEmit)="editar($event)" (configEmit)="configurar($event)" (excluirEmit)="remover($event)"
+    (lockEmit)="habilitar($event)" />
+  }
+</div>
+<p-dialog [modal]="true" [(visible)]="visible">
+  @if(formulario && visible){
+  <app-criar-formulario [formulario]="formulario" (voltarEmit)="visible = false"
+    (updateEmit)="listaFormularios(); visible = false" />
+  }
+</p-dialog>
+
+<p-dialog header="Versões" [modal]="true" [(visible)]="viewVersoes" [style]="{'width': '100%', 'max-width': '800px', 'margin': '0 5px'}">
+  @if(viewVersoes){
+  <app-tabela [auth]="{config: 'DEPLOY_CREATE', delete: 'DEPLOY_CREATE', lock: 'DEPLOY_CREATE', edit: 'DEPLOY_CREATE'}"
+    [view]="{ editEvent: true, lock: true, customConfig: true, delete: true, }" [cols]="cols" [itens]="versoes"
+    (editarEmit)="editar($event, true)" (configEmit)="configurar($event)" (excluirEmit)="remover($event, true)"
+    (lockEmit)="habilitar($event, true)" />
+  }
+  <div class="flex justify-end gap-2 mt-4">
+    <p-button label="Ok" (click)="viewVersoes = false" />
+  </div>
+</p-dialog>

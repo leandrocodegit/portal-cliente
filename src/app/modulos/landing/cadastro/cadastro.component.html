@@ -1,0 +1,80 @@
+<div class="box-cadastro flex justify-center p-2 lg:pt-16">
+  <p-stepper [value]="1" class="lg:basis-[100rem] basis-[100%]" style="width: 100%;">
+      <p-step-list>
+        <p-step class="mb-4" [value]="1">Cadastro</p-step>
+        <p-step class="mb-4" *ngIf="cliente.tipoPessoa == 'PJ'" [value]="2">Endereço</p-step>
+        <p-step class="mb-4" [value]="3">Modulos</p-step>
+        <p-step class="mb-4" [value]="4">concluir</p-step>
+      </p-step-list>
+      <p-step-panels>
+
+    <p-step-panel [value]="1">
+      <ng-template #content let-activateCallback="activateCallback">
+        <div class="flex flex-col h-48">
+          <div
+            class="lg:border-2 lg:border-dashed border-surface-200 dark:border-surface-700 rounded bg-surface-0 dark:bg-surface-950 flex-auto flex justify-center items-center font-medium">
+            <div class="flex flex-row justify-between" style="width: 100%;">
+              <app-cadastro-form [cliente]="cliente"></app-cadastro-form>
+            </div>
+          </div>
+          <div class="flex pt-6 justify-center lg:justify-end  gap-2">
+            <p-button [style]="{'min-width': '150px'}" class="mt-6" label="Proxima" icon="pi pi-arrow-right" iconPos="right" (onClick)="activateCallback(2)" />
+          </div>
+        </div>
+      </ng-template>
+    </p-step-panel>
+
+    <p-step-panel *ngIf="pessoaJuridica.value" [value]="2">
+      <ng-template #content let-activateCallback="activateCallback">
+        <div class="flex flex-col">
+          <div
+            class="border-2 border-dashed border-surface-200 dark:border-surface-700 rounded bg-surface-0 dark:bg-surface-950 flex-auto flex justify-center items-center font-medium">
+            <div class="flex flex-row justify-between" style="width: 100%;">
+              <app-cadastro-endereco></app-cadastro-endereco>
+            </div>
+          </div>
+        </div>
+        <div class="flex pt-6 justify-center lg:justify-end  gap-2">
+          <p-button [style]="{'min-width': '150px'}" label="Voltar" severity="secondary" icon="pi pi-arrow-left" (onClick)="activateCallback(1)" />
+          <p-button [style]="{'min-width': '150px'}" label="Proxima" icon="pi pi-arrow-right" iconPos="right" (onClick)="activateCallback(3)" />
+        </div>
+      </ng-template>
+    </p-step-panel>
+
+    <p-step-panel [value]="3">
+      <ng-template #content let-activateCallback="activateCallback">
+        <div class="flex flex-col">
+          <div
+            class="border-2 border-dashed border-surface-200 dark:border-surface-700 rounded bg-surface-0 dark:bg-surface-950 flex-auto flex justify-center items-center font-medium">
+            <div class="flex flex-row justify-between" style="width: 100%;">
+              <app-modulos />
+            </div>
+          </div>
+        </div>
+        <div class="flex pt-6 justify-center lg:justify-end  gap-2">
+          <p-button [style]="{'min-width': '150px'}" label="Voltar" severity="secondary" icon="pi pi-arrow-left" (onClick)="activateCallback(2)" />
+          <p-button [style]="{'min-width': '150px'}" label="Proxima" icon="pi pi-arrow-right" iconPos="right" (onClick)="activateCallback(4)" />
+        </div>
+      </ng-template>
+    </p-step-panel>
+
+    <p-step-panel [value]="4">
+      <ng-template #content let-activateCallback="activateCallback">
+        <div class="flex flex-col">
+          <div
+            class="border-2 border-dashed border-surface-200 dark:border-surface-700 rounded bg-surface-0 dark:bg-surface-950 flex-auto flex justify-center items-center font-medium">
+            <div class="flex flex-row justify-between" style="width: 100%;">
+              <div class="col-span-12 text-center mt-20 mb-6">
+                <app-cadastro-completo></app-cadastro-completo>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex pt-6 justify-center lg:justify-end gap-2">
+          <p-button [style]="{'min-width': '150px'}" label="Concluir" icon="pi pi-check" iconPos="right" (onClick)="salvar();activateCallback(3)" />
+        </div>
+      </ng-template>
+    </p-step-panel>
+    </p-step-panels>
+  </p-stepper>
+</div>

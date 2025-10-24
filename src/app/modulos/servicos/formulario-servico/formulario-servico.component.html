@@ -1,0 +1,128 @@
+<p-fluid>
+  <div class="flex">
+    <div class="flex-col gap-6 w-full">
+      <app-titulo-curto [titulo]="{
+        nome: 'Cadastro serviços',
+        icone: 'pi-briefcase'
+      }" />
+      <div class="flex py-4" style="max-width: 800px;">
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col gap-4">
+
+            <div class="flex flex-wrap gap-2 w-full">
+              <label for="nome" class="required">Nome</label>
+              <div class="flex justify-between gap-4 w-full">
+                <input [class.border-error]="servico.nome == ''" [(ngModel)]="servico.nome" pInputText type="text" />
+                <div (click)="viewIcons = true" [style.background]="servico.color"
+                  class="cursor-pointer float-left mr-4 flex items-center justify-center dark:bg-indigo-500/20 rounded-xl w-12 h-12 shrink-0">
+                  <span class="material-symbols-outlined text-white dark:text-indigo-400 text-3xl">
+                    {{servico?.icon ?? 'room_service'}}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-wrap gap-2 w-full">
+              <label class="required">Descrição</label>
+              <textarea rows="5" cols="30" pTextarea [(ngModel)]="servico.descricao" fluid></textarea>
+            </div>
+          </div>
+          <div class="flex flex-wrap lg:flex-nowrap gap-6 w-full">
+            <div class="flex flex-col gap-4 flex-grow w-[50%]">
+              <div class="flex flex-wrap gap-2 w-full">
+                <label class="required">Prazo para execução (Dias)</label>
+                <input [(ngModel)]="servico.prazo" pInputText type="text" />
+              </div>
+              <div class="flex flex-wrap gap-2 w-full">
+                <label class="required">Data de início</label>
+                <input [(ngModel)]="servico.dataInicio" pInputText type="date" />
+              </div>
+              <div class="flex flex-wrap gap-2 w-full">
+                <label class="required">Protocolo</label>
+                <p-select [options]="configuracaoes" appendTo="body" [(ngModel)]="servico.configuracaoProtocolo" [checkmark]="true"
+                  optionLabel="descricao" [showClear]="true" placeholder="Selecione um protocolo" class="w-full" />
+              </div>
+              <app-lista-categorias [categoria]="servico.categoria" [select]="true" (selectEmit)="servico.categoria = $event"/>
+            </div>
+            <div class="flex flex-col gap-4 flex-grow w-[50%]">
+              <div class="flex flex-col gap-2 w-full">
+                <label class="required">Processo</label>
+                <p-select (onChange)="listaProcessosPorKey()" appendTo="body" [options]="processos" dataKey="key"
+                  [(ngModel)]="servico.processo" optionLabel="name" [filter]="true" [checkmark]="true" />
+              </div>
+              <div class="flex flex-col gap-2 w-full">
+                <label class="required">Versão</label>
+                <p-select [disabled]="servico.usarUltimaVersao" appendTo="body" [options]="versoes" dataKey="version"
+                  [(ngModel)]="servico.version" optionLabel="version" [filter]="true" [checkmark]="true" />
+              </div>
+              <div class="flex items-center">
+                <p-checkbox (onChange)="atualizarVersoes()" [(ngModel)]="servico.usarUltimaVersao" name="publico"
+                  [binary]="true" />
+                <label class="ml-2">Usar sempre a ultima versão</label>
+              </div>
+            </div>
+            <div class="flex flex-col gap-4 flex-grow w-[50%]">
+              <div class="flex flex-col gap-2 w-full">
+                <label class="required">Formulário</label>
+                <p-select (onChange)="listaProcessosPorKey()" appendTo="body" [options]="formularios" [(ngModel)]="servico.formulario"
+                  optionLabel="nome" [filter]="true" [checkmark]="true" />
+              </div>
+              <div class="flex flex-col gap-2 w-full">
+                <label class="required">Versão</label>
+                <p-select [disabled]="!servico?.formulario" [options]="servico?.formulario?.versoes" optionValue="id"
+                  dataKey="formKey" [(ngModel)]="servico.formKey" dataKey="versao" optionLabel="versao" />
+              </div>
+              <div class="flex items-center">
+                <p-checkbox [(ngModel)]="servico.publico" name="publico" [binary]="true" />
+                <label class="ml-2">Serviço publico</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <app-voltar-salvar (salvarEmit)="salvar()" [cancel]="true" (voltarEmit)="voltarEmit.emit()" />
+    </div>
+  </div>
+</p-fluid>
+<p-dialog [modal]="true" appendTo="body" [(visible)]="viewIcons" [style]="{ 'max-width': '70%' }">
+  <div class="px-4">
+    <div class="flex items-center gap-4 mb-6">
+      <p-colorpicker inline="true" [(ngModel)]="servico.color" styleClass="w-full" />
+      <div
+        class="bg-white dark:bg-gray-800 shadow rounded p-5 hover:shadow-md transition-shadow duration-300 flex flex-col">
+        <div>
+          <div [style.background]="servico.color"
+            class="float-left mr-4 flex items-center justify-center rounded-xl w-12 h-12 shrink-0">
+            <span class="material-symbols-outlined text-white dark:text-indigo-400 text-3xl">
+              {{servico.icon}}
+            </span>
+          </div>
+          <h4 class="m-0 text-lg font-semibold text-gray-800 dark:text-gray-200">
+            {{servico.nome}}
+          </h4>
+          <p class="m-0 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+            {{servico.descricao}}
+          </p>
+
+          <div class="clear-both"></div>
+        </div>
+
+        <div class="mt-4 flex justify-end">
+          <p-button label="Solicitar" outlined styleClass="!text-cyan-400 !border-cyan-400 hover:!bg-cyan-700" />
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-4 overflow-x-auto" style="max-height: 380px;">
+      @for(icon of icons; track $index){
+      <div (click)="selecionarIcon(icon.value)"
+        class="cursor-pointer float-left mr-4 flex items-center bg-cyan-700 justify-center dark:bg-indigo-500/20 rounded-xl w-12 h-12 shrink-0">
+        <span class="material-symbols-outlined text-white dark:text-indigo-400 text-3xl">
+          {{icon.value}}
+        </span>
+      </div>
+      }
+    </div>
+    <div class="flex justify-end gap-2 my-4">
+      <p-button label="Ok" (click)="viewIcons = false" />
+    </div>
+  </div>
+</p-dialog>

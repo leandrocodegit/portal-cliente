@@ -1,0 +1,179 @@
+<div class="bg-white dark:bg-transparent p-2 lg:p-6 pb-2">
+  <form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
+    <div class="flex items-center gap-4 py-4">
+      <div class="flex items-center gap-2">
+        <app-imprimir [query]="getQuery()" [isRelatorio]="true" />
+        <app-imprimir-relatorio />
+      </div>
+      <div class="flex items-center flex-wrap lg:flex-nowrap grow gap-6">
+       <div class="flex flex-col w-[180px]">
+          <h3 class="text-xl font-bold m-0 grow">
+            Filtros Avançados
+          </h3>
+          <span class="text-gray-500">Tarefas</span>
+        </div>
+        <div class="hidden lg:block grow w-full">
+          <app-filter-summary #summary [filters]="getQuery()" />
+        </div>
+      </div>
+    </div>
+
+    <p-tabView scrollable="true" [activeIndex]="tab" (activeIndexChange)="selectTab($event)">
+      <!-- Aba 1: Identificadores -->
+      <p-tabPanel header="Identificadores">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 p-fluid p-2 lg:p-6">
+          <div class="flex flex-col gap-2">
+            <label for="taskId">ID da Tarefa</label>
+            <input id="taskId" type="text" pInputText formControlName="taskId" />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="processInstanceId">ID da Instância do Processo</label>
+            <input id="processInstanceId" type="text" pInputText formControlName="processInstanceId" />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="processDefinitionKey">Chave da Definição do Processo</label>
+            <input id="processDefinitionKey" type="text" pInputText formControlName="processDefinitionKey" />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="taskDefinitionKey">Chave da Definição da Tarefa</label>
+            <input id="taskDefinitionKey" type="text" pInputText formControlName="taskDefinitionKey" />
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- Aba 2: Detalhes -->
+      <p-tabPanel header="Detalhes da Tarefa">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 p-fluid p-6">
+          <div class="flex flex-col gap-2">
+            <label for="taskName">Nome da Tarefa (Exato)</label>
+            <input id="taskName" type="text" pInputText formControlName="taskName" />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="taskNameLike">Nome da Tarefa (Contém)</label>
+            <input id="taskNameLike" type="text" pInputText formControlName="taskNameLike" />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="taskAssignee">Responsável (Exato)</label>
+            <input id="taskAssignee" type="text" pInputText formControlName="taskAssignee" />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="taskAssigneeLike">Responsável (Contém)</label>
+            <input id="taskAssigneeLike" type="text" pInputText formControlName="taskAssigneeLike" />
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- Aba 3: Datas -->
+      <p-tabPanel header="Datas">
+        <div class="grid grid-cols-1 lg:grid-cols-6 gap-4 p-fluid p-6">
+          <div class="flex flex-col gap-2">
+            <label for="taskDueDateAfter">Prazo Final (Depois de)</label>
+            <p-calendar id="taskDueDateAfter" formControlName="taskDueDateAfter" [showIcon]="true"></p-calendar>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="taskDueDateBefore">Prazo Final (Antes de)</label>
+            <p-calendar id="taskDueDateBefore" formControlName="taskDueDateBefore" [showIcon]="true"></p-calendar>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="startedAfter">Iniciada (Depois de)</label>
+            <p-calendar id="startedAfter" formControlName="startedAfter" [showIcon]="true"></p-calendar>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="startedBefore">Iniciada (Antes de)</label>
+            <p-calendar id="startedBefore" formControlName="startedBefore" [showIcon]="true"></p-calendar>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="finishedAfter">Finalizada (Depois de)</label>
+            <p-calendar id="finishedAfter" formControlName="finishedAfter" [showIcon]="true"></p-calendar>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="finishedBefore">Finalizada (Antes de)</label>
+            <p-calendar id="finishedBefore" formControlName="finishedBefore" [showIcon]="true"></p-calendar>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- Aba 4: Status -->
+      <p-tabPanel header="Status">
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 p-fluid align-items-center p-6">
+          <div class="flex items-center">
+            <p-toggleswitch (onChange)="filterForm?.get('unfinished').setValue(false)" formControlName="finished" />
+            <label class="ml-2">Finalizada</label>
+          </div>
+          <div class="flex items-center">
+            <p-toggleswitch (onChange)="filterForm?.get('finished').setValue(false)" formControlName="unfinished" />
+            <label class="ml-2">Não Finalizada</label>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- Aba 5: Variáveis -->
+      <p-tabPanel header="Variáveis">
+        <div class="p-4">
+          <h4 class="font-semibold mb-2">Variáveis da Tarefa</h4>
+          <div formArrayName="taskVariables">
+            <div *ngFor="let variable of taskVariables.controls; let i = index" [formGroupName]="i"
+              class="grid grid-cols-12 gap-2 mb-2 items-center">
+              <div class="col-span-12 md:col-span-4">
+                <input type="text" pInputText placeholder="Nome da Variável" formControlName="name">
+              </div>
+              <div class="col-span-12 md:col-span-3">
+                <p-dropdown [options]="variableOperators" formControlName="operator" optionLabel="label"
+                  optionValue="value"></p-dropdown>
+              </div>
+              <div class="col-span-12 md:col-span-4">
+                <input type="text" pInputText placeholder="Valor" formControlName="value">
+              </div>
+              <div class="col-span-12 md:col-span-1">
+                <button pButton type="button" icon="pi pi-trash" class="p-button-danger w-full"
+                  (click)="removeTaskVariable(i)" pTooltip="Remover Variável"></button>
+              </div>
+            </div>
+          </div>
+          <button pButton type="button" label="Adicionar Variável da Tarefa" icon="pi pi-plus"
+            class="p-button-outlined mt-2" (click)="addTaskVariable()"></button>
+        </div>
+      </p-tabPanel>
+
+      <!-- Aba 6: Ordenação -->
+      <p-tabPanel header="Ordenação">
+        <div formArrayName="sorting" class="p-6">
+          <div *ngFor="let sort of sorting.controls; let i = index" [formGroupName]="i"
+            class="grid grid-cols-12 gap-2 mb-2 items-center">
+            <div class="col-span-12 md:col-span-5">
+              <p-dropdown [options]="sortableFields" formControlName="sortBy" optionLabel="label" optionValue="value"
+                placeholder="Campo para Ordenar"></p-dropdown>
+            </div>
+            <div class="col-span-12 md:col-span-5">
+              <p-dropdown [options]="sortOrders" formControlName="sortOrder" optionLabel="label" optionValue="value"
+                placeholder="Ordem"></p-dropdown>
+            </div>
+            <div class="col-span-12 md:col-span-2">
+              <button pButton type="button" icon="pi pi-trash" class="p-button-danger w-full" (click)="removeSorting(i)"
+                pTooltip="Remover Ordenação"></button>
+            </div>
+          </div>
+        </div>
+        <button pButton type="button" label="Adicionar Critério de Ordenação" icon="pi pi-plus"
+          class="p-button-outlined mt-2" (click)="addSorting()"></button>
+      </p-tabPanel>
+    </p-tabView>
+  </form>
+  <div class="p-4">
+    <app-titulo-pesquisa [ativos]="getAtivos()" [value]="{
+    titulo: 'Lista de tarefas',
+    routerLink: 'form',
+    customLabel: 'Aplicar Filtros',
+    customIcon: 'pi-check',
+    showAtivos: false,
+    showCustom: true,
+    showAdicional: true,
+    adicionalIcon: 'pi-times',
+    adicionalLabel: 'Limpar',
+   showCustomAtivos: true,
+    ativosLabel: ['Todos os critérios', 'Algum Critério']
+  }" (customEmit)="onSubmit()" (adicionalEmit)="resetForm()" (ativosEmit)="setCriterios($event)" />
+    <app-tabela [auth]="{view: 'TASK_READ'}" [view]="{  customview: true }" (visualizarEmit)="visualizar($event)"
+      [page]="pagina" [cols]="cols" [itens]="tarefas">
+    </app-tabela>
+  </div>

@@ -1,0 +1,113 @@
+<div class="bg-surface-ground flex justify-center">
+  <div class="w-full">
+    <p-card>
+      <ng-template pTemplate="title">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <i class="pi pi-compass mr-3 text-primary-500"></i>
+            <span>Acompanhamento do Protocolo: {{ protocoloId }}</span>
+          </div>
+          <p-tag [value]="statusTarefaDescriptions[protocolo?.status]"
+            [severity]="getStatusSeverity(protocolo?.status)"></p-tag>
+        </div>
+      </ng-template>
+
+      @if(servico){
+      <div
+        class="bg-white dark:bg-gray-800 shadow rounded-lg p-5 hover:shadow-md transition-shadow duration-300 flex flex-col">
+        <div>
+          <div [style.background]="servico.color"
+            class="float-left mr-4 flex items-center justify-center dark:bg-indigo-500/20 rounded-xl w-12 h-12 shrink-0">
+            <span class="material-symbols-outlined !text-white dark:text-indigo-400 text-3xl">
+              {{servico.icon}}
+            </span>
+          </div>
+          <h4 class="m-0 text-lg font-semibold text-gray-800 dark:text-gray-200">
+            {{servico.nome}}
+          </h4>
+          <p class="m-0 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+            {{servico.descricao}}
+          </p>
+          <div class="clear-both"></div>
+        </div>
+      </div>
+      }
+
+      <ng-template pTemplate="content">
+        <!-- Estado de Carregamento -->
+        <div *ngIf="isLoading" class="flex flex-col justify-center items-center h-80 w-full">
+          <p-progressSpinner />
+          <p class="mt-4 text-surface-500">Buscando informações do seu pedido...</p>
+        </div>
+
+        <!-- Estado de Erro -->
+        <div *ngIf="error && !isLoading" class="mt-4">
+          <p-message severity="error" [text]="error"></p-message>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div *ngIf="!isLoading && !error && protocolo">
+
+          <!-- 1. Seção de Pendências do Cliente -->
+          <div class="my-8 p-4 border-l-4 rounded-lg"
+            [ngClass]="protocolo?.tarefa ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/20' : 'border-green-500 bg-green-50 dark:bg-green-900/20'">
+            <div class="flex items-start">
+              <i class="pi text-2xl mr-3 mt-1"
+                [ngClass]="protocolo?.tarefa ? 'pi-exclamation-triangle text-orange-500' : 'pi-check-circle text-green-500'"></i>
+              <div>
+                <h3 class="font-bold text-lg m-0">
+                  {{ protocolo?.tarefa ? 'Ação Necessária' : 'Nenhuma Pendência' }}
+                </h3>
+
+                <div *ngIf="protocolo?.tarefa">
+                  <div class="mt-2">
+                    <button pButton [label]="protocolo?.tarefa.name" icon="pi pi-arrow-right" iconPos="right"
+                      class="p-button-sm mt-2" (click)="onTaskAction()"></button>
+                  </div>
+                </div>
+                <ng-template #noPendingTasks>
+                  <p class="m-0 text-surface-600 dark:text-surface-300">Neste momento, não há nenhuma ação pendente da
+                    sua parte. Aguarde o andamento pelas nossas equipes.</p>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex my5 flex-col gap-2">
+            <h3 class="font-bold text-xl mb-4">Comentários da Tarefa</h3>
+            @for (comentario of protocolo?.tarefa?.comentarios; track $index) {
+            <div class="grid grid-cols-12 p-4 shadow-sm hover:border-primary-300 dark:border-b dark:border-gray-700">
+              <div class="col-span-1 hidden lg:block">
+                <div class="flex items-center justify-center bg-primary-900/30 dark:bg-primary-400/10 rounded-lg"
+                  style="width: 3.5rem; height: 3.5rem">
+                  <i class="pi pi-comment text-white !text-xl"></i>
+                </div>
+              </div>
+              <div class="col-span-11 lg:col-span-10 flex gap-8">
+                <div class="flex gap-2 flex-col">
+                  <p class="m-0 font-bold">{{''}}</p>
+                  <p class="font-light text-gray-600 dark:text-gray-300">{{comentario.time | date: formatDate()}}
+                  </p>
+                </div>
+                <div class="flex gap-2 flex-col">
+                  <p class="m-0 font-bold">{{comentario.message}}</p>
+                </div>
+              </div>
+              @if(false){
+              <div class="flex gap-2">
+                <div class="col-span-1 text-right">
+                  <i class="pi pi-trash text-orange-500 !text-xl cursor-pointer"></i>
+                </div>
+                <div class="col-span-1 text-right">
+                  <i class="pi pi-pen-to-square text-gray-500 !text-xl cursor-pointer"></i>
+                </div>
+              </div>
+              }
+            </div>
+            }
+          </div>
+        </div>
+      </ng-template>
+    </p-card>
+  </div>
+</div>

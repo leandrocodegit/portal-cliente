@@ -1,0 +1,175 @@
+<div class="py-4 pdf-container flex justify-between flex-nowrap gap-8">
+  <div class="rounded" style="flex-basis: 400px;">
+    <div class="h-full bg-gray-50 dark:bg-gray-800 py-6 rounded-lg px-2 ">
+      <h5 class="text-xl font-semibold text-gray-500 dark:text-gray-400 mb-4 px-4">Signatários</h5>
+      <div class="flex flex-col gap-2 py-4 bg-white dark:bg-gray-700 shadow rounded">
+        <div class="flex flex-col">
+          <div class="flex items-center gap-6 border-b p-2 shadow-sm">
+            <div class="hidden lg:flex items-center justify-center bg-teal-100/30 dark:bg-teal-400/10 rounded-border"
+              style="width: 2.5rem; height: 2.5rem">
+              <i class="pi pi-user text-teal-500 !text-xl"></i>
+            </div>
+            <div class="flex items-center justify-between grow">
+              <span class="font-bold whitespace-nowrap">Cliente</span>
+              <!-- <i (click)="viewPreferencias = true"
+                class="pi pi-cog !text-lg transition text-gray-400 m-1 cursor-pointer mr-6" pTooltip="Preferências"></i> -->
+            </div>
+          </div>
+          <div class="p-3">
+            @if(getPosicoes().size){
+            <app-lista-signatarios [posicoes]="getPosicoes()" [signatarios]="getUser()"
+              [signatarioSelecionado]="getSignatario()" (removerSignatario)="removerTodos($event)"
+              (selecionarSignatarioEmit)="selecionarSignatario($event)" />
+            }
+          </div>
+        </div>
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center gap-6 border-b p-2 shadow-sm">
+            <div
+              class="hidden lg:flex items-center justify-center bg-orange-100/30 dark:bg-orange-400/10 rounded-border"
+              style="width: 2.5rem; height: 2.5rem">
+              <i class="pi pi-th-large text-orange-500 !text-xl"></i>
+            </div>
+            <div class="flex items-center justify-between grow">
+              <span class="font-bold whitespace-nowrap">Grupo</span>
+              @if(!getGrupo().length){
+              <i (click)="viewGrupos = true"
+                class="pi pi-plus-circle !text-lg transition text-gray-400 m-1 cursor-pointer mr-6"
+                pTooltip="Adicionar grupo"></i>
+              }@else{
+              <i (click)="removerGrupo()" class="pi pi-trash !text-lg transition text-gray-400 m-1 cursor-pointer mr-6"
+                pTooltip="Remover grupo"></i>
+              }
+            </div>
+          </div>
+          @if(getGrupo().length && getPosicoes().size){
+          <div class="p-3">
+            <app-lista-signatarios [posicoes]="getPosicoes()" [signatarios]="getGrupo()"
+              [signatarioSelecionado]="getSignatario()" (removerSignatario)="removerTodos($event)"
+              (selecionarSignatarioEmit)="selecionarSignatario($event)" />
+          </div>
+          }
+        </div>
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center gap-6 border-b p-2 shadow-sm">
+            <div class="hidden lg:flex items-center justify-center bg-sky-100/30 dark:bg-sky-400/10 rounded-border"
+              style="width: 2.5rem; height: 2.5rem">
+              <i class="pi pi-users text-sky-500 !text-xl"></i>
+            </div>
+            <span class="font-bold whitespace-nowrap">Tarefas</span>
+          </div>
+          <div class="p-3">
+            @if(getTask().length && getPosicoes().size){
+            <app-lista-signatarios [lock]="true" [signatarios]="getTask()" (removerSignatario)="removerTodos($event)"
+              [signatarioSelecionado]="getSignatario()" [posicoes]="getPosicoes()"
+              (selecionarSignatarioEmit)="selecionarSignatario($event)" />
+            }
+          </div>
+        </div>
+        <div class="flex flex-col gap-3">
+          <div class="flex items-center gap-6 border-b p-2 shadow-sm">
+            <div
+              class="hidden lg:flex items-center justify-center bg-indigo-100/30 dark:bg-indigo-400/10 rounded-border"
+              style="width: 2.5rem; height: 2.5rem">
+              <i class="pi pi-warehouse text-indigo-500 !text-xl"></i>
+            </div>
+            <div class="flex items-center justify-between grow">
+              <span class="font-bold whitespace-nowrap">Extras</span>
+              <i (click)="verUsuarios()"
+                class="pi pi-plus-circle !text-lg transition text-gray-400 m-1 mr-6 cursor-pointer"
+                pTooltip="Adicionar signatário"></i>
+            </div>
+          </div>
+          <div class="p-3">
+            @if(getPosicoes().size){
+            <app-lista-signatarios [posicoes]="getPosicoes()" [signatarios]="getExtras()"
+              (removerSignatario)="removerTodos($event)" [signatarioSelecionado]="getSignatario()"
+              (selecionarSignatarioEmit)="selecionarSignatario($event)" />
+            }
+          </div>
+        </div>
+      </div>
+      <div class="w-full">
+        <app-voltar-salvar (salvarEmit)="salvar()" [cancel]="true" (voltarEmit)="voltar()" />
+      </div>
+    </div>
+  </div>
+  <div class="w-full bg-gray-50 dark:bg-gray-800 m-auto rounded-lg flex items-center">
+
+    <div class="m-auto bg-gray-900 py-8 px-10">
+      @if(isload){
+      <app-load />
+      }@else{
+      <h2 class="font-semibold text-white text-center">{{isInit ? 'Etapa - Posicionando local da assinatura' :
+        'Carregando documento...' }}</h2>
+      <pdf-viewer [src]="pdfBase64" [fit-to-page]="true" [show-all]="true" [original-size]="false"
+        (after-load-complete)="carregarPdf($event)" (page-rendered)="pageRendered($event)"
+        style="width: 100%;min-width: 700px; height: 100vh;"></pdf-viewer>
+      }
+    </div>
+
+  </div>
+</div>
+
+<p-popover #op>
+  <div class="flex flex-col gap-4">
+    <div>
+      <span class="font-medium block mb-2">Grupos</span>
+    </div>
+  </div>
+</p-popover>
+
+<p-dialog header="Novo signatário" [modal]="true" [(visible)]="viewGrupos" [responsive]="true">
+  <div class="w-full" style="min-width: 450px;">
+    <div class="overflow-x-auto">
+      <app-titulo-pesquisa [value]="{ titulo: '', hideBack: true, showCustom: false, }"
+        (customEmit)="viewGrupos = true" />
+      <app-tabela [view]="{ plus: true }" (plusEmit)="adicionarGrupo($event)" [cols]="colsGrupos"
+        [itens]="grupoSignatarios" />
+    </div>
+    <div class="flex justify-end gap-2 mt-4">
+      <p-button label="Ok" (click)="viewGrupos = false" />
+    </div>
+  </div>
+</p-dialog>
+
+<p-dialog header="Novo signatário" [modal]="true" [(visible)]="viewUsers" [responsive]="true">
+  <div class="w-full" style="min-width: 450px;">
+    <p-tabs value="usuarios">
+      <p-tablist>
+        <p-tab value="usuarios">Usuário do sistema</p-tab>
+        <p-tab value="form">Novo usuário</p-tab>
+      </p-tablist>
+      <p-tabpanels>
+        <p-tabpanel value="usuarios">
+          <div class="overflow-x-auto">
+            <app-titulo-pesquisa [value]="{ titulo: '', hideBack: true, showCustom: false, }"
+              (customEmit)="viewGrupos = true" />
+            <app-tabela [view]="{ plus: true }" (plusEmit)="adicionarUsuario($event)" [cols]="colsUsuarios"
+              [itens]="usuarios" />
+          </div>
+          <div class="flex justify-end gap-2 mt-4">
+            <p-button label="Ok" (click)="viewUsers = false" />
+          </div>
+        </p-tabpanel>
+        <p-tabpanel value="form">
+          <div class="flex-col gap-6 w-full">
+            <div class="flex flex-auto flex-wrap gap-6 py-4" style="max-width: 600px;">
+              <div class="flex flex-col gap-4 flex-grow">
+                <div class="flex flex-col gap-2 w-full">
+                  <label for="firstname" class="required">Nome</label>
+                  <input [(ngModel)]="newUsuario.firstName" pInputText type="text" />
+                </div>
+                <div class="flex flex-col gap-2 w-full">
+                  <label for="firstname" class="required">Email</label>
+                  <input [(ngModel)]="newUsuario.email" pInputText type="text" />
+                </div>
+              </div>
+            </div>
+            <app-voltar-salvar (salvarEmit)="adicionarUsuario()" [cancel]="true" (voltarEmit)="viewUsers = false" />
+          </div>
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  </div>
+</p-dialog>

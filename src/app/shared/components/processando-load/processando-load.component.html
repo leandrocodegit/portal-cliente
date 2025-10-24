@@ -1,0 +1,10 @@
+@if (viewFechar) {
+<div class="flex flex-col justify-center items-center">
+    <i class="pi pi-check" style="font-size: 22px;"></i>
+    <p>Concluido</p>
+  <p-button (click)="fechar()" routerLink="form" class="ml-2" label="Fechar" icon="pi pi-close"
+    [style]="{'margin': '10px auto;'}"></p-button>
+</div>
+}@else {
+  <p-progressbar [mode]="viewFechar ? 'determinate' : 'indeterminate'" value="100" [style]="{ height: '6px' }" />
+}

@@ -1,0 +1,65 @@
+<div class="card">
+  @if (tab == 'documentos') {
+  <p-fluid>
+    <div class="flex">
+      <div class="flex-col gap-6 w-full">
+        <app-titulo-curto [titulo]="{
+        nome: 'Cadastro modelo documento',
+        icone: 'pi-file-word'
+      }" />
+        <div class="flex flex-auto flex-wrap gap-6 py-4" style="max-width: 600px;">
+          <div class="flex flex-col gap-4 flex-grow">
+            <div class="flex flex-col gap-2 w-full">
+              <label for="firstname" class="required">Descrição</label>
+              <input [class.border-error]="modelo.descricao == ''" [(ngModel)]="modelo.descricao" pInputText
+                type="text" />
+            </div>
+            <div class="flex flex-col items-start gap-2 w-full">
+              <label for="firstname" class="required">Arquivo modelo</label>
+              <p-fileupload #fu mode="basic" name="demo[]" [customUpload]="true" chooseLabel="Selecione um arquivo"
+                chooseIcon="pi pi-upload" accept=".docx" maxFileSize="1000000" (uploadHandler)="salvarModelo($event)" />
+            </div>
+          </div>
+        </div>
+        <app-voltar-salvar (salvarEmit)="fu.upload()" [cancel]="true" (voltarEmit)="fechar()"/>
+      </div>
+    </div>
+  </p-fluid>
+  } @else {
+  <p-fluid>
+    <div class="flex">
+      <div class="flex-col gap-6 w-full">
+        <app-titulo-curto [titulo]="{
+        nome: 'Cadastro modelo signatários',
+        icone: 'pi-file-word'
+      }" />
+        <div class="flex flex-auto flex-wrap gap-6 py-4" style="max-width: 600px;">
+          <div class="flex flex-col gap-4 flex-grow">
+            <div class="flex flex-col gap-2 w-full">
+              <label for="firstname" class="required">Descrição</label>
+              <input [class.border-error]="modelo.descricao == ''" [(ngModel)]="modelo.descricao" pInputText
+                type="text" />
+            </div>
+            <div class="flex flex-wrap gap-2 w-full">
+              <label class="required">Documento</label>
+              <p-select [options]="modelos" [(ngModel)]="modelo.documentoModelo" [checkmark]="true" optionLabel="descricao"
+                [showClear]="true" placeholder="Selecione um documento" class="w-full" />
+            </div>
+            <div class="flex flex-col gap-2 w-full">
+              <label class="required">Processo</label>
+              <p-select (onChange)="listaProcessosPorKey()" [options]="processos" optionValue="key"
+                [(ngModel)]="modelo.processDefinitionKey" optionLabel="name" [filter]="true" [checkmark]="true" />
+            </div>
+            <div class="flex flex-col gap-2 w-full">
+              <label class="required">Versão</label>
+              <p-select [options]="versoes" optionValue="version"
+                [(ngModel)]="modelo.version" optionLabel="version" [filter]="true" [checkmark]="true" />
+            </div>
+          </div>
+        </div>
+        <app-voltar-salvar (salvarEmit)="salvarModeloSignatario()" [cancel]="true" (voltarEmit)="fechar()"/>
+      </div>
+    </div>
+  </p-fluid>
+  }
+</div>

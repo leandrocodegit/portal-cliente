@@ -1,0 +1,7 @@
+{
+  "name": "base-front",
+  "compatibility_date": "2025-05-10",
+  "assets": {
+    "directory": "./dist/base-front/browser"
+  }
+}

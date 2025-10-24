@@ -1,0 +1,9 @@
+@if(layoutService.isDesktop()){
+<p-select [options]="categorias" (onChange)="selectEmit.emit(select.value)" appendTo="body" #select
+          [checkmark]="true" [showClear]="true" placeholder="Filtrar por categoria" [style]="{'height': '45px', 'border-radius': '40px', 'min-width': '190px'}"
+          class="rounded-full" />
+}@else{
+  <p-button [rounded]="true" styleClass="icon-print !w-[45px] !h-[45px]" severity="info" [outlined]="true" icon="pi pi-filter" (click)="menu.toggle($event)"
+    appendTo="body" />
+  <p-tieredmenu #menu [model]="itens" [popup]="true" appendTo="body" />
+}

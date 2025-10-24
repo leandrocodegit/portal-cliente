@@ -1,0 +1,40 @@
+<div class="bg-surface-card p-4">
+  @if(showTitulo){
+  <div class="mb-6 pb-4">
+    <div class="flex justify-between">
+      <h2 class="!text-xl font-bold mb-0">📊 Estatísticas de Desempenho de Tarefas</h2>
+      @if(incluirUsuario){
+      <p-select (onChange)="loadTaskHistory()" dropdownIcon="pi pi-building" [options]="departamentos"
+        [(ngModel)]="departamentoSelect" optionLabel="description" placeholder="Departamento"
+        class="w-full md:w-56 h-10" />
+      }
+    </div>
+    <p class="text-surface-600 dark:text-surface-400">Comparativo de tarefas atendidas e não atendidas ao longo do
+      tempo.</p>
+  </div>
+  }
+
+  <!-- Estado de Carregamento -->
+  <div *ngIf="isLoading" class="flex justify-center items-center h-80">
+    <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
+  </div>
+
+  <!-- Estado de Erro -->
+  <div *ngIf="error && !isLoading" class="mt-4">
+    <p-message severity="error" [text]="error"></p-message>
+  </div>
+
+  <!-- Gráfico de Linha -->
+  <div *ngIf="!isLoading && !error">
+    <div *ngIf="taskStatsChartData; else noData">
+      <p-chart [responsive]="true" type="line" [data]="taskStatsChartData" [options]="taskStatsChartOptions"
+        height="400px"></p-chart>
+    </div>
+
+    <ng-template #noData>
+      <div class="text-center p-4">
+        <p-message severity="info" text="Nenhum dado de tarefas foi encontrado para análise."></p-message>
+      </div>
+    </ng-template>
+  </div>
+</div>

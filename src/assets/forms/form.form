@@ -1,0 +1,202 @@
+{
+  "components": [
+    {
+      "label": "Expressão 1",
+      "type": "checkbox",
+      "text": "Texto",
+      "extends": {
+        "subtype": "checkbox",
+        "conditional": "",
+        "color": "",
+        "fontSize": 13,
+        "active": true,
+        "multiple": false,
+        "icon": "pi pi-check",
+        "options": [],
+        "pattern": "",
+        "message": ""
+      },
+      "subtype": "",
+      "layout": {
+        "row": "Row_0hpg1a4"
+      },
+      "id": "Caixaseleção1",
+      "key": "checkbox_535xdo",
+      "validate": {
+        "minLength": null,
+        "maxLength": null,
+        "pattern": "",
+        "required": false
+      },
+      "description": "",
+      "defaultValue": null,
+      "readonly": false,
+      "disabled": false,
+      "multiple": false,
+      "searchable": false,
+      "disallowPassedDates": false,
+      "values": [],
+      "properties": {},
+      "conditional": {
+        "hide": ""
+      },
+      "timeLabel": "",
+      "timeSerializingFormat": "",
+      "timeInterval": 0
+    },
+    {
+      "label": "Expressão 2",
+      "type": "checkbox",
+      "layout": {
+        "row": "Row_1iz72f2",
+        "columns": null
+      },
+      "id": "Field_0u239pe",
+      "key": "checkbox_jdn5hb"
+    },
+    {
+      "label": "Campo texto1",
+      "type": "textfield",
+      "text": "Texto",
+      "extends": {
+        "subtype": "text",
+        "conditional": "",
+        "color": "",
+        "fontSize": 13,
+        "active": true,
+        "multiple": false,
+        "icon": "pi pi-equals",
+        "options": [],
+        "pattern": "",
+        "message": ""
+      },
+      "subtype": "",
+      "layout": {
+        "row": "Row_0oynq0i"
+      },
+      "id": "Campotexto1",
+      "key": "textfield_rmqc",
+      "validate": {
+        "minLength": 0,
+        "pattern": "",
+        "required": false
+      },
+      "description": "",
+      "defaultValue": null,
+      "readonly": false,
+      "disabled": false,
+      "multiple": false,
+      "searchable": false,
+      "disallowPassedDates": false,
+      "values": [],
+      "properties": {},
+      "conditional": {
+        "hide": "=taglist_2cxhp8 = 1"
+      },
+      "timeLabel": "",
+      "timeSerializingFormat": "",
+      "timeInterval": 0
+    },
+    {
+      "label": "Tag list",
+      "type": "taglist",
+      "layout": {
+        "row": "Row_0kt89c5",
+        "columns": null
+      },
+      "id": "Field_0z6xjyx",
+      "key": "taglist_2cxhp8",
+      "valuesExpression": "=assert(expression_978pu, checkbox_535xdo, expression_pop4tb)"
+    },
+    {
+      "label": "File picker",
+      "type": "file",
+      "layout": {
+        "row": "Row_0gg1ome",
+        "columns": null
+      },
+      "id": "Field_0pjzmpv",
+      "key": "filepicker_avy8ic",
+      "accept": ".pdf,docx"
+    },
+    {
+      "computeOn": "change",
+      "type": "expression",
+      "layout": {
+        "row": "Row_07loihq",
+        "columns": null
+      },
+      "id": "Field_1emfo0b",
+      "key": "expression_pop4tb",
+      "properties": {
+        "key1": "Expressão 2"
+      }
+    },
+    {
+      "label": "Document preview",
+      "type": "documentPreview",
+      "layout": {
+        "row": "Row_1i0ruw1",
+        "columns": null
+      },
+      "id": "Field_13n2tl2",
+      "dataSource": "=[\n  {\n    \"documentId\": \"files\",\n    \"endpoint\":\"https://eppg.fgv.br/sites/default/files\",\n    \"metadata\": {\n      \"fileName\": \"teste.pdf\"\n    }\n  }\n]\n"
+    },
+    {
+      "content": "<h1>Texto</h1>",
+      "type": "html",
+      "layout": {
+        "row": "Row_1i0ruw1",
+        "columns": null
+      },
+      "id": "Field_0tvzsly"
+    },
+    {
+      "computeOn": "change",
+      "type": "expression",
+      "layout": {
+        "row": "Row_1i0ruw1",
+        "columns": null
+      },
+      "id": "Field_0uhxx1n",
+      "key": "expression_978pu",
+      "properties": {
+        "key1": "Expressao 1"
+      }
+    },
+    {
+      "type": "table",
+      "layout": {
+        "row": "Row_0j9w035",
+        "columns": null
+      },
+      "label": "Table",
+      "rowCount": 10,
+      "columns": [
+        {
+          "label": "ID",
+          "key": "id"
+        },
+        {
+          "label": "Name",
+          "key": "name"
+        },
+        {
+          "label": "Date",
+          "key": "date"
+        }
+      ],
+      "id": "Field_0q1awv8",
+      "dataSource": "=Field_0q1awv8"
+    }
+  ],
+  "type": "default",
+  "id": "formulario",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.35.0"
+  },
+  "executionPlatform": "Camunda Platform",
+  "executionPlatformVersion": "7.23.0",
+  "schemaVersion": 18
+}

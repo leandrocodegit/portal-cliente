@@ -1,0 +1,29 @@
+<div class="" style="margin-bottom: 0;padding-bottom: 0!important;height: calc(100vh - 185px);">
+  <div #formEditorContainer class="box-form-editor" style="width: 100%;height: 92%;"></div>
+  <div class="flex itens-center justify-center mt-8 gap-1">
+    <p-button icon="pi pi-arrow-left" label="Voltar" (click)="voltar()" outlined [style]="{ marginRight: '0.25em' }" />
+  <p-button icon="pi pi-eye" label="Visualizar" (click)="visualizar()" [style]="{ marginRight: '0.25em' }" />
+  <p-button icon="pi pi-download" label="Baixar" (click)="download()" [style]="{ marginRight: '0.25em' }" />
+  <p-button icon="pi pi-save" label="Salvar" (click)="viewSalvar = true" [style]="{ marginRight: '0.25em' }" />
+      <p-select (onChange)="loadFormulario()" [options]="versoes" optionLabel="versao" dataKey="id" styleClass="bg-select" [(ngModel)]="formulario" [style]="{'border-radius': '5x','box-shadow': 'var(--p-button-raised-shadow)'}" />
+  </div>
+</div>
+@if(drawner.visivel){
+<p-drawer [(visible)]="drawner.visivel" position="right">
+  <app-visao-formulario [schema]="schema" [drawner]="drawner"></app-visao-formulario>
+</p-drawer>
+}
+
+<p-dialog header="Salvar alterações" [modal]="true" [(visible)]="viewSalvar" [style]="{ 'min-width': '50%' }">
+  <p-message severity="warn">Ao salvar como versão, é necessário atualizar a implantação.</p-message>
+  <br>
+  <div class="flex justify-end gap-2">
+    <p-button severity="secondary" label="Cancelar" variant="outlined" (click)="viewSalvar = false" />
+    <p-button severity="primary" label="Salvar" (click)="salvar(false)" />
+     <p-button [disabled]="loadVersao" severity="primary" label="Salvar e versionar" (click)="salvar(true)" >
+      @if(loadVersao){
+      <i class="pi pi-spin pi-spinner" style="font-size: 1rem"></i>
+      }
+    </p-button>
+  </div>
+</p-dialog>

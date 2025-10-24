@@ -1,0 +1,53 @@
+<div class="flex flex-col gap-6 p-4 lg:p-16 w-[85vw] lg:w-[40vw]">
+   <div class="flex flex-col md:flex-row gap-4">
+    <div class="flex items-center">
+        <p-radiobutton id="option1" name="option" value="PF" [(ngModel)]="cliente.tipoPessoa" />
+        <label for="option1" class="leading-none ml-2">Pessoa física</label>
+    </div>
+    <div class="flex items-center">
+        <p-radiobutton id="option2" name="option" value="PJ" [(ngModel)]="cliente.tipoPessoa" />
+        <label for="option2" class="leading-none ml-2">Pessoa jurídica</label>
+    </div>
+</div>
+<div>
+  <label for="documento" class="block font-bold mb-3">{{radioValue == 'PF' ? 'Nº documento' : 'CNPJ'}}</label>
+  <input type="text" pInputText id="documento" [(ngModel)]="cliente.documento" required autofocus fluid />
+  <small class="text-red-500" *ngIf="!cliente.documento">Documento é obrigatório.</small>
+</div>
+  <div>
+    <label for="name" class="block font-bold mb-3">{{radioValue == 'PF' ? 'Nome completo' : 'Razão social'}}</label>
+    <input type="text" pInputText id="name" [(ngModel)]="cliente.nome" required autofocus fluid />
+    <small class="text-red-500" *ngIf="cliente.tipoPessoa">Name é obrigatório.</small>
+  </div>
+  <div>
+    <label for="name" class="block font-bold mb-3">Email</label>
+    <input type="email" placeholder="Email de acesso" pInputText id="email" [(ngModel)]="cliente.email" required autofocus fluid />
+    <small class="text-red-500" *ngIf="cliente.tipoPessoa">Email é obrigatório.</small>
+  </div>
+  <div>
+    <label for="inventoryStatus" class="block font-bold mb-3">Segmento</label>
+    <!-- <p-select [(ngModel)]="product.inventoryStatus" inputId="inventoryStatus" [options]="statuses" optionLabel="label"
+      optionValue="label" placeholder="Selecione seu segmento" fluid /> -->
+  </div>
+  <!--<div>
+    <span class="block font-bold mb-4">Category</span>
+    <div class="grid grid-cols-12 gap-4">
+      <div class="flex items-center gap-2 col-span-6">
+        <p-radiobutton id="category1" name="category" value="Accessories" [(ngModel)]="product.category" />
+        <label for="category1">Accessories</label>
+      </div>
+      <div class="flex items-center gap-2 col-span-6">
+        <p-radiobutton id="category2" name="category" value="Clothing" [(ngModel)]="product.category" />
+        <label for="category2">Clothing</label>
+      </div>
+      <div class="flex items-center gap-2 col-span-6">
+        <p-radiobutton id="category3" name="category" value="Electronics" [(ngModel)]="product.category" />
+        <label for="category3">Electronics</label>
+      </div>
+      <div class="flex items-center gap-2 col-span-6">
+        <p-radiobutton id="category4" name="category" value="Fitness" [(ngModel)]="product.category" />
+        <label for="category4">Fitness</label>
+      </div>
+    </div>
+  </div> -->
+</div>

@@ -1,0 +1,175 @@
+<div class="p-2">
+  <div class="flex flex-wrap gap-4 grow">
+    @for (filtro of filtros; track $index) {
+    <div class="flex flex-col card-task" style="padding: 0 2px;">
+      <div class="shadow rounded-lg grow lg:grow-0 mb-2" [style.background]="filtro.properties.color"
+        style="height: 40px;">
+        <p-overlaybadge [value]="tarefas.get(filtro.id)?.length"
+          [style]="{'background-color': filtro.properties.color}">
+          <div class="text-white pl-2 pr-1 py-[4px] text-center rounded-lg"
+            [style.background]="filtro.properties.color">
+            <div class="flex items-center justify-between w-full">
+              <div class="flex gap-2">
+                <i pTooltip="Selecionar Tudo" tooltipPosition="top" (click)="selecionarTodasTarefas(filtro)"
+                  class="pi pi-{{tarefasSelecionadas.has(filtro.id) ? 'check-circle' : 'circle'}} text-white !text-mediun cursor-pointer"></i>
+                <i pTooltip="Recarregar Filtro" tooltipPosition="top" (click)="atualizarFiltro(filtro)"
+                  class="pi pi-refresh text-white !text-mediun cursor-pointer"></i>
+              </div>
+              <div class="grow flex items-center justify-between">
+                <div class="grow">{{filtro.name}}</div>
+                <div class="flex gap-2">
+                  <p-button [style]="{'padding': '3px 5px'}" [disabled]="totalTaskSelecionada(filtro) == 0"
+                    label="{{totalTaskSelecionada(filtro)}}"
+                    [severity]="totalTaskSelecionada(filtro) > 0 ? 'danger' : 'secondary'"
+                    [className]="'grow lg:flex-none w-full-b'" icon="pi pi-flag" (click)="completarTarefas(filtro)" />
+                  <app-task-user-assignee [tarefas]="tarefasSelecionadas.get(filtro.id)"
+                    [disabled]="totalTaskSelecionada(filtro) == 0"
+                    [severity]="totalTaskSelecionada(filtro) > 0 ? 'success' : 'secondary'" [noIcone]="true"
+                    pTooltip="Assumidas ({{totalTaskAssumidas(filtro,true)}})&#10; Não assumidas ({{totalTaskAssumidas(filtro, false)}})"
+                    [tooltipPosition]="'top'" (updataEmit)="updataTarefas.emit()" [filtroSelecionado]="filtro" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </p-overlaybadge>
+      </div>
+      <div
+        class="overflow-x-auto col-span-2 flex flex-col gap-2 dark:bg-transparent dark:border-0 h-full grow lg:grow-0"
+        [style.max-height]="height">
+        @for (tarefa of tarefas.get(filtro.id); track $index) {
+        <div (click)="selecionarTarefa(filtro.id,tarefa);" [pTooltip]="identity.getDescricao(tarefa.description)"
+          [tooltipPosition]="'bottom'" class="mb-1 pl-1 pr-1 rounded">
+          <div
+            class="rounded px-4 py-2 flex flex-col card-task hover:bg-orange-50 dark:hover:bg-gray-800 shadow bg-white dark:bg-gray-900 dark:border dark:border-gray-600"
+            style="height: 130px;"
+            [style.border-left]="(permiteAssumir ? 'solid 2px ' +  filtro.properties.color : 'none')">
+            <div class="flex justify-between">
+              <div class="flex flex-col">
+                @if(identity.getProtocolo(tarefa.description)){
+                <app-numero-protocolo [text]="true"
+                  [instancia]="{id: tarefa.processInstanceId, taskId: tarefa.id, processDefinitionId: tarefa.processDefinitionId, businessKey: identity.getProtocolo(tarefa.description)}" />
+                }
+              </div>
+              <div class="flex items-center justify-between gap-1">
+                <div (click)="selecionarTarefaInfo(tarefa, $event)"
+                  class="flex items-center justify-center bg-gray-100 dark:bg-gray-400/10 rounded-full cursor-pointer hover-icon"
+                  style="width: 2rem; height: 2rem">
+                  <i class="pi pi-info text-gray-500 !text-mediun"></i>
+                </div>
+                @if(!isTaskSelecionada(filtro, tarefa)){
+                @if(isSupervisionadaUsuarioAtual(tarefa)){
+                <div (click)="removerTarefa(tarefa.id, $event)"
+                  class="flex items-center justify-center bg-orange-100 dark:bg-orange-400/10 rounded-full hover-icon"
+                  style="width: 2rem; height: 2rem">
+                  <i class="pi pi-trash text-orange-500 !text-mediun"></i>
+                </div>
+                }
+                @if(!this.isSupervisionada(tarefa) && permiteAssumir(tarefa)){
+                <div [pTooltip]="'Data vencimento'" [autoHide]="false" tooltipPosition="top"
+                  (click)="toggleVencimento(tarefa, $event, $event)"
+                  class="flex items-center justify-center bg-indigo-100 dark:bg-indigo-400/10 rounded-full cursor-pointer hover-icon"
+                  style="width: 2rem; height: 2rem">
+                  <i class="pi pi-calendar-clock text-indigo-500 !text-mediun"></i>
+                </div>
+                }
+                @if(!this.isSupervisionada(tarefa)){
+                <app-task-user-assignee (updataEmit)="updataTarefas.emit()" [tarefa]="tarefa" />
+                }
+                <div (click)="verTarefa(tarefa)" pTooltip="Ver tarefa" [autoHide]="false" tooltipPosition="top"
+                  class="flex items-center justify-center bg-emerald-100 dark:bg-emerald-400/10 rounded-full cursor-pointer hover-icon"
+                  style="width: 2rem; height: 2rem">
+                  <i class="pi pi-arrow-right text-emerald-500 !text-mediun"></i>
+                </div>
+                }@if(isTaskSelecionada(filtro, tarefa)){
+                <div (click)="completarTarefa(tarefa)" [pTooltip]="'Detalhes da tarefa'" [autoHide]="false"
+                  [tooltipStyleClass]="'tooltip-color-calendar'" tooltipPosition="top"
+                  (click)="this.tarefaSelecionada = tarefa; viwDetalhes = true"
+                  class="flex items-center justify-center bg-teal-100 dark:bg-teal-400/10 rounded-full cursor-pointer hover-icon"
+                  style="width: 2rem; height: 2rem">
+                  <i class="pi pi-check text-teal-500 !text-mediun"></i>
+                </div>
+                }
+              </div>
+            </div>
+            <div class="flex flex-col justify-between grow ">
+              <div class="flex flex-col mt-1 text-gray-600">
+                <p class="font-semibold m-0 dark:text-white">{{tarefa.name}}</p>
+                <p class="text-gray-400 dark:text-white" style="font-size: 9px;">
+                  {{identity.getDescricao(tarefa.description)}}</p>
+              </div>
+              @if (tarefa.delegationState == 'PENDING') {
+              <div class="flex justify-between">
+                <p [pTooltip]="'Tarefa delegada para ' + identity.getUserName(tarefa.assignee).toUpperCase()"
+                  tooltipPosition="top" class="text-purple-500 m-0" style="font-size: 11px;">
+                  {{identity.getUserName(tarefa.assignee).toUpperCase()}}</p>
+                <div class="flex items-center gap-2">
+                  <app-task-user-assignee [tipo]="tipos.delegate"
+                    [tooltip]="{edit: 'Editar Delegado', add: 'Editar Delegado'}"
+                    [icon]="{edit: 'pi-address-book', add: 'pi-address-book'}" [noBorder]="true"
+                    (updataEmit)="updataTarefas.emit()" [tarefa]="tarefa" />
+                </div>
+              </div>
+              }
+              @else if (tarefa?.owner) {
+              <div class="flex justify-between">
+                <p [pTooltip]="'Tarefa com supervisão de ' + identity.getUserName(tarefa.owner).toUpperCase()"
+                  tooltipPosition="top" class="text-green-500 m-0" style="font-size: 11px;">
+                  {{identity.getUserName(tarefa.owner).toUpperCase()}}</p>
+                <div class="flex items-center gap-2">
+                  <app-task-user-assignee [icon]="{edit: 'pi-user-edit', add: 'pi-user-minus'}" [noBorder]="true"
+                    (updataEmit)="updataTarefas.emit()" [tarefa]="tarefa" />
+                  <app-task-user-assignee [tipo]="tipos.owner" [icon]="{edit: 'pi-users', add: 'pi-users'}"
+                    [noBorder]="true" [tooltip]="{ add: 'Atribuir supervisor', edit: 'Editar supervisor'}"
+                    (updataEmit)="updataTarefas.emit()" [tarefa]="tarefa" />
+                </div>
+              </div>
+              }
+              @if (tarefa.due) {
+              <div class="flex items-center justify-between mt-0"
+                [style.color]="((tarefa.due | vencida) ? '#f58981' : ((tarefa.due | proxima) ? 'orange' : 'gray'))"
+                pTooltip="{{tarefa.due | date : 'dd/MM/yyyy HH:mm:SS'}}" [tooltipStyleClass]="'tooltip-color-due'">
+                <p class="font-semibold text-lg m-0">{{tarefa.due | posterior : 'dd/MM/yyyy HH:mm:SS'}}</p>
+                @if(tarefa.due | vencida){
+                <i class="pi pi-clock"></i>
+                }
+              </div>
+              }@else {<span class="font-normal text-gray-400 text-sm">{{tarefa.created | date : 'dd/MM/yyyy
+                HH:mm:SS'}}</span>}
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    }
+  </div>
+
+
+  <p-popover dismissable="true" #opVencimento>
+    <div class="flex flex-col gap-5 p-3">
+      @if(tarefaSelecionada){
+      <div class="flex-auto">
+        <label for="icondisplay" class="font-bold block mb-2">Date de vencimento </label>
+        <div class="flex gap-2">
+          <p-datepicker [showTime]="true" [hourFormat]="'24'" inputId="data" dateFormat="dd/mm/yy"
+            [(ngModel)]="vencimento" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" />
+          <p-button icon="pi pi-eraser" severity="danger" (click)="removerVencimento(true)" />
+          <p-button icon="pi pi-save" (click)="atualizarVencimento(true)" />
+        </div>
+      </div>
+      <div class="flex-auto">
+        <label for="icondisplay" class="font-bold block mb-2"> Data de acompanhamento </label>
+        <div class="flex gap-2">
+          <p-datepicker [showTime]="true" [hourFormat]="'24'" inputId="data" dateFormat="dd/mm/yy"
+            [(ngModel)]="acompanhamento" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" />
+          <p-button icon="pi pi-eraser" severity="danger" (click)="removerVencimento()" />
+          <p-button icon="pi pi-save" (click)="atualizarVencimento()" />
+        </div>
+      </div>
+      }
+    </div>
+  </p-popover>
+  <p-drawer [(visible)]="viwDetalhes" [header]="identity.getProtocolo(tarefaSelecionada?.description)">
+    <app-descricao-tarefa [tarefa]="tarefaSelecionada" />
+  </p-drawer>
+</div>

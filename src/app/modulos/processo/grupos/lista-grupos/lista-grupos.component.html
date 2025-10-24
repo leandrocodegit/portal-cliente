@@ -1,0 +1,13 @@
+ <div class="card">
+    <app-titulo-pesquisa [value]="{
+    customLabel: 'Adicionar',
+    routerLink: 'form',
+    showAtivos: true,
+    showCustom: true
+  }" (customEmit)="editar({description: ''})"/>
+  <app-tabela [auth]="{edit: 'ADM', delete: 'ADM'}" [view]="{
+  editEvent: true,
+  delete: true,
+  showAtivos: false,
+}" (editarEmit)="editar($event)" (excluirEmit)="removerGrupo($event)" (refreshEmit)="sincronizarGrupo($event)" [cols]="cols" [itens]="itens"/>
+ </div>

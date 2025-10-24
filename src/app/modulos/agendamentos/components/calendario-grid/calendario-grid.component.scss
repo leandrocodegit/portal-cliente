@@ -1,0 +1,32 @@
+.box-card-agenda {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.box-calendar-day:hover {
+  position: relative;
+  background-color: var(--p-inputtext-background);
+  cursor: pointer;
+}
+
+h4{
+  margin: 0;
+  padding: 0;
+  color: var(--primary-color);
+}
+
+p {
+  margin: 5px 0;
+}
+
+@media(max-width:900px) {
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .box-card-agenda {}
+}

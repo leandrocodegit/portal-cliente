@@ -1,0 +1,114 @@
+@if(process?.suspended){
+<p-progressbar [style]="{ height: '6px' }" />
+}@else {
+<p-progressbar mode="indeterminate" [style]="{ height: '2px' }" />
+}
+<br>
+@if (deploy) {
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-3" style="width: 100%;">
+  <div class="border rounded-border shadow">
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+      <div class="card-small mb-0" style="margin-bottom: 0;">
+        <div class="flex items-center justify-between mb-0">
+          <div class="flex flex-col">
+            <span class="block text-muted-color font-medium mb-2">Identificador</span>
+            <span class="text-indigo-500 font-medium">{{process?.id}}</span>
+            <span class="text-gray-500 font-medium">{{process?.key}}</span>
+          </div>
+          <div class="flex items-center justify-center bg-indigo-100/30 dark:bg-indigo-400/10 rounded-border"
+            style="width: 3.5rem; height: 3.5rem">
+            <i class="pi pi-info text-indigo-500 !text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="border rounded-border shadow">
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+      <div class="card-small mb-0" style="margin-bottom: 0;">
+        <div class="flex items-center justify-between mb-1">
+          <div>
+            <span class="block text-muted-color font-medium mb-2">Data implantação</span>
+            <span class="text-orange-500 font-medium">{{deploy?.deploymentTime | date: 'dd/MM/yyy HH:mm:ss'}}</span>
+          </div>
+          <div class="flex items-center justify-center bg-orange-100/30 dark:bg-orange-400/10 rounded-border"
+            style="width: 3.5rem; height: 3.5rem">
+            <i class="pi pi-calendar-clock text-orange-500 !text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-3" style="width: 100%;">
+  <div class="border rounded-border shadow">
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+      <div class="card-small mb-0" style="margin-bottom: 0;">
+        <div class="flex items-center justify-between mb-0">
+          <div class="flex flex-col">
+            <span class="block text-muted-color font-medium mb-2">Recurso implantado</span>
+            <span class="text-indigo-500 font-medium">{{process?.suspended ? 'Parado' : 'Executando'}}</span>
+          </div>
+          <div class="flex items-center justify-center bg-indigo-100/30 dark:bg-indigo-400/10 rounded-border"
+            style="width: 3.5rem; height: 3.5rem">
+            <i class="pi pi-file-export text-indigo-500 !text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="border rounded-border shadow">
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+      <div class="card-small mb-0" style="margin-bottom: 0;">
+        <div class="flex items-center justify-between mb-0">
+          <div class="flex flex-col">
+            <span class="block text-muted-color font-medium mb-2">Duração do historico</span>
+            <span
+              class="text-indigo-500 font-medium">{{process?.historyTimeToLive}}</span>
+            <span class="text-gray-500 font-medium">- - -</span>
+          </div>
+          <div class="flex items-center justify-center bg-indigo-100/30 dark:bg-indigo-400/10 rounded-border"
+            style="width: 3.5rem; height: 3.5rem">
+            <i class="pi pi-database text-indigo-500 !text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="border rounded-border shadow">
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+      <div class="card-small mb-0" style="margin-bottom: 0;">
+        <div class="flex items-center justify-between mb-0">
+          <div>
+            <span class="block text-muted-color font-medium mb-2">Instâncias</span>
+            <span class="text-indigo-500 font-medium">{{instancias ?? '- - -'}}</span>
+          </div>
+          <div class="flex items-center justify-center bg-indigo-100/30 dark:bg-indigo-400/10 rounded-border"
+            style="width: 3.5rem; height: 3.5rem">
+            <i class="pi pi-cog text-indigo-500 !text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  @if(deploy?.deploymentTime){
+  <div class="border rounded-border shadow">
+    <div class="col-span-12 lg:col-span-6 xl:col-span-3">
+      <div class="card-small mb-0" style="margin-bottom: 0;">
+        <div class="flex items-center justify-between mb-1">
+          <div>
+            <span class="block text-muted-color font-medium mb-2">Implantação</span>
+            <span class="text-green-500 font-medium">{{deploy?.name}}</span>
+          </div>
+          <div class="flex items-center justify-center bg-green-100/30 dark:bg-green-400/10 rounded-border"
+            style="width: 3.5rem; height: 3.5rem">
+            <i class="pi pi-info-circle text-green-500 !text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+</div>
+
+}

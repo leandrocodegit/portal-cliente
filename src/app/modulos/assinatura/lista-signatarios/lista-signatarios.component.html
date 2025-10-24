@@ -1,0 +1,109 @@
+<ol class="space-y-3">
+  @for (signatario of signatarios; track signatario) {
+  <li (click)="selecionarSignatario(signatario, $event)">
+
+    <div
+      class="flex items-center justify-between border-1 rounded-lg border-dotted transition cursor-pointer p-2 shadow hover:shadow-md bg-white dark:bg-transparent"
+      [ngClass]="{
+            'border-transparent': signatarioSelecionado?.email != signatario.email,
+            'border': signatarioSelecionado?.email == signatario.email,
+            'bg-opacity-10': signatarioSelecionado?.email == signatario.email
+          }" [style.borderColor]="signatario.color"
+      [style.background]="signatarioSelecionado?.email == signatario.email ? (signatario.color + '3d') : 'white'">
+
+      <!-- Dados -->
+      <div class="flex-1 px-2">
+        <div class="flex justify-between">
+          <p class="font-medium text-base m-0"
+            [style.color]="signatarioSelecionado?.email == signatario.email ? signatario.color : '#111'">
+            {{getNome(signatario)}}
+          </p>
+          <div>
+            @if(signatario.tipoSignatario == 'EXTRA'){
+            <i (click)="remover(signatario, true, $event)" pTooltip="Remover da lista"
+              class="pi pi-trash !text-sm transition text-gray-400 m-1"></i>
+            }
+            <i (click)="configurarPreferencias(signatario)" pTooltip="Preferências"
+              class="pi pi-cog !text-sm transition text-gray-400 m-1"></i>
+            @if(signatario.tipoSignatario == 'TASK' || !signatario.enabled){
+            <i (click)="remover(signatario, false, $event)"
+              [pTooltip]="signatario.tipoSignatario == 'TASK' ? 'Não assinar nessa tarefa' : 'Assinar nessa tarefa'"
+              class="pi pi-{{signatario.tipoSignatario == 'TASK' ? 'lock' : 'times'}} !text-sm transition text-gray-400 m-1"></i>
+            }
+            @else{
+            <i (click)="remover(signatario, false, $event)" pTooltip="Limpar posições"
+              class="pi pi-times !text-sm transition text-gray-400 m-1"></i>
+            }
+          </div>
+        </div>
+        <div class="flex justify-between">
+          <p class="text-sm"
+            [style.color]="signatarioSelecionado?.email == signatario.email ? signatario.color : '#a0a0a0'">
+            {{signatario.email}}
+          </p>
+          <i *ngIf="isSignatarioConfigurado(signatario)" class="pi pi-check transition !text-sm text-green-400 m-1"></i>
+        </div>
+      </div>
+    </div>
+  </li>
+  }
+</ol>
+
+
+<p-dialog header="Preferências" [modal]="true" [(visible)]="viewPreferencias" [responsive]="true">
+  @if(signatarioSelecionado?.preferenciasSignatario){
+  <div class="w-full" style="min-width: 450px;">
+    <p>{{signatarioSelecionado?.email}}</p>
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-wrap gap-2 w-full">
+        <label class="required">Tipo de assinatura</label>
+        <p-select [options]="tiposAssinatura" [checkmark]="true"
+          [(ngModel)]="signatarioSelecionado.preferenciasSignatario.act" optionValue="value" dataKey="value"
+          optionLabel="nome" [showClear]="true" placeholder="Selecione um tipo" class="w-full" />
+      </div>
+      <div class="flex items-center">
+        <p-checkbox inputId="assinatura_presencial" name="face"
+          [(ngModel)]="signatarioSelecionado.preferenciasSignatario.assinatura_presencial" [binary]="true" />
+        <label for="assinatura_presencial" class="ml-2">Assinatura presencial</label>
+      </div>
+      <div class="flex items-center">
+        <p-checkbox inputId="docauth" name="docauth" [(ngModel)]="signatarioSelecionado.preferenciasSignatario.docauth"
+          [binary]="true" />
+        <label for="docauth" class="ml-2">Exige documento com foto</label>
+      </div>
+      <div class="flex items-center">
+        <p-checkbox inputId="docauthandselfie" name="docauthandselfie"
+          [(ngModel)]="signatarioSelecionado.preferenciasSignatario.docauthandselfie" [binary]="true" />
+        <label for="docauthandselfie" class="ml-2">Documento + selfie</label>
+      </div>
+      <div class="flex items-center">
+        <p-checkbox inputId="videoselfie" name="videoselfie"
+          [(ngModel)]="signatarioSelecionado.preferenciasSignatario.videoselfie" [binary]="true" />
+        <label for="videoselfie" class="ml-2">Exige vídeo selfie</label>
+      </div>
+      <div class="flex items-center">
+        <p-checkbox inputId="auth_pix" name="auth_pix"
+          [(ngModel)]="signatarioSelecionado.preferenciasSignatario.auth_pix" [binary]="true" />
+        <label for="auth_pix" class="ml-2">Autenticação via PIX</label>
+      </div>
+      <div class="flex items-center">
+        <p-checkbox inputId="certificadoicpbr"
+          [(ngModel)]="signatarioSelecionado.preferenciasSignatario.certificadoicpbr" name="certificadoicpbr"
+          [binary]="true" />
+        <label for="certificadoicpbr" class="ml-2">Assinatura com Certificado ICP-Brasil</label>
+      </div>
+      @if(signatarioSelecionado.preferenciasSignatario.certificadoicpbr){
+      <div class="flex flex-wrap gap-2 w-full">
+        <label class="required">Tipo de certificado</label>
+        <p-select [options]="tiposCertificado" [checkmark]="true"
+          [(ngModel)]="signatarioSelecionado.preferenciasSignatario.certificadoicpbr_tipo" optionValue="value"
+          dataKey="value" optionLabel="nome" [showClear]="true" placeholder="Selecione um tipo" class="w-full" />
+      </div>
+      }
+    </div>
+    <div class="flex justify-end gap-2 mt-4">
+      <p-button label="Ok" (click)="viewPreferencias = false" />
+    </div>
+  </div>
+  }
+</p-dialog>

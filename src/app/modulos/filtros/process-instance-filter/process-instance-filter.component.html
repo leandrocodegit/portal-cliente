@@ -1,0 +1,198 @@
+<div class="bg-white dark:bg-transparent p-2 lg:p-6 pb-2">
+  <form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
+    <div class="flex items-center gap-4 py-4">
+      <div class="flex items-center gap-2">
+        <app-imprimir [query]="getQuery()" [isRelatorio]="true" />
+        <app-imprimir-relatorio />
+      </div>
+      <div class="flex items-center flex-wrap lg:flex-nowrap grow gap-6">
+       <div class="flex flex-col w-[180px]">
+          <h3 class="text-xl font-bold m-0 grow">
+            Filtros Avançados
+          </h3>
+          <span class="text-gray-500">Instâncias</span>
+        </div>
+        <div class="hidden lg:block grow w-full">
+          <app-filter-summary #summary [filters]="getQuery()" />
+        </div>
+      </div>
+    </div>
+
+    <p-tabView scrollable="true" [activeIndex]="tab" (activeIndexChange)="selectTab($event)">
+      <!-- Aba 1: Definição e Chaves -->
+      <p-tabPanel header="Definição e Chaves">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 p-fluid p-2 lg:p-6">
+          <div class="flex flex-col gap-2">
+            <label for="processDefinitionKey">Chave da Definição (Exata)</label>
+            <input id="processDefinitionKey" type="text" pInputText formControlName="processDefinitionKey" />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="processDefinitionName">Nome da Definição (Exato)</label>
+            <input id="processDefinitionName" type="text" pInputText formControlName="processDefinitionName" />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="processDefinitionNameLike">Nome da Definição (Contém)</label>
+            <input id="processDefinitionNameLike" type="text" pInputText formControlName="processDefinitionNameLike" />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="processInstanceBusinessKey">Protocolo (Exata)</label>
+            <input id="processInstanceBusinessKey" type="text" pInputText
+              formControlName="processInstanceBusinessKey" />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="processInstanceBusinessKeyLike">Protocolo (Contém)</label>
+            <input id="processInstanceBusinessKeyLike" type="text" pInputText
+              formControlName="processInstanceBusinessKeyLike" />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="startedBy">Iniciado Por</label>
+            <input id="startedBy" type="text" pInputText formControlName="startedBy" />
+          </div>
+          <div class="flex flex-col gap-2 col-span-full">
+            <label for="processDefinitionKeyIn">Chave da Definição (Em)</label>
+            <p-chips id="processDefinitionKeyIn" formControlName="processDefinitionKeyIn" separator=","></p-chips>
+            <small class="block mt-1">Separe as chaves por vírgula ou Enter.</small>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- Aba 2: Datas -->
+      <p-tabPanel header="Datas">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 p-fluid p-6">
+          <div class="flex flex-col gap-2">
+            <label for="startedAfter">Iniciada (Depois de)</label>
+            <p-calendar id="startedAfter" formControlName="startedAfter" [showIcon]="true"></p-calendar>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="startedBefore">Iniciada (Antes de)</label>
+            <p-calendar id="startedBefore" formControlName="startedBefore" [showIcon]="true"></p-calendar>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="finishedAfter">Finalizada (Depois de)</label>
+            <p-calendar id="finishedAfter" formControlName="finishedAfter" [showIcon]="true"></p-calendar>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="finishedBefore">Finalizada (Antes de)</label>
+            <p-calendar id="finishedBefore" formControlName="finishedBefore" [showIcon]="true"></p-calendar>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- Aba 3: Status -->
+      <p-tabPanel header="Status">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-fluid align-items-center p-6">
+          <div class="flex items-center">
+            <p-toggleswitch (onChange)="filterForm?.get('suspended').setValue(false); onSubmit()"
+              [falseValue]="filterForm.get('suspended').value" formControlName="active" />
+            <label class="ml-2">Ativa</label>
+          </div>
+          <div class="flex items-center">
+            <p-toggleswitch (onChange)="filterForm?.get('active').setValue(false); onSubmit()" formControlName="suspended" />
+            <label class="ml-2">Suspensa</label>
+          </div>
+        </div>
+      </p-tabPanel>
+
+      <!-- Aba 4: Variáveis -->
+      <p-tabPanel header="Variáveis">
+        <div class="p-4">
+          <div formArrayName="variables">
+            <div *ngFor="let variable of variables.controls; let i = index" [formGroupName]="i"
+              class="grid grid-cols-12 gap-2 mb-2 items-center">
+              <div class="col-span-12 md:col-span-4">
+                <input type="text" pInputText placeholder="Nome da Variável" formControlName="name">
+              </div>
+              <div class="col-span-12 md:col-span-3">
+                <p-dropdown [options]="variableOperators" formControlName="operator" optionLabel="label"
+                  optionValue="value"></p-dropdown>
+              </div>
+              <div class="col-span-12 md:col-span-4">
+                <input type="text" pInputText placeholder="Valor" formControlName="value">
+              </div>
+              <div class="col-span-12 md:col-span-1">
+                <button pButton type="button" icon="pi pi-trash" class="p-button-danger w-full"
+                  (click)="removeVariable(i)" pTooltip="Remover Variável"></button>
+              </div>
+            </div>
+          </div>
+          <button pButton type="button" label="Adicionar Variável" icon="pi pi-plus" class="p-button-outlined mt-2"
+            (click)="addVariable()"></button>
+        </div>
+      </p-tabPanel>
+
+      <!-- Aba 5: Condições OR -->
+      <p-tabPanel header="Condições OR">
+        <div class="pt-4 p-4">
+          <p class="text-sm text-surface-500 mb-4">Adicione múltiplos critérios onde qualquer um deles pode ser
+            verdadeiro.</p>
+          <div formArrayName="orQueries">
+            <div *ngFor="let orQuery of orQueries.controls; let i = index" [formGroupName]="i"
+              class="p-4 border rounded-md mb-3 relative bg-surface-50 dark:bg-surface-800">
+              <div class="flex gap-4">
+                <button pButton type="button" outlined="true" icon="pi pi-times" class="p-button-danger p-button-sm"
+                  (click)="removeOrQuery(i)" pTooltip="Remover Condição"></button>
+                <div class="flex flex-col gap-2">
+                  <label [for]="'or_processDefinitionKey' + i">Chave da Definição</label>
+                  <input [id]="'or_processDefinitionKey' + i" type="text" pInputText
+                    formControlName="processDefinitionKey">
+                </div>
+                <div class="flex flex-col gap-2">
+                  <label [for]="'or_startedBy' + i">Iniciado Por</label>
+                  <input [id]="'or_startedBy' + i" type="text" pInputText formControlName="startedBy">
+                </div>
+                <div class="flex items-center mt-4">
+                  <p-toggleswitch [inputId]="'or_finished' + i" formControlName="finished" />
+                  <label [for]="'or_finished' + i" class="ml-2">Finalizada</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button pButton type="button" label="Adicionar Condição OR" icon="pi pi-plus" class="p-button-outlined mt-2"
+            (click)="addOrQuery()"></button>
+        </div>
+      </p-tabPanel>
+
+      <!-- Aba 6: Ordenação -->
+      <p-tabPanel header="Ordenação">
+        <div formArrayName="sorting" class="p-6">
+          <div *ngFor="let sort of sorting.controls; let i = index" [formGroupName]="i"
+            class="grid grid-cols-12 gap-2 mb-2 items-center">
+            <div class="col-span-12 md:col-span-5">
+              <p-dropdown [options]="sortableFields" formControlName="sortBy" optionLabel="label" optionValue="value"
+                placeholder="Campo para Ordenar"></p-dropdown>
+            </div>
+            <div class="col-span-12 md:col-span-5">
+              <p-dropdown [options]="sortOrders" formControlName="sortOrder" optionLabel="label" optionValue="value"
+                placeholder="Ordem"></p-dropdown>
+            </div>
+            <div class="col-span-12 md:col-span-2">
+              <button pButton type="button" icon="pi pi-trash" class="p-button-danger w-full" (click)="removeSorting(i)"
+                pTooltip="Remover Ordenação"></button>
+            </div>
+          </div>
+          <button pButton type="button" label="Adicionar Critério de Ordenação" icon="pi pi-plus"
+            class="p-button-outlined" (click)="addSorting()"></button>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+
+  </form>
+
+  <div class="p-4">
+    <app-titulo-pesquisa [ativos]="getAtivos()" [value]="{
+    titulo: 'Lista de tarefas',
+    routerLink: 'form',
+    customLabel: 'Aplicar Filtros',
+    customIcon: 'pi-check',
+    showCustom: true,
+    showAdicional: true,
+    adicionalIcon: 'pi-times',
+    adicionalLabel: 'Limpar',
+    showCustomAtivos: true,
+    ativosLabel: ['Todos os critérios', 'Algum Critério']
+  }" (customEmit)="onSubmit()" (adicionalEmit)="resetForm()" (ativosEmit)="setCriterios($event)" />
+    <app-tabela [auth]="{view: 'TASK_READ'}" [view]="{  customview: true }" (visualizarEmit)="visualizar($event)"
+      [page]="pagina" [cols]="cols" [itens]="instancias">
+    </app-tabela>
+  </div>
+</div>

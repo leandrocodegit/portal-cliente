@@ -1,0 +1,65 @@
+<p-card class="!px-0">
+  <ng-template pTemplate="title">
+    <div class="flex items-center">
+      <i class="pi pi-list-check mr-3 text-primary-500"></i>
+      <span>Meus Pedidos e Solicitações</span>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="content">
+    <!-- Estado de Carregamento -->
+    <div *ngIf="isLoading" class="flex flex-col justify-center items-center h-60">
+      <p-progressSpinner />
+      <p class="mt-4 text-surface-500">Buscando seus pedidos...</p>
+    </div>
+
+    <!-- Estado de Erro -->
+    <div *ngIf="error && !isLoading" class="mt-4">
+      <p-message severity="error" [text]="error"></p-message>
+    </div>
+
+    <!-- Lista de Pedidos -->
+    <div *ngIf="!isLoading && !error">
+      <div *ngIf="requests.length > 0; else noRequests" class="flex flex-col gap-4">
+
+        <!-- Itera sobre cada pedido -->
+        <div *ngFor="let request of requests"
+          class="p-4 border rounded-lg bg-surface-50 dark:bg-surface-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+
+          <!-- Informações do Pedido -->
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="font-bold text-lg">PROTOCOLO - {{ request.protocolo.numeroProtocolo }}</span>
+              @if(request?.tarefa){
+              <p-tag value="Com Pendência" severity="warn"></p-tag>
+              }
+              <p-tag [value]="statusTarefaDescriptions[request.status]"
+                [severity]="getStatusSeverity(request.status)"></p-tag>
+
+
+            </div>
+            <p class="m-0 text-surface-600 dark:text-surface-300">{{ request.descricaoServico }}</p>
+            <small class="text-surface-500">Aberto em: {{ request.dataCriacao | date:'dd/MM/yyyy HH:mm'
+              }}</small>
+          </div>
+
+          <!-- Botão de Ação -->
+          <div>
+            <button pButton label="Ver Detalhes" icon="pi pi-arrow-right" iconPos="right" class="p-button-outlined"
+              (click)="viewDetails(request)"></button>
+          </div>
+        </div>
+
+      </div>
+
+      <ng-template #noRequests>
+        <div class="text-center p-6 border-2 border-dashed rounded-lg">
+          <i class="pi pi-inbox text-4xl text-surface-400 mb-3"></i>
+          <h3 class="font-bold text-xl">Nenhum Pedido Encontrado</h3>
+          <p class="text-surface-500">Você ainda não possui nenhuma solicitação aberta.</p>
+        </div>
+      </ng-template>
+    </div>
+
+  </ng-template>
+</p-card>

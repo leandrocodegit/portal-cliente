@@ -1,0 +1,27 @@
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+  <div *ngFor="let item of files" class="relative group border rounded-lg overflow-hidden shadow-lg">
+
+      <app-reproduzir-arquivo [file]="item"/>
+
+    <!-- Botões (aparecem ao passar o mouse) -->
+    <div class="absolute inset-0 bg-black bg-opacity-50 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity">
+      <div class="flex space-x-2">
+        <!-- Remover -->
+        <button (click)="removeItem(item)" class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full">
+          <i class="pi pi-trash"></i>
+        </button>
+
+        <!-- Download -->
+        <a [href]="item.url" download class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full">
+          <i class="pi pi-download"></i>
+        </a>
+
+        <!-- Reproduzir -->
+        <button *ngIf="item.type === 'video'" (click)="playVideo(item.url)" class="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full">
+          <i class="pi pi-play"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

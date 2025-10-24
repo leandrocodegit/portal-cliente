@@ -1,0 +1,39 @@
+<p-tabs [value]="tab" [scrollable]="true" (valueChange)="selectTab($event)">
+  <p-tablist>
+    <p-tab value="documentos">
+      <i class="pi pi-database mr-3"></i>
+      <span>Modelo Documentos</span>
+    </p-tab>
+    <p-tab value="signatarios">
+      <i class="pi pi-play mr-3"></i>
+      <span>Modelo Assinaturas</span>
+    </p-tab>
+    <p-tab value="grupo-signatarios">
+      <i class="pi pi-user-edit mr-3"></i>
+      <span>Grupo Signatários</span>
+    </p-tab>
+  </p-tablist>
+  <p-tabpanels>
+    <p-tabpanel value="documentos">
+      <div class="min-full">
+        @if(tab == 'documentos'){
+        <app-lista-modelos />
+        }
+      </div>
+    </p-tabpanel>
+    <p-tabpanel value="grupo-signatarios">
+      <div class="min-full">
+        @if(tab == 'grupo-signatarios'){
+        <app-lista-grupos-signatarios />
+        }
+      </div>
+    </p-tabpanel>
+    <p-tabpanel value="signatarios">
+      <div class="min-full">
+        @if(tab == 'signatarios'){
+        <app-lista-modelos-assinatura [idModelo]="idModelo" />
+        }
+      </div>
+    </p-tabpanel>
+  </p-tabpanels>
+</p-tabs>

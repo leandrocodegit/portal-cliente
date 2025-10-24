@@ -1,0 +1,99 @@
+<p-table #dt1 [value]="horarios" dataKey="id" [rows]="10" [loading]="loading" [rowHover]="true" [showGridlines]="true"
+  [paginator]="true" [globalFilterFields]="['name', 'country.name', 'representative.name', 'situacao']"
+  responsiveLayout="scroll">
+  <ng-template #caption>
+    <div class="flex justify-between items-start flex-column sm:flex-row gap-2">
+      <p-iconfield iconPosition="left">
+        <p-inputicon>
+          <i class="pi pi-search"></i>
+        </p-inputicon>
+        <input pInputText type="text" (input)="onGlobalFilter(dt1, $event)" placeholder="Consultar horários" />
+      </p-iconfield>
+      <div class="flex gap-2">
+        <p-overlaybadge value="1" badgeSize="small" [badgeDisabled]="!dataFiltro">
+          <p-button  (click)="op.toggle($event)" outlined label="Filtros"
+          icon="pi pi-filter"></p-button>
+      </p-overlaybadge>
+
+        <button (click)="clear(dt1)" pButton label="Limpar filtros" class="p-button-outlined"
+          icon="pi pi-filter-slash"></button>
+        <p-button (click)="gerarHorarios()" routerLink="form" label="Gerar horários"
+          icon="pi pi-plus"></p-button>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #header>
+    <tr>
+      <th style="min-width: 12rem">
+        Dia
+      </th>
+      <th style="min-width: 10rem">
+        Horário
+      </th>
+      <th style="min-width: 12rem">
+        Dia da semana
+      </th>
+      <th style="min-width: 12rem">
+        Mês
+      </th>
+      <th style="min-width: 10rem">
+        Profissional
+      </th>
+      <th style="min-width: 12rem">
+        Situacao
+      </th>
+      <th style="min-width: 12rem">
+        Status
+      </th>
+    </tr>
+
+  </ng-template>
+  <ng-template #body let-horario>
+    <tr>
+      <td>
+        {{ horario.horario | date: 'dd'}}
+      </td>
+      <td>
+        {{ horario.horario | date: 'HH:mm' }}
+      </td>
+      <td>
+        {{ horario.horario | date: 'EEEE'}}
+      </td>
+      <td>
+        {{ (horario.horario | date: 'MMMM')}}
+      </td>
+      <td>
+        {{ horario.profissional }}
+      </td>
+      <td>
+        <p-tag [value]="horario.situacao.toLowerCase()" severity="success" value="Success"/>
+      </td>
+      <td class="text-center">
+        <p-tag [value]="horario.ativo ? 'Ativo' : 'Desativada'" [severity]="horario.ativo ? 'info' : 'danger'"/>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template #emptymessage>
+    <tr>
+      <td colspan="8">Nenhum horário definido.</td>
+    </tr>
+  </ng-template>
+  <ng-template #loadingbody>
+    <tr>
+      <td colspan="8">Carregando lista de horários...</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-popover #op>
+    <div class="flex flex-col gap-4">
+      <label for="templatedisplay" class="font-bold block mb-2 "> Data Início </label>
+      <p-datepicker [(ngModel)]="dataFiltro" [iconAriaLabel]="'teste'" [showIcon]="true" [showButtonBar]="true"></p-datepicker>
+      <label for="templatedisplay" class="font-bold block mb-2 "> Horário inicio </label>
+      <p-slider/>
+      <div class="flex justify-between mt-4">
+        <p-button  (click)="op.toggle($event)" severity="secondary" label="Limpar" outlined></p-button>
+        <p-button (click)="clear(dt1)" label="Aplicar" outlined></p-button>
+      </div>
+    </div>
+</p-popover>

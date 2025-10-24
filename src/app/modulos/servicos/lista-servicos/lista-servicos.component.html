@@ -1,0 +1,81 @@
+<p-tabs (valueChange)="selectTab($event)" [scrollable]="true" [value]="tab">
+  <p-tablist>
+    <p-tab value="servicos">
+      <i class="pi pi-file mr-3"></i>
+      Serviços
+    </p-tab>
+    <p-tab value="paginas">
+      <i class="pi pi-home mr-3"></i>
+      Paginas de Serviço
+    </p-tab>
+    <p-tab value="categorias">
+      <i class="pi pi-bookmark-fill mr-3"></i>
+      Categorias
+    </p-tab>
+    <p-tab value="configuracao-protocolo">
+      <i class="pi pi-cog mr-3"></i>
+      Configuração de Protocolo
+    </p-tab>
+    <p-tab value="protocolos">
+      <i class="pi pi-ticket mr-3"></i>
+      Protocolos
+    </p-tab>
+  </p-tablist>
+  <p-tabpanels>
+    <p-tabpanel value="servicos">
+      <div class="card">
+        <app-titulo-pesquisa
+          [value]="{ titulo: '', customIcon: 'pi-ticket', botaoAdd: 'Novo Serviço', showAtivos: true, showCustom: true, showAdd: true, customLabel: 'Gerar Protocolo' }"
+          (customEmit)="gerarProtocolo()" (customAdd)="visible = true" />
+        <app-tabela [auth]="{edit: 'DEPLOY_CREATE', delete: 'DEPLOY_DELETE'}"
+          [view]="{ editEvent: true, delete: true, lock: true, duplicar: true }" [page]="pagina"
+          (editarEmit)="editarServico($event)" (excluirEmit)="removerServico($event)"
+          (duplicarEmit)="duplicarServico($event)" (lockEmit)="lock($event)" [cols]="cols" [itens]="servicos" />
+      </div>
+    </p-tabpanel>
+    <p-tabpanel value="categorias">
+      <div class="card">
+        @if(tab == 'categorias'){
+        <app-lista-categorias />
+        }
+
+      </div>
+    </p-tabpanel>
+    <p-tabpanel value="paginas">
+      <div class="card">
+        @if(tab == 'paginas'){
+        <app-lista-paginas />
+        }
+
+      </div>
+    </p-tabpanel>
+    <p-tabpanel value="configuracao-protocolo">
+      <div class="card">
+        <app-titulo-pesquisa [value]="{ customLabel: 'Nova Configuração', showCustom: true }"
+          (customEmit)="novaConfiguracao()"></app-titulo-pesquisa>
+        <app-tabela [auth]="{edit: 'DEPLOY_CREATE', delete: 'DEPLOY_DELETE'}"
+          [view]="{ editEvent: true, delete: true, }" [page]="pagina" (editarEmit)="editarConfiguracao($event);"
+          (excluirEmit)="removerConfiguracao($event)" (lockEmit)="lock($event)" [cols]="colsConfiguracoes"
+          [itens]="configuracoes">
+        </app-tabela>
+      </div>
+    </p-tabpanel>
+    <p-tabpanel value="protocolos">
+      <div class="card">
+        @if(tab == 'protocolos'){
+        <app-lista-protocolos />
+        }
+      </div>
+    </p-tabpanel>
+  </p-tabpanels>
+</p-tabs>
+<p-dialog [modal]="true" [(visible)]="visible" [style]="{ 'min-width': '30%' }">
+  @if(visible){
+  <app-formulario-servico [servico]="servicoSelecionado" (voltarEmit)="visible = false" />
+  }
+</p-dialog>
+<p-dialog [modal]="true" [(visible)]="viewFormularioConfiguracao" [style]="{ 'min-width': '30%' }">
+  @if(viewFormularioConfiguracao){
+  <app-formulario-configuracao-protocolo [configuracao]="configuracao" (voltarEmit)="visible = false" />
+  }
+</p-dialog>

@@ -1,0 +1,40 @@
+<p-card styleClass="min-full">
+  <ng-template pTemplate="title">
+    <app-titulo-pesquisa [value]="{
+    titulo: 'Gerenciador de Arquivos',
+    routerLink: 'form',
+    customLabel: 'Nova pasta',
+    customIcon: 'pi-folder-plus',
+    showAtivos: false,
+    showCustom: true,
+    adicionalIcon: 'pi-times'}" />
+  </ng-template>
+  <ng-template pTemplate="content">
+    <div class="px-4">
+      <!-- Grade que contém os ícones -->
+      <div class="flex flex-wrap gap-6">
+
+        <!-- Itera sobre cada item (arquivo ou pasta) -->
+        <div *ngFor="let item of items"
+          class="flex flex-col items-center justify-center text-center w-28 h-28 cursor-pointer rounded-lg p-2 transition-all duration-200 hover:bg-primary-50 dark:hover:bg-surface-700"
+          (click)="onItemClick(item)" [pTooltip]="item.name" tooltipPosition="bottom">
+
+          <!-- Ícone do item -->
+          <i [class]="item.icon" class="!text-3xl lg:!text-4xl text-primary-400 mb-2"></i>
+
+          <!-- Nome do item -->
+          <span class="text-sm font-medium text-surface-700 dark:text-surface-200 truncate w-full">
+            {{ item.name }}
+          </span>
+
+        </div>
+
+        <!-- Mensagem caso não haja itens -->
+        <div *ngIf="!items || items.length === 0" class="text-center w-full text-surface-500">
+          <p>Esta pasta está vazia.</p>
+        </div>
+
+      </div>
+    </div>
+  </ng-template>
+</p-card>

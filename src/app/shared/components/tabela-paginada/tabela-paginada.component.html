@@ -1,0 +1,77 @@
+<div class="overflow-y-auto pr-6"  style="max-height: calc(100vh - 430px);">
+  <table matSort mat-table (matSortChange)="sortData($event)" [dataSource]="itens" class="mat-elevation-z8">
+
+    @for (item of cols; track $index) {
+    @if(item?.header != 'icon'){
+    <ng-container [matColumnDef]="item.field">
+      <th [mat-sort-header]="item.sort" mat-header-cell *matHeaderCellDef> {{item.header}} </th>
+      <td mat-cell *matCellDef="let element" style="z-index: 1;overflow: visible;">
+        @if(item.isTag){
+        <p-tag [severity]="element[item.field] ? 'success' : 'warn'"
+          [value]="element[item.field] ? 'Sim' : 'Não'"></p-tag>
+        }
+        @else if(item.isTagReverse){
+        <p-tag [severity]="element[item.field] ? 'warn' : 'success'"
+          [value]="element[item.field] ? 'Sim' : 'Não'"></p-tag>
+        }
+        @else if(item.isTime){
+        {{(element[item.field] | date : 'dd/MM/yyyy HH:mm')}}
+        }@else if(item.isSubfield){
+        {{ element[item.field][item.subfield]}}
+        }@else if(item.isProtocolo){
+        <app-numero-protocolo [isTable]="true" [instancia]="element"/>
+        }@else if(item.isUserName){
+        {{ identityService.getUserName(element[item.field])}}
+        }
+        @else{
+        {{ element[item.field]}}
+        }
+        @if((item.field == 'id') || (item.isCopy) && element[item.field]){
+        <i [cdkCopyToClipboard]="item.isSubfield ? element[item.field][item.subfield] : element[item.field]"
+          pTooltip="Copiar" class="pi pi-clipboard cursor-pointer text-primary"></i>
+        }
+      </td>
+    </ng-container>
+    }@else{
+    <ng-container [matColumnDef]="item.field">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element">
+        <div class="flex gap-2 justify-end mr-4">
+          <i *ngIf="view?.stop" (click)="stop(element)"
+            class="pi pi-{{element['suspended'] ? 'play' : 'pause-circle'}} hover cursor-pointer"
+            style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.config" routerLink="config/{{element['id']}}" class="pi pi-cog hover cursor-pointer"
+            style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.refresh && !element['check']" (click)="refresh(element['id'], element['name'])"
+            class="pi pi-refresh hover cursor-pointer" style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.logout" (click)="logout(element['id'],element['firstName'])"
+            class="pi pi-sign-out hover cursor-pointer" style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.view" routerLink="detalhes/{{element['id']}}" class="pi pi-eye hover cursor-pointer"
+            style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.customview" pTooltip="Ver detalhes" (click)="visualizar(element)"
+            class="pi pi-eye hover cursor-pointer" style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.detail" (click)="detalhes(element)" class="pi pi-info-circle hover cursor-pointer" style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.lock" (click)="lock({id: element['id'], value: element['firstName']})"
+            class="pi pi-{{element['enabled'] ? 'unlock' : 'lock text-orange-500' }} hover cursor-pointer"
+            style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.delete" (click)="excluir(element['id'])" class="pi pi-trash hover cursor-pointer"
+            style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.edit" routerLink="edit/{{element['id']}}" class="pi pi-pen-to-square hover cursor-pointer"
+            style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.editEvent" (click)="editar(element)" class="pi pi-pen-to-square hover cursor-pointer"
+            style="font-size: 1.2rem"></i>
+          <i *ngIf="view?.download" (click)="download(element['id'])" class="pi pi-download hover cursor-pointer"
+            style="font-size: 1.2rem"></i>
+        </div>
+      </td>
+    </ng-container>
+    }
+    }
+    <tr mat-header-row *matHeaderRowDef="colunas()"></tr>
+    <tr mat-row *matRowDef="let row; columns: colunas();"></tr>
+  </table>
+</div>
+<br>
+<mat-paginator [length]="page?.totalElements" [pageSize]="page?.size" [showFirstLastButtons]="true"
+  [pageSizeOptions]="[10,20,30,50]" (page)="onPageChange($event)">
+</mat-paginator>

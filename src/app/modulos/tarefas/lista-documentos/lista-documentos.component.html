@@ -1,0 +1,91 @@
+@if(this.isLoadFiles?.documentos || this.isLoadFiles?.anexos){
+<app-skeleton />
+}@else{
+@if(files.length){
+@if(isLoad){
+<p-progressbar mode="indeterminate" [style]="{ height: '2px' }" />
+}@else {
+
+}
+
+<p-dataview #dv [value]="files" [layout]="layout">
+  <ng-template #header>
+    <div class="flex justify-end">
+      <p-selectbutton [(ngModel)]="layout" [options]="options" [allowEmpty]="false">
+        <ng-template #item let-item>
+          <i class="pi " [ngClass]="{ 'pi-bars': item === 'list', 'pi-table': item === 'grid' }"></i>
+        </ng-template>
+      </p-selectbutton>
+    </div>
+  </ng-template>
+  <ng-template #list let-items>
+    <div *ngFor="let item of items; let first = first">
+      <div class="flex flex-col sm:flex-row sm:items-end p-6 gap-4"
+        [ngClass]="{ 'border-t border-surface-200 dark:border-surface-700': !first }">
+        <div class="flex justify-center rounded-lg bg-gray-100 dark:bg-surface-800 p-2">
+          <div class="w-[120px] h-[80px] flex items-center justify-center overflow-hidden">
+            <app-image-preload [url]="getThumbail(item)" />
+          </div>
+        </div>
+        <div class="flex flex-col md:flex-row justify-between md:items-center flex-1 gap-6">
+          <div class="flex flex-row md:flex-col justify-between items-start gap-2">
+            <div>
+              <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{ item.category }}</span>
+              <div class="text-sm font-medium mt-2">{{ item.name }}</div>
+            </div>
+          </div>
+          <div class="flex flex-col md:items-end gap-8">
+            <span class="text-xl font-semibold">{{ item.price | currency: 'USD' }}</span>
+            <div class="flex flex-row-reverse md:flex-row gap-2">
+              <button (click)="download(item)" severity="warn" pButton icon="pi pi-download" [outlined]="true"></button>
+              <button (click)="excluir(item)" pButton icon="pi pi-trash" outlined></button>
+              <button (click)="select(item)" [outlined]="layoutService.isDarkTheme()" pButton icon="pi pi-eye"
+                label="Visualizar" class="flex-auto md:flex-initial whitespace-nowrap"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #grid let-items>
+    <div class="flex flex-auto justify-center lg:justify-start flex-wrap gap-1">
+      <div *ngFor="let product of items" class="justify-center basis-[350px] p-2">
+        <div
+          class="p-3 border border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 rounded flex justify-between flex-col h-full">
+          <div class="flex justify-center rounded bg-gray-100 dark:bg-surface-800 p-2">
+            <div class="h-[180px] flex items-center justify-center overflow-hidden">
+              <app-image-preload [url]="getThumbail(product)" />
+            </div>
+          </div>
+          <div class="pt-6">
+            <div class="flex flex-row justify-between products-start gap-2">
+              <div>
+                <span class="font-medium text-surface-500 dark:text-surface-400 text-sm">{{
+                  product.category
+                  }}</span>
+                <div class="text-sm font-medium mt-1">{{ product.name }}</div>
+              </div>
+            </div>
+            <div class="flex flex-col gap-6 mt-4">
+              <div class="flex gap-2">
+                <button (click)="select(product)" [outlined]="layoutService.isDarkTheme()" pButton icon="pi pi-eye"
+                  label="Visualizar" class="flex-auto whitespace-nowrap"></button>
+                <button (click)="excluir(product)" pButton icon="pi pi-trash" outlined></button>
+                <button (click)="download(product)" severity="warn" pButton icon="pi pi-download" outlined></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</p-dataview>
+}
+}
+
+
+<p-drawer [(visible)]="viewArquivo" position="bottom">
+  @if(fileSelect && viewArquivo){
+  <app-reproduzir-arquivo [file]="fileSelect" />
+  }
+</p-drawer>

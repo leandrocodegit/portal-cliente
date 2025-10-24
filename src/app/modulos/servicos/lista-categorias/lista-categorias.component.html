@@ -1,0 +1,24 @@
+@if(select){
+<div class="flex flex-wrap gap-2 w-full">
+  <label class="required">Categoria</label>
+  <p-select [options]="categorias" appendTo="body" (onChange)="selectEmit.emit(categoria)" [(ngModel)]="categoria" dataKey="id" [checkmark]="true" optionLabel="nome"
+    [showClear]="true" placeholder="Selecione uma categoria" class="w-full" />
+</div>
+}@else{
+<app-titulo-pesquisa [value]="{ titulo: '', botaoAdd: 'Nova Categoria', showAtivos: true, showAdd: true }"
+  (customAdd)="visible = true" />
+<app-tabela [auth]="{edit: 'DEPLOY_CREATE', delete: 'DEPLOY_DELETE'}" [view]="{ editEvent: true, delete: true }"
+  [page]="pagina" (editarEmit)="editar($event)" (excluirEmit)="remover($event)" [cols]="cols" [itens]="categorias" />
+
+<p-dialog [modal]="true" appendTo="body" [(visible)]="visible" [style]="{ 'max-width': '70%' }">
+  <div class="px-4">
+    <p-fluid>
+      <div class="flex flex-col gap-2">
+        <label for="nome" class="required">Nome</label>
+        <input [class.border-error]="categoria.nome == ''" [(ngModel)]="categoria.nome" pInputText type="text" />
+      </div>
+      <app-voltar-salvar (salvarEmit)="salvar()" [cancel]="true" (voltarEmit)="visible = false" />
+    </p-fluid>
+  </div>
+</p-dialog>
+}

@@ -9,7 +9,7 @@ export const environment = {
   urlApi: protocolo + host + porta,
   urlWebSocket: 'painel.sincroled.com.br',
   authConfig: {
-    issuer: `https://auth.simodapp.com:8443/realms/${window.location.hostname.replace('portal-cliente.','')}`,
+    issuer: `https://auth.simodapp.com:8443/realms/${window.location.hostname.replace('portal.','')}`,
     redirectUri: window.location.origin + '/auth',
     postLogoutRedirectUri: window.location.origin,
     clientId: window.location.hostname,

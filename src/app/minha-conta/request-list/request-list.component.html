@@ -34,8 +34,8 @@
               @if(request?.tarefa){
               <p-tag value="Pendência" severity="warn"></p-tag>
               }
-              <p-tag [value]="statusTarefaDescriptions[request.status]"
-                [severity]="getStatusSeverity(request.status)"></p-tag>
+              <p-tag [value]="statusTarefaDescriptions[request?.instancia?.state]"
+                [severity]="getStatusSeverity(request?.instancia?.state)"></p-tag>
                 @if(request?.tarefa?.comentarios?.length > 0){
                 <i class="pi pi-comment text-orange-500"></i>
                 }

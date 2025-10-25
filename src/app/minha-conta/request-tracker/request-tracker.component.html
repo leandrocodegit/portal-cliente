@@ -4,11 +4,11 @@
       <ng-template pTemplate="title">
         <div class="flex items-center justify-between">
           <div class="flex items-center">
-            <i class="pi pi-compass mr-3 text-primary-500"></i>
+            <i class="pi pi-compass mr-3 !text-2xl text-primary-500"></i>
             <span>Acompanhamento do Protocolo: {{ protocoloId }}</span>
           </div>
-          <p-tag [value]="statusTarefaDescriptions[protocolo?.status]"
-            [severity]="getStatusSeverity(protocolo?.status)"></p-tag>
+          <p-tag [value]="statusTarefaDescriptions[protocolo?.instancia?.state]"
+            [severity]="getStatusSeverity(protocolo?.instancia?.state)"></p-tag>
         </div>
       </ng-template>
 
@@ -49,17 +49,17 @@
         <div *ngIf="!isLoading && !error && protocolo">
 
           <!-- 1. Seção de Pendências do Cliente -->
+          @if(protocolo?.instancia?.state == 'ACTIVE'){
           <div class="my-8 p-4 border-l-4 rounded-lg"
             [ngClass]="protocolo?.tarefa ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/20' : 'border-green-500 bg-green-50 dark:bg-green-900/20'">
             <div class="flex items-start">
-              <i class="pi text-2xl mr-3 mt-1"
+              <i class="pi !text-2xl mr-3 mt-1"
                 [ngClass]="protocolo?.tarefa ? 'pi-exclamation-triangle text-orange-500' : 'pi-check-circle text-green-500'"></i>
               <div>
                 <h3 class="font-bold text-lg m-0">
                   {{ protocolo?.tarefa ? 'Ação Necessária' : 'Nenhuma Pendência' }}
                 </h3>
-
-                <div *ngIf="protocolo?.tarefa">
+                <div *ngIf="protocolo?.tarefa; else noPendingTasks">
                   <div class="mt-2">
                     <button pButton [label]="protocolo?.tarefa.name" icon="pi pi-arrow-right" iconPos="right"
                       class="p-button-sm mt-2" (click)="onTaskAction()"></button>
@@ -72,6 +72,26 @@
               </div>
             </div>
           </div>
+          }@else {
+            <div class="my-8 p-4 border-l-4 rounded-lg"
+            [ngClass]="protocolo?.instancia?.state == 'SUSPENDED' ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/20' : 'border-cyan-500 bg-cyan-50 dark:bg-cyan-900/20'">
+            <div class="flex items-start">
+              <i class="pi !text-2xl mr-3 mt-1"
+                [ngClass]="protocolo?.instancia?.state == 'SUSPENDED' ? 'pi-exclamation-triangle text-orange-500' : 'pi-check-circle text-cyan-500'"></i>
+              <div>
+                <h3 class="font-bold text-lg m-0">
+                  {{ protocolo?.instancia?.state == 'SUSPENDED' ? 'Processo foi parado ou cancelado.' : 'Processo foi concluído.' }}
+                </h3>
+                 @if(protocolo?.instancia?.endTime){
+                    <p class="text-lg text-gray-400">{{protocolo?.instancia?.endTime | date: formatDate()}}</p>
+                  }
+                   @if(protocolo?.instancia?.state == 'SUSPENDED'){
+                    <p class="text-lg text-gray-400">A suspensão pode ser temporária o definitiva.</p>
+                  }
+              </div>
+            </div>
+          </div>
+        }
 
           @if(protocolo?.tarefa?.comentarios?.length > 0){
           <div class="flex my5 flex-col gap-2">

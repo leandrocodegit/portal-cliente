@@ -32,7 +32,7 @@
               <i class="pi pi-compass text-primary-500"></i>
               <span class="font-bold text-lg">PROTOCOLO - {{ request.protocolo.numeroProtocolo }}</span>
               @if(request?.tarefa){
-              <p-tag value="Com Pendência" severity="warn"></p-tag>
+              <p-tag value="Pendência" severity="warn"></p-tag>
               }
               <p-tag [value]="statusTarefaDescriptions[request.status]"
                 [severity]="getStatusSeverity(request.status)"></p-tag>

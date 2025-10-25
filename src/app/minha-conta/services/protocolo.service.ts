@@ -21,7 +21,7 @@ export class AutorProtocoloService {
   }
 
   public listarProtocolos(): Observable<Page<any>> {
-    return this.http.get<Page<any>>(`${environment.urlApi}/autor-protocolo`);
+    return this.http.get<Page<any>>(`${environment.urlApi}/autor-protocolo?sort=dataCriacao,desc`);
   }
 
 }

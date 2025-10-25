@@ -32,7 +32,7 @@ export class PreencherFormularioComponent {
   constructor(
     private readonly publicoService: PublicoService,
     private readonly activeRoute: ActivatedRoute,
-    private readonly loadService: LoadService,
+    public readonly loadService: LoadService,
     private readonly router: Router,
     private readonly location: Location) { }
 

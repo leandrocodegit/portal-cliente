@@ -29,13 +29,16 @@
           <!-- Informações do Pedido -->
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-2">
+              <i class="pi pi-compass text-primary-500"></i>
               <span class="font-bold text-lg">PROTOCOLO - {{ request.protocolo.numeroProtocolo }}</span>
               @if(request?.tarefa){
               <p-tag value="Com Pendência" severity="warn"></p-tag>
               }
               <p-tag [value]="statusTarefaDescriptions[request.status]"
                 [severity]="getStatusSeverity(request.status)"></p-tag>
-
+                @if(request?.tarefa?.comentarios?.length > 0){
+                <i class="pi pi-comment text-orange-500"></i>
+                }
 
             </div>
             <p class="m-0 text-surface-600 dark:text-surface-300">{{ request.descricaoServico }}</p>

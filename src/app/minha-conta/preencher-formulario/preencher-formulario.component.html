@@ -2,7 +2,7 @@
   @if(formulario && variaveis){
   <app-visao-formulario [tarefa]="tarefa" [schema]="formulario" [data]="variaveis" [apenasBotaoEnviar]="true"
     (dataEmit)="enviarFormulario($event)" />
-  }@else {
+  }@else if(!loadService.isLoad && !formulario) {
   <p-message severity="error">Não há tarefas pendentes no momento.</p-message>
   }
 </div>

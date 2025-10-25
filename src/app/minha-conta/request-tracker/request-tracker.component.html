@@ -73,6 +73,7 @@
             </div>
           </div>
 
+          @if(protocolo?.tarefa?.comentarios?.length > 0){
           <div class="flex my5 flex-col gap-2">
             <h3 class="font-bold text-xl mb-4">Comentários da Tarefa</h3>
             @for (comentario of protocolo?.tarefa?.comentarios; track $index) {
@@ -106,6 +107,7 @@
             </div>
             }
           </div>
+          }
         </div>
       </ng-template>
     </p-card>

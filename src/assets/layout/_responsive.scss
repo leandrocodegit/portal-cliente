@@ -129,7 +129,7 @@
       left: 0;
       top: 45px;
       padding-top: 30px;
-      height: 100vh;
+      height: calc(100vh - 45px);
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
       transition:

@@ -58,11 +58,11 @@
       &.layout-static-inactive {
         .layout-sidebar {
           transform: translateX(-100%);
-          left: 60px;
+          left: -10px;
         }
 
         .layout-main-container {
-          margin-left: 70px;
+          margin-left: 15px;
           padding-left: 1rem;
         }
 

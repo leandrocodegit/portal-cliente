@@ -14,7 +14,7 @@ export const environment = {
     issuer: `https://auth.simodapp.com:8443/realms/simod`,
     redirectUri: window.location.origin + '/auth',
     postLogoutRedirectUri: window.location.origin,
-    clientId: 'simod.portal-cliente',
+    clientId: 'portal.simod',
     responseType: 'code',
     scope: `openid profile email`,
     showDebugInformation: false,

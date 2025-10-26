@@ -20,6 +20,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { InputTextModule } from 'primeng/inputtext';
 import { InstanciaService } from '@/shared/services/process-instance.service';
+import { PublicoService } from '@/shared/services/publicos.service';
 
 @Component({
   selector: 'app-menu',
@@ -47,13 +48,9 @@ export class AppMenu implements OnInit {
     {
       order: 0,
       label: '',
-      items: [{ label: 'Meus Protocolos', icon: 'pi pi-fw pi-home', separator: false, routerLink: ['/'] }]
+      items: [{ label: 'Meus Protocolos', icon: 'pi pi-fw pi-ticket', separator: false, routerLink: ['/'] }]
     },
-    {
-      order: 3,
-      label: '',
-      items: [{ label: 'Serviços', icon: 'pi pi-briefcase', separator: false, routerLink: ['/servicos/932706af-e8f3-4125-8ee1-39553bf53fcb'] }]
-    },
+
 
   ];
   protected filteredProtocolos: any[] = [];
@@ -71,6 +68,7 @@ export class AppMenu implements OnInit {
     private readonly dialogService: DialogService,
     private readonly protocoloService: ProtocoloService,
     private readonly instanciaService: InstanciaService,
+    private readonly publicoService: PublicoService,
     private readonly router: Router
 
   ) {
@@ -86,6 +84,37 @@ export class AppMenu implements OnInit {
   }
 
   ngOnInit(): void {
+
+    let servico = {
+      order: 3,
+      label: '',
+      items: [
+        {
+          label:
+            'Serviços',
+          icon: 'pi pi-fw pi-briefcase',
+          separator: false,
+        }
+      ]
+    };
+
+    let servicos: any[] = [];
+    this.publicoService.listaPaginasPublicas().subscribe(response => {
+
+      response.forEach(pagina => {
+        servicos.push(
+          {
+            label: pagina.nome,
+            icon: 'pi pi-minus',
+            separator: true,
+            routerLink: [`/servicos/${pagina.id}`]
+          })
+      })
+    })
+
+    servico.items[0]['items'] = servicos;
+    this.model.push(servico)
+
     if (this.authService.hasGrupo(PermissaoEnum.ADM))
 
       this.model = this.model.sort((a, b) => a.order - b.order);

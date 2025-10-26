@@ -18,6 +18,10 @@ export class PublicoService {
   constructor(
     private readonly http: HttpClient) { }
 
+  public listaPaginasPublicas(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.urlApi}/publico/pagina`);
+  }
+
   public listaServicosPublicos(): Observable<any[]> {
     return this.http.get<any[]>(`${environment.urlApi}/publico/servico`);
   }

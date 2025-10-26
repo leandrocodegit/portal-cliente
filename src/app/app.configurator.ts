@@ -106,7 +106,6 @@ export class AppConfigurator {
     var tema: any = {
       color: localStorage.getItem('color') ?? 'gray',
       dark: localStorage.getItem('dark'),
-      toggle: localStorage.getItem('toggle'),
     }
     if (tema?.color) {
       this.layoutService.layoutConfig.update((state) => ({ ...state, primary: tema?.color }));
@@ -114,8 +113,6 @@ export class AppConfigurator {
     }
     if (tema?.dark == 'true')
       this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
-    if (tema.toggle)
-      this.layoutService.onMenuToggle();
   }
 
   private atualizarTema() {

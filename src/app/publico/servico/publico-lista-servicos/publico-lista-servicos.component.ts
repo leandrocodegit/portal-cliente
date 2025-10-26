@@ -13,7 +13,7 @@ import { PublicoService } from '@/shared/services/publicos.service';
 })
 export class PublicoListaServicosComponent implements OnInit {
 
-   protected servicos: any[] = [];
+   protected paginaServico: PaginaServico;
 
     constructor(
       private readonly publicoService: PublicoService,
@@ -24,13 +24,13 @@ export class PublicoListaServicosComponent implements OnInit {
     ngOnInit(): void {
       this.activeRoute.params.subscribe(param => {
         if (param['id'])
-          this.publicoService.listaServicosPublicos().subscribe(response => {
-            this.servicos = response;
+          this.publicoService.buscarPaginaServico(param['id']).subscribe(response => {
+            this.paginaServico = response;
           });
       });
     }
 
      iniciarServico(servico: any) {
-    this.router.navigate([`/servicos/formulario/${servico.id}/${servico.formKey}`]);
+    this.router.navigate([`/embedded/formulario/${servico.id}/${servico.formKey}`, {'redirect': this.paginaServico.redirect}]);
   }
   }

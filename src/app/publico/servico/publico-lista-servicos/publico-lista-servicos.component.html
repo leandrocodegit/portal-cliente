@@ -1,1 +1,1 @@
-<app-grid-servicos (solicitarEmit)="iniciarServico($event)"  [servicos]="servicos" [servicosFiltro]="servicos"/>
+<app-grid-servicos (solicitarEmit)="iniciarServico($event)" [categorias]="paginaServico?.categorias" [servicos]="paginaServico?.servicos" [servicosFiltro]="paginaServico?.servicos"/>

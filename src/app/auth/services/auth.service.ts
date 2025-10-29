@@ -8,8 +8,6 @@ import { environment } from '../../../environments/environment.dev';
 import { Role } from '../models/role-auth.enum';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { authConfig } from '../../app.module';
-import { PermissaoEnum, PermissaoEnumDescriptions } from '@/shared/models/grupo-permissao.enum';
-
 
 
 @Injectable({
@@ -18,7 +16,6 @@ import { PermissaoEnum, PermissaoEnumDescriptions } from '@/shared/models/grupo-
 )
 export class AuthService {
 
-  private grupos: Map<PermissaoEnum, any> = new Map();
 
   constructor(
     private readonly oauthService: OAuthService,
@@ -105,11 +102,6 @@ export class AuthService {
       const expireMillis = this.decodeToken(this.oauthService.getAccessToken()).exp;
       let expire: number = Number.parseInt(expireMillis) * 1000 - 10000;
       const now = Date.now();
-
-      /* console.log('exp', expire);
-      console.log('now', now); */
-
-
       return now < expire;
     } catch (error) {
       return false;
@@ -253,17 +245,5 @@ export class AuthService {
     }
 
     return null;
-  }
-
-  hasGrupo(grupoPermissao: PermissaoEnum) {
-    return this.grupos.has(grupoPermissao);
-  }
-
-  processaAutorizacoes() {
-
-    const gps: PermissaoEnum[] = this.decodePayloadJWT().grupos;
-    gps.forEach(gp => {
-      this.grupos.set(gp, PermissaoEnumDescriptions[gp])
-    })
   }
 }

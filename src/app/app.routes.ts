@@ -8,7 +8,6 @@ import { PreencherFormularioComponent } from './minha-conta/preencher-formulario
 import { AppLayout } from './base/sidebar/app.layout';
 import { LoginSocialComponent } from './auth/login-social/login-social.component';
 import { AutenticacaoComponent } from './auth/autenticacao/autenticacao.component';
-import { ListaServicosComponent } from './modulos/servicos/lista-servicos/lista-servicos.component';
 import { AuthGuard } from './auth/services/auth.guard';
 
 export const routes: Routes = [

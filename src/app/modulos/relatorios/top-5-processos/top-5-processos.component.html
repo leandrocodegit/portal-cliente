@@ -1,7 +1,0 @@
-<div class="bg-surface-section p-2 lg:p-4 rounded-lg h-full">
-  @if(showTitulo){
-  <h5 class="!text-xl font-semibold mb-4 text-center">Top 5 Processos Mais Ativos</h5>
-  }
-  <p-chart [responsive]="true" type="doughnut" [data]="processActivityChartData" [options]="processActivityChartOptions"
-    [height]="height"></p-chart>
-</div>

@@ -13,8 +13,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ServicoService } from '@/shared/services/servico.service';
 import { ProtocoloService } from '@/shared/services/protocolo.service';
 import { AutorProtocoloService } from '../services/protocolo.service';
-import { StatusTarefa, StatusTarefaDescriptions } from '@/modulos/tarefas/models/status-tarefa.enum';
 import { TimelineComponent } from '@/shared/components/timeline/timeline.component';
+import { StatusTarefa, StatusTarefaDescriptions } from '@/shared/models/status-tarefa.enum';
 
 interface TrackedRequest {
   id: string;

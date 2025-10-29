@@ -11,7 +11,6 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TopBarComponent } from '../top-bar/top-bar.component';
 import { TabsModule } from 'primeng/tabs';
-import { DrawersComponent } from '../drawers/drawers.component';
 
 @Component({
   selector: 'app-layout',
@@ -24,8 +23,7 @@ import { DrawersComponent } from '../drawers/drawers.component';
     PreloadComponent,
     ToastModule,
     ConfirmDialogModule,
-    TabsModule,
-    DrawersComponent
+    TabsModule
   ],
   template: `
 <div class="layout-wrapper" [ngClass]="containerClass">
@@ -38,7 +36,6 @@ import { DrawersComponent } from '../drawers/drawers.component';
           <app-preload></app-preload>
           }
           <router-outlet></router-outlet>
-          <app-drawers/>
           <p-toast />
           <p-confirmdialog />
         </div>

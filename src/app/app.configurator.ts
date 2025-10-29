@@ -9,7 +9,6 @@ import { PrimeNG } from 'primeng/config';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { PT_BR } from './shared/translate/pt-BR';
 import { AuthService } from './auth/services/auth.service';
-import { MinhaContaService } from './modulos/minha-conta/services/minha-conta.service';
 import { LayoutService } from './base/services/layout.service';
 
 const presets = {
@@ -88,15 +87,12 @@ export class AppConfigurator {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly minhaContaService: MinhaContaService
     ) {
       this.setTemaUsuario();
   }
 
   ngOnInit() {
-    this.authService.processaAutorizacoes();
     this.config.setTranslation(PT_BR);
-
     if (isPlatformBrowser(this.platformId)) {
       this.onPresetChange(this.layoutService.layoutConfig().preset);
     }

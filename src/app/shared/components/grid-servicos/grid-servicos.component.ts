@@ -1,12 +1,10 @@
 
-import { ICONS } from '@/shared/models/icons';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputText } from 'primeng/inputtext';
-import { ServicoService } from '@/shared/services/servico.service';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -39,7 +37,6 @@ export class GridServicosComponent {
   @Input() servicosFiltro: any[] = [];
   @Output() solicitarEmit = new EventEmitter();
   protected categoria: Categoria = new Categoria();
-  protected icons = ICONS;
   protected selectedCountryAdvanced: any[] | undefined;
   protected filteredServicos: any[] | undefined;
 

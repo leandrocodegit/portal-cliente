@@ -5,13 +5,12 @@ import { Router, RouterModule } from '@angular/router';
 // Módulos PrimeNG
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { Tag, TagModule } from 'primeng/tag';
+import { Tag } from 'primeng/tag';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
 import { TooltipModule } from 'primeng/tooltip';
-import { TopBarComponent } from '@/base/top-bar/top-bar.component';
 import { AutorProtocoloService } from '../services/protocolo.service';
-import { StatusTarefa, StatusTarefaDescriptions } from '@/modulos/tarefas/models/status-tarefa.enum';
+import { StatusTarefa, StatusTarefaDescriptions } from '@/shared/models/status-tarefa.enum';
 
 // Substitua pelo seu serviço real
 

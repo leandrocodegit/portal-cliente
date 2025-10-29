@@ -1,25 +1,19 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 import { Menu } from 'src/app/base/models/modulo.model';
 import { AuthService } from '@/auth/services/auth.service';
 import { ButtonModule } from 'primeng/button';
-import { GerarProtocoloComponent } from '@/modulos/servicos/gerar-protocolo/gerar-protocolo.component';
-import { DialogService } from 'primeng/dynamicdialog';
 import { LayoutService } from '../services/layout.service';
 import { TooltipModule } from 'primeng/tooltip';
 import { LoadService } from '@/shared/components/preload/load.service';
-import { PermissaoEnum } from '@/shared/models/grupo-permissao.enum';
-import { ProtocoloService } from '@/shared/services/protocolo.service';
 import { AppMenuitem } from '../sidebar/app.menuitem';
 import { Popover, PopoverModule } from 'primeng/popover';
 import { Protocolo } from '@/shared/models/protocolo.model';
 import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { InputTextModule } from 'primeng/inputtext';
-import { InstanciaService } from '@/shared/services/process-instance.service';
 import { PublicoService } from '@/shared/services/publicos.service';
 
 @Component({
@@ -34,8 +28,7 @@ import { PublicoService } from '@/shared/services/publicos.service';
     ButtonModule,
     TooltipModule,
     InputTextModule,
-    PopoverModule,
-    DatePipe
+    PopoverModule
   ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.scss'
@@ -65,22 +58,10 @@ export class AppMenu implements OnInit {
     public readonly loadService: LoadService,
     private readonly authService: AuthService,
     public readonly layoutService: LayoutService,
-    private readonly dialogService: DialogService,
-    private readonly protocoloService: ProtocoloService,
-    private readonly instanciaService: InstanciaService,
     private readonly publicoService: PublicoService,
     private readonly router: Router
 
   ) {
-    this.nomeFind.pipe(
-      debounceTime(1000),
-      distinctUntilChanged())
-      .subscribe(value => {
-        this.protocolo = value
-        if (value?.length > 7) {
-          this.pesquisarProtocolo()
-        }
-      });
   }
 
   ngOnInit(): void {
@@ -113,10 +94,6 @@ export class AppMenu implements OnInit {
     servico.items[0]['items'] = servicos;
     this.model.push(servico)
 
-    if (this.authService.hasGrupo(PermissaoEnum.ADM))
-
-      this.model = this.model.sort((a, b) => a.order - b.order);
-
     this.filteredProtocolos.push({
       "protocolo": {
         "numeroProtocolo": "A00000071",
@@ -132,7 +109,6 @@ export class AppMenu implements OnInit {
     })
   }
 
-
   saveEvent(event: any) {
     this.event = event;
   }
@@ -140,33 +116,5 @@ export class AppMenu implements OnInit {
   selectTenant(event: any) {
     this.tenant = event.value;
     sessionStorage.setItem("X-Tenant-ID", this.tenant);
-  }
-
-  pesquisarProtocolo(event?: any) {
-    if (this.protocolo.length > 7 && this.protocolo != this.protocoloResult?.protocolo?.numeroProtocolo) {
-      this.protocoloService.buscarProtocolo(this.protocolo).subscribe(response => {
-        if (response?.protocolo?.numeroProtocolo && response?.protocolo?.numeroProtocolo != this.protocoloResult?.protocolo?.numeroProtocolo) {
-          this.protocoloResult = response;
-          this.op.show(this.event)
-        }
-
-      })
-    }
-    else this.op.toggle(this.event)
-  }
-
-  gerarProtocolo() {
-    this.dialogService.open(GerarProtocoloComponent, {
-      modal: true,
-    });
-  }
-
-  abrirProtocolo() {
-    this.instanciaService.buscarInstanciaPorProtocolo(this.protocoloResult.protocolo.numeroProtocolo).subscribe(response => {
-      if (response.length && response[0]?.businessKey) {
-        this.op.hide();
-        this.router.navigate([`/painel/protocolo/${response[0].businessKey}/detalhes/${response[0].id}`]);
-      }
-    })
   }
 }

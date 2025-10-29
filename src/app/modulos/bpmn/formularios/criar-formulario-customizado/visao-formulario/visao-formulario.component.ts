@@ -5,13 +5,10 @@ import { Form } from '../customForm/form-js';
 
 import { HttpClient } from '@angular/common/http';
 import { Location } from '@angular/common';
-import { TarefaService } from 'src/app/shared/services/tarefa.service';
 import { FilesTarefaService } from 'src/app/shared/services/files-tarefa.service';
-import { TypeFormDescriptions } from '../../../fluxos/models/type-form.enum';
 import { InstanciaService } from '@/shared/services/process-instance.service';
-import { formatarData } from '@/shared/services/util/DateUtil';
-import { TypeVariableDescriptions } from '@/modulos/bpmn/fluxos/models/type-variable.enum';
 import { MessageService } from 'primeng/api';
+import { TypeFormDescriptions } from '@/shared/models/type-form.enum';
 
 @Component({
   selector: 'app-visao-formulario',

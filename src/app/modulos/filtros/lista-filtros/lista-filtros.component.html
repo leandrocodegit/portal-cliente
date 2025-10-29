@@ -1,9 +1,0 @@
-<div class="card">
-  <app-titulo-pesquisa [value]="{
-    titulo: 'Lista Filtros',
-    botaoAdd: 'Novo Filtro',
-    routerLink: 'form',
-    showAdd: true,
-  }" />
-  <app-tabela [auth]="{edit: 'FILTER_CREATE', config: 'FILTER_CREATE', delete: 'FILTER_DELETE', view: 'FILTER_READ'}" [view]="{ edit: true, delete: true }" (editarEmit)="editar($event)" (excluirEmit)="removerFiltro($event)" [cols]="cols" [itens]="itens"/>
-</div>

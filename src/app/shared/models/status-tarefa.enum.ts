@@ -427,7 +427,7 @@ export const StatusTarefaDescriptions: Record<StatusTarefa, string> = {
   [StatusTarefa.DeleteComment]: 'Removido comentário',
   [StatusTarefa.UpdateComment]: 'Atualizado comentário',
   [StatusTarefa.Created]: 'Criada',
-  [StatusTarefa.Assign]: 'Atribuiu',
+  [StatusTarefa.Assign]: 'Atribuição',
   [StatusTarefa.AddGroupLink]: 'Adicionou ao grupo',
   [StatusTarefa.Create]: 'Criada',
   [StatusTarefa.Updated]: 'Atualizada',

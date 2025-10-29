@@ -14,10 +14,10 @@ import { AuthService } from '@/auth/services/auth.service';
 <div class="flex flex-col gap-4">
   <div class="flex flex-col items-start p-2 gap-6">
      @if (isLogin) {
-    <a type="button" routerLink="/painel/conta/meus-dados">
+    <a type="button" href="https://auth.simodapp.com:8443/realms/simod/account">
       <i class="pi pi-user mr-4"></i>
       <span>Minha conta</span>
-     </a> 
+     </a>
      }
     @if (!isLogin) {
       <button (click)="login()" type="button">

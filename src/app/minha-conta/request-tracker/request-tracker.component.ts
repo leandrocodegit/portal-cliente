@@ -14,6 +14,7 @@ import { ServicoService } from '@/shared/services/servico.service';
 import { ProtocoloService } from '@/shared/services/protocolo.service';
 import { AutorProtocoloService } from '../services/protocolo.service';
 import { StatusTarefa, StatusTarefaDescriptions } from '@/modulos/tarefas/models/status-tarefa.enum';
+import { TimelineComponent } from '@/shared/components/timeline/timeline.component';
 
 interface TrackedRequest {
   id: string;
@@ -48,7 +49,8 @@ interface PendingTask {
     ProgressSpinnerModule,
     MessageModule,
     TooltipModule,
-    TagModule
+    TagModule,
+    TimelineComponent
   ],
   templateUrl: './request-tracker.component.html',
   styleUrls: ['./request-tracker.component.scss']

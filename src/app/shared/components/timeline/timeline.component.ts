@@ -3,12 +3,16 @@ import { InstanciaService } from '@/shared/services/process-instance.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { TimelineModule } from 'primeng/timeline';
 import { TooltipModule } from 'primeng/tooltip';
+import { OrganizationChartModule } from 'primeng/organizationchart';
+import { BpmnTimelineComponent } from '../bpmn-timeline/bpmn-timeline.component';
 
 @Component({
   selector: 'app-timeline',
   imports: [
     TimelineModule,
-    TooltipModule
+    TooltipModule,
+    OrganizationChartModule,
+    BpmnTimelineComponent
   ],
   templateUrl: './timeline.component.html',
   styleUrl: './timeline.component.scss'
@@ -17,8 +21,10 @@ export class TimelineComponent implements OnInit{
 
   @Input() instancia?: any;
   @Input()  tarefas?: any[] = [];
+   @Input()  vertical = false;
   protected etapas: any[] = [];
   protected activity?: HistoricTask;
+  protected org: any;
 
   constructor(
     private readonly instanciaService: InstanciaService
@@ -29,12 +35,12 @@ export class TimelineComponent implements OnInit{
   }
 
   buscarTimeLine() {
-    this.instanciaService.timeLine(this.instancia.processDefinitionId).subscribe(response => {
 
+     this.instanciaService.fluxoOrg(this.instancia.processDefinitionId, this.instancia.id).subscribe(response => {
+        this.org = response;
+     })
+    this.instanciaService.timeLine(this.instancia.processDefinitionId, this.instancia.id).subscribe(response => {
 
-      response.push({
-        nome: 'Fim'
-      })
 
       if (!this.instancia?.endTime) {
         for (let index = response.length - 1; index > 0; index--) {

@@ -786,3 +786,17 @@ iframe {
 .pi-minus{
   font-size: 6px !important;
 }
+
+.p-timeline-horizontal .p-timeline-event-opposite, .p-timeline-horizontal .p-timeline-event-content {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.p-timeline-event {
+  min-height: 3.7rem !important;
+}
+
+.bt-timeline .p-button{
+  width: 25px !important;
+  height: 25px !important;
+}

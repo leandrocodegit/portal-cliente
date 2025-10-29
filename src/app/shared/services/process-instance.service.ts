@@ -60,8 +60,12 @@ export class InstanciaService {
     return this.http.get<any>(`${environment.urlApi}/processo/api/v1/simod-rest/base/comment/${instanceId}`);
   }
 
-  public timeLine(instanceId: any): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.urlApi}/processo/api/v1/simod-rest/base/timeline/${instanceId}`);
+  public timeLine(processDefinitionId: string, processInstanceId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.urlApi}/processo/api/v1/simod-rest/base/timeline/${processDefinitionId}/${processInstanceId}`);
+  }
+
+  public fluxoOrg(processDefinitionId: string, processInstanceId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.urlApi}/processo/api/v1/simod-rest/base/timeline/${processDefinitionId}/${processInstanceId}/org`);
   }
 
   public listaAnexosInstancia(taskId: any): Observable<any[]> {

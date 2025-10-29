@@ -3,9 +3,12 @@
     <p-card>
       <ng-template pTemplate="title">
         <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <i class="pi pi-compass mr-3 !text-2xl text-primary-500"></i>
-            <span>Acompanhamento do Protocolo: {{ protocoloId }}</span>
+          <div class="flex items-start">
+            <i class="pi pi-compass mr-3 mt-[-3px] !text-2xl text-primary-500"></i>
+            <div>
+              <span>Acompanhamento do Protocolo</span>
+              <p class="font-bold text-green-400">{{ protocoloId }}</p>
+            </div>
           </div>
           <p-tag [value]="statusTarefaDescriptions[protocolo?.instancia?.state]"
             [severity]="getStatusSeverity(protocolo?.instancia?.state)"></p-tag>
@@ -14,7 +17,7 @@
 
       @if(servico){
       <div
-        class="bg-white dark:bg-gray-800 shadow rounded-lg p-5 hover:shadow-md transition-shadow duration-300 flex flex-col">
+        class="flex flex-col my-4">
         <div>
           <div [style.background]="servico.color"
             class="float-left mr-4 flex items-center justify-center dark:bg-indigo-500/20 rounded-xl w-12 h-12 shrink-0">
@@ -30,6 +33,12 @@
           </p>
           <div class="clear-both"></div>
         </div>
+      </div>
+      }
+
+      @if(protocolo?.instancia?.state != 'SUSPENDED'){
+      <div class="my-6">
+        <app-timeline [vertical]="true" [instancia]="{id: protocolo.id, processDefinitionId: protocolo.processId}" />
       </div>
       }
 
@@ -73,7 +82,7 @@
             </div>
           </div>
           }@else {
-            <div class="my-8 p-4 border-l-4 rounded-lg"
+          <div class="my-8 p-4 border-l-4 rounded-lg"
             [ngClass]="protocolo?.instancia?.state == 'SUSPENDED' ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/20' : 'border-cyan-500 bg-cyan-50 dark:bg-cyan-900/20'">
             <div class="flex items-start">
               <i class="pi !text-2xl mr-3 mt-1"
@@ -82,16 +91,16 @@
                 <h3 class="font-bold text-lg m-0">
                   {{ protocolo?.instancia?.state == 'SUSPENDED' ? 'Processo foi parado ou cancelado.' : 'Processo foi concluído.' }}
                 </h3>
-                 @if(protocolo?.instancia?.endTime){
-                    <p class="text-lg text-gray-400">{{protocolo?.instancia?.endTime | date: formatDate()}}</p>
-                  }
-                   @if(protocolo?.instancia?.state == 'SUSPENDED'){
-                    <p class="text-lg text-gray-400">A suspensão pode ser temporária o definitiva.</p>
-                  }
+                @if(protocolo?.instancia?.endTime){
+                <p class="text-lg text-gray-400">{{protocolo?.instancia?.endTime | date: formatDate()}}</p>
+                }
+                @if(protocolo?.instancia?.state == 'SUSPENDED'){
+                <p class="text-lg text-gray-400">A suspensão pode ser temporária o definitiva.</p>
+                }
               </div>
             </div>
           </div>
-        }
+          }
 
           @if(protocolo?.tarefa?.comentarios?.length > 0){
           <div class="flex my5 flex-col gap-2">

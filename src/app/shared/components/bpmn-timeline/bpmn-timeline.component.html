@@ -1,0 +1,41 @@
+<div class="h-full" *ngIf="timelineEvents.length > 0; else noData">
+
+  @if(!vertical){
+  <div class="grid grid-cols-1 p-4 mb-3 rounded" style="width: 100%;background: var(--surface-card)">
+    <p-timeline layout="horizontal" align="bottom" [value]="timelineEvents" className="w-full">
+      <ng-template #marker let-event>
+        <p-button class="bt-timeline" [outlined]="event.status === 'PENDING'" [loading]="event?.icon?.load"
+          [severity]="event.icon.severity" [rounded]="true" [icon]="event.icon.icon"></p-button>
+      </ng-template>
+      <ng-template #content let-event>
+        {{ event.label }}
+      </ng-template>
+    </p-timeline>
+  </div>
+  }@else {
+  <p-timeline [layout]="layoutService.isDesktop() ? layout : 'vertical'" [value]="timelineEvents" align="left"
+    styleClass="customized-timeline">
+    <ng-template pTemplate="marker" let-event>
+      <p-button [outlined]="event.status !== 'ACTIVE'" [loading]="event?.icon?.load" [severity]="event.icon.severity"
+        [rounded]="true" [icon]="event.icon.icon"></p-button>
+    </ng-template>
+
+    <ng-template pTemplate="content" let-event>
+      <div class="mt-2 pb-4 border-b border-surface-100 dark:border-surface-700 last:border-b-0 h-full">
+        <p-tag [value]="event.icon.label" [severity]="event.icon.severity" [icon]="event.icon.iconTag"></p-tag>
+        <span class="font-semibold text-base block" [ngClass]="{'text-primary-500 font-bold': event.status === 'ACTIVE'}">{{
+          event.label }}</span>
+        <p *ngIf="event.date" class="text-surface-500 text-sm dark:text-surface-400">
+          {{ event.date | date:'dd/MM/yyyy HH:mm' }}
+        </p>
+      </div>
+    </ng-template>
+  </p-timeline>
+  }
+</div>
+
+<ng-template #noData>
+  <div class="text-center p-4 text-surface-500">
+    Nenhum dado de processo para exibir a linha do tempo.
+  </div>
+</ng-template>

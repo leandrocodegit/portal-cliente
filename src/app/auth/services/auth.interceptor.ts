@@ -78,7 +78,7 @@ private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
       catchError((error) => {
         this.isRefreshing = false;
         this.refreshTokenSubject.error(error); // propaga o erro
-        this.authService.logout();
+        this.router.navigate(['/login']);
         return throwError(() => error);
       }),
       finalize(() => {

@@ -2,7 +2,7 @@
   <app-titulo-protocolo [instancia]="instancia" />
 </div>
 @if (instancia && tarefas?.length) {
-<app-timeline [instancia]="instancia" [tarefas]="tarefas" />
+<app-timeline [instancia]="instancia" [vertical]="true" [tarefas]="tarefas" />
 }
 <div class="flex flex-col justify-between">
   <p-tabs value="0" [scrollable]="true" (valueChange)="selectTab($event)" [value]="tab">

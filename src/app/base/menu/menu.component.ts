@@ -93,7 +93,6 @@ export class AppMenu implements OnInit {
           label:
             'Serviços',
           icon: 'pi pi-fw pi-briefcase',
-          separator: false,
         }
       ]
     };
@@ -106,7 +105,6 @@ export class AppMenu implements OnInit {
           {
             label: pagina.nome,
             icon: 'pi pi-minus',
-            separator: true,
             routerLink: [`/servicos/${pagina.id}`]
           })
       })

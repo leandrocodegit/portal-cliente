@@ -86,8 +86,8 @@
 
 @media (max-width: 991px) {
 
-  .p-card-body{
-    padding: 8px !important;
+ .p-card-body{
+    padding: 15px !important;
   }
   .min-dialog-full {
     height: 100% !important;
@@ -114,14 +114,14 @@
   }
 
   .card {
-    padding: 0.5rem !important;
+    padding: 0.8rem !important;
     align-items: center;
   }
 
   .layout-wrapper {
     .layout-main-container {
       margin-left: 0;
-      padding: 5rem 0.2rem 0;
+      padding: 5rem 0.4rem 0;
     }
 
     .layout-sidebar {

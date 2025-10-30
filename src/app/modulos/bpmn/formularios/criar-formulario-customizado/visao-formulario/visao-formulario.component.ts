@@ -29,6 +29,7 @@ export class VisaoFormularioComponent implements OnInit, AfterViewInit {
   @Input() drawner?: any;
   @Input() variavel?: any;
   @Input() readonly = false;
+  @Input() noReadonly = false;
   @Output() formEmit = new EventEmitter();
   @Output() dataEmit = new EventEmitter();
   protected form: FormGroup;
@@ -95,8 +96,6 @@ export class VisaoFormularioComponent implements OnInit, AfterViewInit {
     });
 
     this.formEditor.on('submit', (event: any) => {
-      console.log(event);
-
       let erros = false;
       try {
         erros = JSON.stringify(event?.errors) != "{}"
@@ -166,11 +165,14 @@ export class VisaoFormularioComponent implements OnInit, AfterViewInit {
   }
 
 
-  private preencherCidadeEndereco(components: any[] ) {
+  private preencherCidadeEndereco(components: any[]) {
+
+    if (this.noReadonly)
+      return;
 
     components.forEach(component => {
       component.readonly = this.readonly;
-      if (component.type == 'endereco'){
+      if (component.type == 'endereco') {
         let cidade = component.components.find(comp => comp.label == 'Cidade');
         cidade.values = [this.data[cidade.id]]
       }
@@ -182,12 +184,11 @@ export class VisaoFormularioComponent implements OnInit, AfterViewInit {
 
   private makeReadonly(components: any[]) {
 
+    if (this.noReadonly)
+      return;
+
     components.forEach(component => {
       component.readonly = this.readonly;
-      /* if (component.type === 'select') {
-        component.type = 'textfield';
-      } */
-
       if (component.components && Array.isArray(component.components)) {
         this.makeReadonly(component.components);
       }
@@ -195,6 +196,9 @@ export class VisaoFormularioComponent implements OnInit, AfterViewInit {
   }
 
   private carregarTipagem(components: any[]) {
+    if (this.noReadonly)
+      return;
+
     components.forEach(component => {
       this.tipagem.set(component.key, TypeFormDescriptions[component.type] ?? 'String');
       if (component.components && Array.isArray(component.components)) {

@@ -7,6 +7,7 @@ import { OAuthService } from 'angular-oauth2-oidc';
 import { LoadService } from 'src/app/shared/components/preload/load.service';
 import { MessageService } from 'primeng/api';
 import { authConfig } from '@/app.module';
+import { generateCodeChallenge } from '@/shared/services/keycloak.service';
 
 
 @Injectable()
@@ -25,7 +26,35 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
+    const isAccount = req.url.includes('/realms/simod/account') && !req.url.includes('/realms/simod/protocol/openid-connect/auth')
+
+    if (isAccount && !this.loadService.isLoad) {
+      this.loadService.show()
+      return next.handle(req).pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 401) {
+            generateCodeChallenge().then(code => {
+              console.log('Host', req);
+              window.location.href = this.authService.getUrl(code);
+            })
+          }else{
+            this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Algo deu errado ao executar essa ação!' });
+          }
+          return throwError(() => error);
+        }),
+        tap(event => {
+        if (event instanceof HttpResponse && req.method !== 'GET' && req.method !== 'OPTIONS') {
+          this.messageService.add({ severity: 'success', summary: 'Concluido', detail: 'Salvo com sucesso' });
+        }
+      }),
+        finalize(() => {
+          this.loadService.hide()
+        })
+      );
+    }
+
     const accessToken = this.authService.accessToken;
+
     if (req.url.includes('/realms') || req.url.endsWith('/token') || (req.url.includes('/auth') && !req.url.includes('/authorization')) || req.url.includes('/engine-rest')) {
       return next.handle(req);
     } else {
@@ -63,37 +92,37 @@ export class AuthInterceptor implements HttpInterceptor {
     return requisicao;
   }
 
-private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
-  if (!this.isRefreshing) {
-    this.isRefreshing = true;
-    this.refreshTokenSubject.next(null); // limpa antes de atualizar
+  private handle401Error(request: HttpRequest<any>, next: HttpHandler) {
+    if (!this.isRefreshing) {
+      this.isRefreshing = true;
+      this.refreshTokenSubject.next(null); // limpa antes de atualizar
 
-    return this.authService.refreshToken().pipe(
-      switchMap(() => {
-        const newToken = this.oauthService.getAccessToken();
-        this.isRefreshing = false;
-        this.refreshTokenSubject.next(newToken); // emite para quem estava esperando
-        return next.handle(this.addToken(request, newToken));
-      }),
-      catchError((error) => {
-        this.isRefreshing = false;
-        this.refreshTokenSubject.error(error); // propaga o erro
-        this.router.navigate(['/login']);
-        return throwError(() => error);
-      }),
-      finalize(() => {
-        this.isRefreshing = false;
-      })
-    );
-  } else {
-    // se já está atualizando, espera o novo token e repete a requisição
-    return this.refreshTokenSubject.pipe(
-      filter(token => token != null),
-      take(1),
-      switchMap(accessToken => next.handle(this.addToken(request, accessToken!)))
-    );
+      return this.authService.refreshToken().pipe(
+        switchMap(() => {
+          const newToken = this.oauthService.getAccessToken();
+          this.isRefreshing = false;
+          this.refreshTokenSubject.next(newToken); // emite para quem estava esperando
+          return next.handle(this.addToken(request, newToken));
+        }),
+        catchError((error) => {
+          this.isRefreshing = false;
+          this.refreshTokenSubject.error(error); // propaga o erro
+          this.router.navigate(['/login']);
+          return throwError(() => error);
+        }),
+        finalize(() => {
+          this.isRefreshing = false;
+        })
+      );
+    } else {
+      // se já está atualizando, espera o novo token e repete a requisição
+      return this.refreshTokenSubject.pipe(
+        filter(token => token != null),
+        take(1),
+        switchMap(accessToken => next.handle(this.addToken(request, accessToken!)))
+      );
+    }
   }
-}
 
 
   private addToken(request: HttpRequest<any>, token: string) {

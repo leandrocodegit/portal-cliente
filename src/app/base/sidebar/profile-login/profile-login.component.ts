@@ -49,4 +49,10 @@ export class ProfileLoginComponent implements OnInit {
       this.oauthService.logOut();
     });
   }
+    getUrl(){
+    const verifier = sessionStorage.getItem('PKCE_verifier');
+    return `https://auth.simodapp.com:8443/realms/simod/protocol/openid-connect/auth?
+    client_id=account-console&redirect_uri=http://localhost:6600/conta&response_type=code&scope=openid
+    &code_challenge=${verifier}&code_challenge_method=S256&response_mode=query&state=ca5f97da-a86c-baa6-ec5a-d6d2e4dc605d&nonce=dVNRTkJsODh2ckh2TTcyR3BVdnpCQUxBZFFVSGxURW9WMXFvOEt4akxRelgu`
+  }
 }

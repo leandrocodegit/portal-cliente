@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { authConfig } from 'src/app/app.module';
 import { AuthService } from '@/auth/services/auth.service';
+import { generateCodeChallenge, generateCodeVerifier } from '@/shared/services/keycloak.service';
 
 @Component({
   selector: 'app-perfil-bar',
@@ -14,7 +15,7 @@ import { AuthService } from '@/auth/services/auth.service';
 <div class="flex flex-col gap-4">
   <div class="flex flex-col items-start p-2 gap-6">
      @if (isLogin) {
-    <a type="button" href="https://auth.simodapp.com:8443/realms/simod/account">
+    <a type="button" [href]="getUrl()">
       <i class="pi pi-user mr-4"></i>
       <span>Minha conta</span>
      </a>
@@ -40,6 +41,7 @@ import { AuthService } from '@/auth/services/auth.service';
 export class PerfilBar implements OnInit {
 
   protected isLogin: any;
+  protected code: any;
 
   constructor(
     private readonly oauthService: OAuthService,
@@ -55,6 +57,10 @@ export class PerfilBar implements OnInit {
 
   ngOnInit(): void {
     this.isLogin = this.oauthService.hasValidAccessToken() || this.authService.valid();
+    const verifier = sessionStorage.getItem('PKCE_verifier');
+     generateCodeChallenge(verifier).then(code => {
+      this.code = code;
+     })
   }
 
   login(): void {
@@ -69,5 +75,9 @@ export class PerfilBar implements OnInit {
     this.oauthService.loadDiscoveryDocument().then(() => {
       this.oauthService.logOut();
     });
+  }
+
+  getUrl(){
+    return this.authService.getUrl(this.code);
   }
 }

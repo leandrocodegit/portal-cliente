@@ -94,6 +94,34 @@ export class AppMenu implements OnInit {
     servico.items[0]['items'] = servicos;
     this.model.push(servico)
 
+    this.model.push({
+      order: 0,
+      label: '',
+      items: [
+        {
+          label: 'Minha Conta',
+          icon: 'pi pi-fw pi-user',
+          items: [
+            {
+              label: 'Credênciais',
+              icon: 'pi pi-key',
+              routerLink: ['/conta'],
+            },
+            {
+              label: 'Sessões',
+              icon: 'pi pi-mobile',
+              routerLink: ['/conta/sessions']
+            },
+                        {
+              label: 'Perfil',
+              icon: 'pi pi-user-edit',
+              routerLink: ['/conta/perfil']
+            }
+          ]
+
+        }]
+    },)
+
     this.filteredProtocolos.push({
       "protocolo": {
         "numeroProtocolo": "A00000071",

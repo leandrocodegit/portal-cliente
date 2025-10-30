@@ -9,6 +9,10 @@ import { AppLayout } from './base/sidebar/app.layout';
 import { LoginSocialComponent } from './auth/login-social/login-social.component';
 import { AutenticacaoComponent } from './auth/autenticacao/autenticacao.component';
 import { AuthGuard } from './auth/services/auth.guard';
+import { KeycloakAccountSettingsComponent } from './minha-conta/keycloak/keycloak-account-settings/keycloak-account-settings.component';
+import { KeycloakSessionsComponent } from './minha-conta/keycloak/keycloak-sessions/keycloak-sessions.component';
+import { KeycloakUserProfileComponent } from './minha-conta/keycloak/keycloak-user-profile/keycloak-user-profile.component';
+import { KeycloakSessionTokenAuthComponent } from './minha-conta/keycloak/keycloak-session-token-auth/keycloak-session-token-auth.component';
 
 export const routes: Routes = [
 
@@ -21,6 +25,14 @@ export const routes: Routes = [
       { path: 'tarefa/:servicoId/:tarefaId', component: PreencherFormularioComponent },
        { path: 'servicos/:id', component: PublicoListaServicosComponent },
       { path: 'servicos/formulario/:servico/:formulario', component: PreencherSolicitacaoServicoPublicoComponent },
+     ]
+  },
+      {
+    path: 'conta', component: AppLayout, canActivate: [AuthGuard], children: [
+      { path: '', component: KeycloakAccountSettingsComponent },
+      { path: 'auth', component: KeycloakSessionTokenAuthComponent },
+      { path: 'sessions', component: KeycloakSessionsComponent },
+      { path: 'perfil', component: KeycloakUserProfileComponent },
      ]
   },
 

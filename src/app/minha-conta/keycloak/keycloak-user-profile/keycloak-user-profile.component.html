@@ -1,0 +1,19 @@
+<p-card>
+  <ng-template pTemplate="title">
+    <div class="flex items-center">
+      <i class="pi pi-user-edit mx-3 !text-3xl text-primary-500"></i>
+      <span>Editar Perfil</span>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="content">
+    <div *ngIf="!profileForm" class="flex justify-center items-center h-40">
+      <p-progressSpinner ariaLabel="loading"></p-progressSpinner>
+    </div>
+
+    @if(!isLoading){
+    <app-visao-formulario [noReadonly]="true" [schema]="formulario" [data]="userData" [apenasBotaoEnviar]="true"
+      (dataEmit)="enviarFormulario($event)" />
+    }
+  </ng-template>
+</p-card>

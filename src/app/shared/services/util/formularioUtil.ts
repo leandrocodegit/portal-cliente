@@ -51,3 +51,34 @@ export function gerarVariaveisForm(task: any, data: any): FormData {
     }
   return variaveis;
 }
+
+export function extrairAttributesUsuario(data: any): FormData {
+    for (const key in data.attributes) {
+      const value = data.attributes[key];
+      if (value !== null && value !== undefined) {
+        data[key] = value[0];
+      }
+    }
+  return data;
+}
+
+export function formatarDataUsuario(data: any, userData: any): FormData {
+  console.log(data);
+
+    for (const key in userData.attributes) {
+      const value = data[key];
+      console.log(key, value);
+
+      if (value !== null && value !== undefined) {
+        if(data[key])
+          userData.attributes[key] = [value]
+      }
+    }
+    for (const key in userData) {
+      const value = data[key];
+      if (value !== null && value !== undefined) {
+         userData[key] = value
+      }
+    }
+  return userData;
+}

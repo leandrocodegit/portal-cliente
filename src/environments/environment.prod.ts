@@ -2,7 +2,7 @@ import { HttpHeaders } from "@angular/common/http";
 
 const protocolo = 'https://';
 const host = 'dev.simodapp.com';
-const porta = ":2083"
+const porta = ":2053"
 export const environment = {
   url: protocolo + host + porta,
   production: false,

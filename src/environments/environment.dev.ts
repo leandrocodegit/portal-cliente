@@ -27,23 +27,6 @@ export const environment = {
     clockSkewInSec: 0,
     requireHttps: false
   },
-    accountAuthConfig: {
-    issuer: `https://auth.simodapp.com:8443/realms/simod`,
-    redirectUri: window.location.origin + '/auth',
-    postLogoutRedirectUri: window.location.origin,
-    clientId: 'account-console',
-    responseType: 'code',
-    scope: `openid profile email`,
-    showDebugInformation: false,
-    strictDiscoveryDocumentValidation: false,
-   // timeoutFactor: 0.20,
-   // sessionChecksEnabled: false,
-    //silentRefreshRedirectUri: window.location.origin + '/assets/silent-refresh.html',
-  //  useSilentRefresh: false,
-    decreaseExpirationBySec: 10000,
-    clockSkewInSec: 0,
-    requireHttps: false
-  },
   headers: {
     headers: new HttpHeaders({
       "Content-Type": "application/json"

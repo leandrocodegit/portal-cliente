@@ -33,10 +33,7 @@ export class AuthInterceptor implements HttpInterceptor {
       return next.handle(req).pipe(
         catchError((error: HttpErrorResponse) => {
           if (error.status === 401) {
-            generateCodeChallenge().then(code => {
-              console.log('Host', req);
-              window.location.href = this.authService.getUrl(code);
-            })
+           this.authService.redirectAccount();
           }else{
             this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Algo deu errado ao executar essa ação!' });
           }

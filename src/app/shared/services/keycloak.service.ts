@@ -3,8 +3,7 @@ import { Injectable } from '@angular/core';
 import { __await } from 'tslib';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment.dev';
-import { PaginatorState } from 'primeng/paginator';
-import { OAuthService } from 'angular-oauth2-oidc';
+import { AuthService } from '@/auth/services/auth.service';
 
 
 @Injectable({
@@ -15,11 +14,18 @@ export class KeycloakService {
 
 
   constructor(
+    private readonly authService: AuthService,
     private readonly http: HttpClient) { }
 
 
   public getPerfil(): Observable<any> {
     const token = sessionStorage.getItem('account_token');
+
+    if(!token || token == null){
+      this.authService.redirectAccount();
+      return new Observable();
+    }
+    
     return this.http.get<any>(`${environment.authConfig.issuer}/account?userProfileMetadata=true`,
       {
         headers: {
@@ -31,6 +37,12 @@ export class KeycloakService {
 
   public salvarPerfil(userData: any): Observable<any> {
     const token = sessionStorage.getItem('account_token');
+
+    if(!token || token == null){
+      this.authService.redirectAccount();
+      return new Observable();
+    }
+
     return this.http.post<any>(`${environment.authConfig.issuer}/account`,
       userData,
       {
@@ -43,6 +55,12 @@ export class KeycloakService {
 
   public listaCredenciais(): Observable<any[]> {
     const token = sessionStorage.getItem('account_token');
+
+    if(!token || token == null){
+      this.authService.redirectAccount();
+      return new Observable();
+    }
+
     return this.http.get<any>(`${environment.authConfig.issuer}/account/credentials`,
       {
         headers: {
@@ -54,6 +72,12 @@ export class KeycloakService {
 
   public listaSessionsDevices(): Observable<any[]> {
     const token = sessionStorage.getItem('account_token');
+
+    if(!token || token == null){
+      this.authService.redirectAccount();
+      return new Observable();
+    }
+
     return this.http.get<any>(`${environment.authConfig.issuer}/account/sessions/devices`,
       {
         headers: {
@@ -65,6 +89,12 @@ export class KeycloakService {
 
   public removerSessionsDevices(sessionId: string): Observable<any[]> {
     const token = sessionStorage.getItem('account_token');
+
+    if(!token || token == null){
+      this.authService.redirectAccount();
+      return new Observable();
+    }
+
     return this.http.delete<any>(`${environment.authConfig.issuer}/account/sessions/${sessionId}`,
       {
         headers: {

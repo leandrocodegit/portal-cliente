@@ -70,8 +70,9 @@ export function formatarDataUsuario(data: any, userData: any): FormData {
       console.log(key, value);
 
       if (value !== null && value !== undefined) {
-        if(data[key])
+        if(data[key] && userData?.attributes)
           userData.attributes[key] = [value]
+        else userData['attributes'][key] = [value]
       }
     }
     for (const key in userData) {

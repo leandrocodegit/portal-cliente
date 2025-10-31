@@ -32,6 +32,7 @@ export class AuthInterceptor implements HttpInterceptor {
       this.loadService.show()
       return next.handle(req).pipe(
         catchError((error: HttpErrorResponse) => {
+          sessionStorage.removeItem('account_token');
           if (error.status === 401) {
            this.authService.redirectAccount();
           }else{

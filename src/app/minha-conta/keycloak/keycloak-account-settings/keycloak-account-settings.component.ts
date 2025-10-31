@@ -19,6 +19,7 @@ interface UserCredentialMetadata {
     type: string;
     createdDate: number;
     credentialData: string;
+    userLabel?: string
   };
 }
 
@@ -47,16 +48,9 @@ interface KeycloakAuthenticator {
   templateUrl: './keycloak-account-settings.component.html',
   styleUrls: ['./keycloak-account-settings.component.scss']
 })
-export class KeycloakAccountSettingsComponent implements OnInit, OnChanges {
-  // Recebe a lista de autenticadores da API
+export class KeycloakAccountSettingsComponent implements OnInit {
+
   @Input() authenticators: KeycloakAuthenticator[] = [];
-
-  // Emite a ação que o usuário deseja realizar
-  @Output() onAdd = new EventEmitter<string>();
-  @Output() onUpdate = new EventEmitter<string>();
-  @Output() onRemove = new EventEmitter<string>();
-
-  // Listas processadas
   protected configuredMethods: KeycloakAuthenticator[] = [];
   protected availableMethods: KeycloakAuthenticator[] = [];
 
@@ -66,19 +60,12 @@ export class KeycloakAccountSettingsComponent implements OnInit, OnChanges {
   ) { }
 
 
-
   ngOnInit(): void {
     this.keycloakService.listaCredenciais().subscribe(response => {
       this.configuredMethods = response;
       this.availableMethods = response;
     }, error => console.log(error.status)
     );
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['authenticators']) {
-      // this.processAuthenticators();
-    }
   }
 
   protected getIconForType(type: string): string {
@@ -95,30 +82,33 @@ export class KeycloakAccountSettingsComponent implements OnInit, OnChanges {
   }
 
   protected addMethod(action: string | undefined): void {
-    if (action) {
-      this.onAdd.emit(action);
-    }
+     generateCodeChallenge().then(code => {
+      window.location.href = this.authService.getUrlUpdatePassword(code, action)
+    })
   }
 
   protected updateMethod(action: string | undefined): void {
-    if (action) {
-      this.onUpdate.emit(action);
-    }
-
     generateCodeChallenge().then(code => {
-      window.location.href = this.authService.getUrlUpdatePassword(code)
+      window.location.href = this.authService.getUrlUpdatePassword(code, action)
     })
 
   }
 
-  protected removeMethod(type: string): void {
-    // A ação de remoção é geralmente baseada no tipo
-    this.onRemove.emit(type);
+  protected removeMethod(id: string): void {
+    generateCodeChallenge().then(code => {
+      window.location.href = this.authService.getUrlUpdatePassword(code, `delete_credential:${id}`)
+    });
   }
 
   getName(label: string) {
     if (ptBRTranslationMap.has(label))
       return ptBRTranslationMap.get(label);
     return label;
+  }
+
+  getNameCredential(auth: UserCredentialMetadata){
+    if(auth.credential.type == 'password')
+      return 'Minha Senha de Acesso';
+    return auth.credential?.userLabel && auth.credential?.userLabel != '' ? auth.credential?.userLabel : auth.credential?.type
   }
 }

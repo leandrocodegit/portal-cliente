@@ -26,7 +26,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-    const isAccount = req.url.includes('/account') && !req.url.includes('/protocol/openid-connect/auth')
+    const isAccount = req.url.includes('/account') && !req.url.includes('/protocol/openid-connect/auth') && !req.url.includes('/realms/simod/login-actions')
 
     if (isAccount && !this.loadService.isLoad) {
       this.loadService.show()

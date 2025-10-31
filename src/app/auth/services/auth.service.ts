@@ -275,13 +275,13 @@ export class AuthService {
     const verifier = sessionStorage.getItem('PKCE_verifier');
     const nonce = sessionStorage.getItem('nonce');
     const session_state = sessionStorage.getItem('session_state');
-    return `${environment.authConfig.issuer}/protocol/openid-connect/auth?client_id=account-console&UPDATE_PASSWORD&redirect_uri=${window.location.origin}${redirect ?? '/conta/auth'}&response_type=code&scope=openid&code_challenge=${code}&code_challenge_method=S256&response_mode=query&state=${session_state}&nonce=${nonce}`
+    return `${environment.authConfig.issuer}/protocol/openid-connect/auth?client_id=account-console&redirect_uri=${window.location.origin}${redirect ?? '/conta/auth'}&response_type=code&scope=openid&code_challenge=${code}&code_challenge_method=S256&response_mode=query&state=${session_state}&nonce=${nonce}`
   }
 
-  getUrlUpdatePassword(code: string, redirect?: string) {
+  getUrlUpdatePassword(code: string, action: string) {
     const nonce = sessionStorage.getItem('nonce');
     const session_state = sessionStorage.getItem('session_state');
-    return `${environment.authConfig.issuer}/protocol/openid-connect/auth?client_id=account-console&kc_action=UPDATE_PASSWORD&redirect_uri=${window.location.origin}${redirect ?? '/conta/auth'}&response_type=code&scope=openid&code_challenge=${code}&code_challenge_method=S256&response_mode=query&state=${session_state}&nonce=${nonce}`
+    return `${environment.authConfig.issuer}/protocol/openid-connect/auth?client_id=account-console&kc_action=${action}&redirect_uri=${window.location.origin}${'/conta/auth'}&response_type=code&scope=openid&code_challenge=${code}&code_challenge_method=S256&response_mode=query&state=${session_state}&nonce=${nonce}`
   }
 
   redirectAccount() {

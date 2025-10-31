@@ -3487,6 +3487,19 @@ var SvgEnderecofield = function SvgEnderecofield(props) {
   })));
 };
 
+var _path$ap;
+function _extends$ap() { return _extends$ad = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends$ad.apply(null, arguments); }
+var SvgPhonefield = function SvgPhonefield(props) {
+  return /*#__PURE__*/React.createElement("svg", _extends$ap({
+    xmlns: "http://www.w3.org/2000/svg",
+    width: 36,
+    height: 36,
+    fill: "currentcolor",
+  }, props), _path$ap || (_path$ap = /*#__PURE__*/React.createElement("path", {
+    fillRule: "evenodd",
+    d: "M13.24 21.58a30.1 30.1 0 0013.18 13.18l4.4-4.4a2 2 0 012.1-.48 22.72 22.72 0 007.12 1.14 2 2 0 012 2V40a2 2 0 01-2 2A32 32 0 018 10a2 2 0 012-2h7a2 2 0 012 2 22.72 22.72 0 001.14 7.12 2 2 0 01-.48 2.1l-4.42 4.36z"  })));
+};
+
 var _path$h;
 function _extends$h() { return _extends$h = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends$h.apply(null, arguments); }
 var SvgTextarea = function SvgTextarea(props) {
@@ -3606,6 +3619,7 @@ const iconsByType = type => {
     html: SvgHtml,
     textfield: SvgTextfield,
     endereco: SvgEnderecofield,
+    phone: SvgPhonefield,
     textarea: SvgTextarea,
     table: SvgTable,
     filepicker: SvgFilePicker,
@@ -5302,6 +5316,145 @@ Endereco.config = {
 };
 
 
+const type$45 = 'phone';
+function Phone(props) {
+  const {
+    disabled,
+    errors = [],
+    domId,
+    onBlur,
+    onFocus,
+    field,
+    readonly,
+    value = ''
+  } = props;
+  const {
+    description,
+    label,
+    appearance = {},
+    validate = {}
+  } = field;
+  const {
+    prefixAdorner,
+    suffixAdorner
+  } = appearance;
+  const {
+    required
+  } = validate;
+  const [onChange, flushOnChange] = useFlushDebounce(({
+    target
+  }) => {
+    props.onChange({
+      value: target.value
+    });
+  });
+
+  /**
+   * @param {import('preact').JSX.TargetedEvent<HTMLInputElement, Event>} event
+   */
+  const onInputChange = event => {
+    handlePhone(event)
+    onChange({
+      target: event.target
+    });
+  };
+  const onInputBlur = () => {
+    flushOnChange && flushOnChange();
+    onBlur && onBlur();
+  };
+  const onInputFocus = () => {
+    onFocus && onFocus();
+  };
+  const descriptionId = `${domId}-description`;
+  const errorMessageId = `${domId}-error-message`;
+  return jsxs("div", {
+    class: formFieldClasses(type$4, {
+      errors,
+      disabled,
+      readonly
+    }),
+    children: [jsx(Label, {
+      htmlFor: domId,
+      label: label,
+      required: required
+    }), jsx(TemplatedInputAdorner, {
+      disabled: disabled,
+      readonly: readonly,
+      pre: prefixAdorner,
+      post: suffixAdorner,
+      children: jsx("input", {
+        class: "fjs-input",
+        disabled: disabled,
+        readOnly: readonly,
+        id: domId,
+        onInput: onInputChange,
+        onBlur: onInputBlur,
+        onFocus: onInputFocus,
+        onkeyup:handlePhone(event),
+        maxlength:"15",
+        placeholder:"(99) 99999-9999",
+        type: "tel",
+        value: value,
+        "aria-describedby": [descriptionId, errorMessageId].join(' '),
+        required: required,
+        "aria-invalid": errors.length > 0
+      })
+    }), jsx(Description, {
+      id: descriptionId,
+      description: description
+    }), jsx(Errors, {
+      id: errorMessageId,
+      errors: errors
+    })]
+  });
+}
+Phone.config = {
+  type: type$45,
+  keyed: true,
+  name: 'Campo de telefone',
+  group: 'basic-input',
+  emptyValue: '',
+  sanitizeValue: ({
+    value
+  }) => {
+    if (isArray(value) || isObject(value) || isNil(value)) {
+      return '';
+    }
+
+    // sanitize newlines to spaces
+    if (typeof value === 'string') {
+      return value.replace(/[\r\n\t]/g, ' ');
+    }
+    return String(value);
+  },
+  create: (options = {}) => ({
+    label: 'Campo de telefone',
+    ...options
+  })
+};
+
+const handlePhone = (event) => {
+  let input = event.target;
+  input.value = phoneMask(input.value);
+};
+
+const phoneMask = (value) => {
+  if (!value) return "";
+  value = value.replace(/\D/g, "");
+
+  value = value.replace(/(\d{2})(\d)/, "($1)$2");
+
+  // 3. Coloca o traço de separação (hífen), ajustando para 8 ou 9 dígitos
+  // Se for celular (5 dígitos no 3º bloco), fica: (11) 98765-4321
+  if (value.length > 12) {
+    value = value.replace(/(\d{5})(\d{4})$/, "$1-$2");
+  } else {
+    value = value.replace(/(\d{4})(\d{4})$/, "$1-$2");
+  }
+
+  return value;
+};
+
  function Enviar(props) {
   const {
     field,
@@ -6578,7 +6731,7 @@ function FormComponent(props) {
 
 const formFields = [/* Input */
 Textfield, Textarea, Numberfield, Datetime, ExpressionField, FilePicker, /* Selection */
-Checkbox, Checklist, Radio, Select, Taglist, Endereco, Enviar, Button, /* Presentation */
+Checkbox, Checklist, Radio, Select, Taglist, Endereco, Enviar, Button, Phone, /* Presentation */
 Text, Image, Table, Html, DocumentPreview, Spacer, Separator, /* Containers */
 Group, DynamicList, IFrame, /* Other */
 Default];
@@ -10016,5 +10169,5 @@ function createForm(options) {
   });
 }
 
-export { ALLOW_ATTRIBUTE, Checkbox, Checklist, Enviar, ConditionChecker, DATETIME_SUBTYPES, DATETIME_SUBTYPES_LABELS, DATETIME_SUBTYPE_PATH, DATE_DISALLOW_PAST_PATH, DATE_LABEL_PATH, Datetime, Default, Description, DocumentPreview, DynamicList, Errors, ExpressionField, ExpressionFieldModule, ExpressionLanguageModule, ExpressionLoopPreventer, FeelExpressionLanguage, FeelersTemplating, FieldFactory, FilePicker, Form, FormComponent, FormContext, FormField, FormFieldRegistry, FormFields, FormLayouter, FormRenderContext, Group,Endereco, Html, IFrame, Image, Importer, Label, LocalExpressionContext, MINUTES_IN_DAY, MarkdownRenderer, MarkdownRendererModule, Numberfield, OPTIONS_SOURCES, OPTIONS_SOURCES_DEFAULTS, OPTIONS_SOURCES_LABELS, OPTIONS_SOURCES_PATHS, OPTIONS_SOURCE_DEFAULT, PathRegistry, Radio, RenderModule, RepeatRenderManager, RepeatRenderModule, SANDBOX_ATTRIBUTE, SECURITY_ATTRIBUTES_DEFINITIONS, Select, Separator, Spacer, TIME_INTERVAL_PATH, TIME_LABEL_PATH, TIME_SERIALISINGFORMAT_LABELS, TIME_SERIALISING_FORMATS, TIME_SERIALISING_FORMAT_PATH, TIME_USE24H_PATH, Table, Taglist, Text, Textarea, Textfield, ViewerCommands, ViewerCommandsModule, buildExpressionContext, clone, createForm, createFormContainer, createInjector, escapeHTML, formFields, generateIdForType, generateIndexForType, getAncestryList, getOptionsSource, getSchemaVariables, getScrollContainer, hasEqualValue, iconsByType, isRequired, pathParse, pathsEqual, runExpressionEvaluation, runRecursively, sanitizeDateTimePickerValue, sanitizeHTML, sanitizeIFrameSource, sanitizeImageSource, sanitizeMultiSelectValue, sanitizeSingleSelectValue, schemaVersion, useExpressionEvaluation, useSingleLineTemplateEvaluation, useTemplateEvaluation, wrapCSSStyles, wrapObjectKeysWithUnderscores };
+export { ALLOW_ATTRIBUTE, Checkbox, Checklist, Enviar, ConditionChecker, DATETIME_SUBTYPES, DATETIME_SUBTYPES_LABELS, DATETIME_SUBTYPE_PATH, DATE_DISALLOW_PAST_PATH, DATE_LABEL_PATH, Datetime, Default, Description, DocumentPreview, DynamicList, Errors, ExpressionField, ExpressionFieldModule, ExpressionLanguageModule, ExpressionLoopPreventer, FeelExpressionLanguage, FeelersTemplating, FieldFactory, FilePicker, Form, FormComponent, FormContext, FormField, FormFieldRegistry, FormFields, FormLayouter, FormRenderContext, Group,Endereco, Phone, Html, IFrame, Image, Importer, Label, LocalExpressionContext, MINUTES_IN_DAY, MarkdownRenderer, MarkdownRendererModule, Numberfield, OPTIONS_SOURCES, OPTIONS_SOURCES_DEFAULTS, OPTIONS_SOURCES_LABELS, OPTIONS_SOURCES_PATHS, OPTIONS_SOURCE_DEFAULT, PathRegistry, Radio, RenderModule, RepeatRenderManager, RepeatRenderModule, SANDBOX_ATTRIBUTE, SECURITY_ATTRIBUTES_DEFINITIONS, Select, Separator, Spacer, TIME_INTERVAL_PATH, TIME_LABEL_PATH, TIME_SERIALISINGFORMAT_LABELS, TIME_SERIALISING_FORMATS, TIME_SERIALISING_FORMAT_PATH, TIME_USE24H_PATH, Table, Taglist, Text, Textarea, Textfield, ViewerCommands, ViewerCommandsModule, buildExpressionContext, clone, createForm, createFormContainer, createInjector, escapeHTML, formFields, generateIdForType, generateIndexForType, getAncestryList, getOptionsSource, getSchemaVariables, getScrollContainer, hasEqualValue, iconsByType, isRequired, pathParse, pathsEqual, runExpressionEvaluation, runRecursively, sanitizeDateTimePickerValue, sanitizeHTML, sanitizeIFrameSource, sanitizeImageSource, sanitizeMultiSelectValue, sanitizeSingleSelectValue, schemaVersion, useExpressionEvaluation, useSingleLineTemplateEvaluation, useTemplateEvaluation, wrapCSSStyles, wrapObjectKeysWithUnderscores };
 //# sourceMappingURL=index.es.js.map

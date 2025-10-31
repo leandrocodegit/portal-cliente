@@ -98,7 +98,7 @@ export class KeycloakUserProfileComponent implements OnInit {
           if (label != 'locale')
             this.formulario.components.push({
               label: label,
-              type: "textfield",
+              type: "phone",
               referencia: input.name,
               key: input.name,
               id: input.name,

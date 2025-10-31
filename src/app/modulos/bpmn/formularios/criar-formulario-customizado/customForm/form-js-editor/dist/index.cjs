@@ -9517,7 +9517,7 @@ function isProhibitedPath(path) {
   return path.split('.').some(segment => prohibitedSegments.includes(segment));
 }
 const LABELED_NON_INPUTS = ['button', 'group', 'dynamiclist', 'iframe', 'table', 'documentPreview', 'enviar'];
-const INPUTS = ['checkbox', 'checklist', 'datetime', 'number', 'radio', 'select', 'taglist', 'textfield', 'textarea', 'filepicker', 'endereco'];
+const INPUTS = ['checkbox', 'checklist', 'datetime', 'number', 'radio', 'select', 'taglist', 'textfield', 'textarea', 'filepicker', 'endereco', 'phone'];
 const OPTIONS_INPUTS = ['button','checklist', 'radio', 'select', 'taglist', 'enviar'];
 function hasEntryConfigured(formFieldDefinition, entryId) {
   const {

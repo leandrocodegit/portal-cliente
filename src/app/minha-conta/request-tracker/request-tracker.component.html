@@ -38,7 +38,7 @@
 
       @if(protocolo?.instancia?.state != 'SUSPENDED'){
       <div class="my-6">
-        <app-timeline [vertical]="true" [instancia]="{id: protocolo.id, processDefinitionId: protocolo.processId}" />
+        <app-timeline [vertical]="true" [instancia]="{id: protocolo?.id, processDefinitionId: protocolo.processId}" />
       </div>
       }
 

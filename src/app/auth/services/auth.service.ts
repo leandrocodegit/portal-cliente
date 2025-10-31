@@ -232,6 +232,21 @@ export class AuthService {
     }
   }
 
+  loginOrdic(): void {
+    this.oauthService.configure(authConfig);
+    this.oauthService.loadDiscoveryDocumentAndTryLogin().then(() => {
+      this.oauthService.initLoginFlow();
+    });
+  }
+
+  logoutOrdic() {
+    this.oauthService.configure(authConfig);
+    this.oauthService.loadDiscoveryDocument().then(() => {
+      this.oauthService.logOut();
+      sessionStorage.clear();
+    });
+  }
+
   limparSessao() {
     localStorage.clear();
   }

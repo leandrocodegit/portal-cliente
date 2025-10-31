@@ -5,7 +5,7 @@
     <button class="layout-menu-button layout-topbar-action" (click)="sideBarOpen()">
       <i class="pi pi-bars"></i>
     </button>
-  }
+    }
     <a class="layout-topbar-logo" routerLink="/">
       <span>SIMOD</span>
     </a>
@@ -26,41 +26,64 @@
         <app-configurator />
       </div>
       <div class="relative hidden lg:block">
-        <button class="layout-topbar-action" pStyleClass="@next" enterFromClass="hidden"
-          enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout"
-          [hideOnOutsideClick]="true">
+        <button class="layout-topbar-action" (click)="op.toggle($event)">
           <i class="pi pi-user"></i>
         </button>
-        <app-perfil-bar />
       </div>
     </div>
 
-    <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next" enterFromClass="hidden"
+    <button class="layout-topbar-menu-button layout-topbar-action" enterFromClass="hidden"
       enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout"
-      [hideOnOutsideClick]="true">
+      (click)="op.toggle($event)">
       <i class="pi pi-ellipsis-v"></i>
     </button>
-
-    <div class="layout-topbar-menu hidden lg:block gap-4">
-      <div class="layout-topbar-menu-content">
-        @if (isLogin) {
-        <div class="block lg:hidden">
-          <a type="button" href="https://auth.simodapp.com:8443/realms/simod/account?referrer=security-admin-console&referrer_uri=http%3A%2F%2F192.168.15.200%3A8080%2Fadmin%2Fmaster%2Fconsole%2F%23%2Fsimod%2Frealms" class="layout-topbar-action mb-1 block">
-            <i class="pi pi-user dark:text-white"></i>
-            <span>Minha conta</span>
-          </a>
-        </div>
-        <button (click)="logout()" type="button" class="layout-topbar-action">
-          <i class="pi pi-sign-out"></i>
-          <span>Sair</span>
-        </button>
-        }@else {
-        <button (click)="login()" type="button" class="layout-topbar-action">
-          <i class="pi pi-sign-in"></i>
-          <span>Login</span>
-        </button>
-        }
-      </div>
-    </div>
   </div>
-</div>
+  <p-popover #op>
+    <ng-container *ngTemplateOutlet="barLogin" />
+  </p-popover>
+
+  <ng-template #barLogin>
+    <div class="py-4 px-2 w-full max-w-xs">
+      <ul class="list-none p-0 m-0 flex flex-col gap-1">
+        @if (!isLogin) {
+        <li>
+          <button (click)="login()" type="button"
+            class="flex items-center w-full p-3 rounded-md text-surface-700 dark:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors duration-200">
+            <i class="pi pi-sign-in text-lg mr-3"></i>
+            <span class="font-medium">Login</span>
+          </button>
+        </li>
+        } @else {
+        <li>
+          <a routerLink="/conta"
+            class="flex items-center w-full p-3 rounded-md text-surface-700 dark:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors duration-200 no-underline">
+            <i class="pi pi-key text-lg mr-3 text-primary-500"></i>
+            <span class="font-medium">Credenciais</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/conta/sessions"
+            class="flex items-center w-full p-3 rounded-md text-surface-700 dark:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors duration-200 no-underline">
+            <i class="pi pi-mobile text-lg mr-3 text-primary-500"></i>
+            <span class="font-medium">Sessões</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/conta/perfil"
+            class="flex items-center w-full p-3 rounded-md text-surface-700 dark:text-surface-200 hover:bg-surface-100 dark:hover:bg-surface-700 transition-colors duration-200 no-underline">
+            <i class="pi pi-user-edit text-lg mr-3 text-primary-500"></i>
+            <span class="font-medium">Perfil</span>
+          </a>
+        </li>
+        <li class="border-t border-surface-200 dark:border-surface-700 my-2"></li>
+        <li>
+          <button (click)="logout()" type="button"
+            class="flex items-center w-full p-3 rounded-md text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200">
+            <i class="pi pi-sign-out text-lg mr-3"></i>
+            <span class="font-medium">Sair</span>
+          </button>
+        </li>
+        }
+      </ul>
+    </div>
+  </ng-template>

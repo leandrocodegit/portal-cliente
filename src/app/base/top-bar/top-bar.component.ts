@@ -6,10 +6,9 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { AppConfigurator } from '../../app.configurator';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { SelectModule } from 'primeng/select';
-import { authConfig } from 'src/app/app.module';
 import { AuthService } from '@/auth/services/auth.service';
 import { LayoutService } from '../services/layout.service';
-import { PerfilBar } from '../sidebar/perfil.login';
+import { PopoverModule } from 'primeng/popover';
 
 @Component({
   selector: 'app-top-bar',
@@ -21,10 +20,9 @@ import { PerfilBar } from '../sidebar/perfil.login';
     AppConfigurator,
     RouterModule,
     SelectModule,
-    PerfilBar,
+    PopoverModule
   ],
-  templateUrl: './top-bar.component.html',
-  styleUrl: './top-bar.component.scss'
+  templateUrl: './top-bar.component.html'
 })
 export class TopBarComponent implements OnInit {
 
@@ -37,6 +35,12 @@ export class TopBarComponent implements OnInit {
     private readonly oauthService: OAuthService,
     private readonly authService: AuthService,
   ) {
+    this.oauthService.events
+      .pipe()
+      .subscribe((e: any) => {
+        if (e.type == 'token_received' || e.type == 'token_refreshed')
+          this.isLogin = oauthService.hasValidAccessToken() || authService.valid();
+      });
   }
 
   ngOnInit(): void {
@@ -48,26 +52,17 @@ export class TopBarComponent implements OnInit {
     this.layoutService.setPreferencias();
   }
 
-
-  login(): void {
-    this.oauthService.configure(authConfig);
-    this.oauthService.loadDiscoveryDocumentAndTryLogin().then(() => {
-      this.oauthService.tryLoginCodeFlow().then((data) => {
-        console.log('tryLoginCodeFlow', data);
-      });
-    });
-  }
-
   sideBarOpen() {
     this.layoutService.onMenuToggle();
     if (this.layoutService.isDesktop())
       this.layoutService.setPreferencias();
   }
 
+  login(): void {
+    this.authService.loginOrdic();
+  }
+
   logout() {
-    this.oauthService.configure(authConfig);
-     this.oauthService.loadDiscoveryDocumentAndTryLogin().then(() => {
-     this.oauthService.logOut();
-    });
+    this.authService.logoutOrdic();
   }
 }

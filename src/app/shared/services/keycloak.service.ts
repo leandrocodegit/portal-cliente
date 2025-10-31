@@ -21,11 +21,11 @@ export class KeycloakService {
   public getPerfil(): Observable<any> {
     const token = sessionStorage.getItem('account_token');
 
-    if(!token || token == null){
+    if (!token || token == null) {
       this.authService.redirectAccount();
       return new Observable();
     }
-    
+
     return this.http.get<any>(`${environment.authConfig.issuer}/account?userProfileMetadata=true`,
       {
         headers: {
@@ -38,7 +38,7 @@ export class KeycloakService {
   public salvarPerfil(userData: any): Observable<any> {
     const token = sessionStorage.getItem('account_token');
 
-    if(!token || token == null){
+    if (!token || token == null) {
       this.authService.redirectAccount();
       return new Observable();
     }
@@ -56,7 +56,7 @@ export class KeycloakService {
   public listaCredenciais(): Observable<any[]> {
     const token = sessionStorage.getItem('account_token');
 
-    if(!token || token == null){
+    if (!token || token == null) {
       this.authService.redirectAccount();
       return new Observable();
     }
@@ -73,7 +73,7 @@ export class KeycloakService {
   public listaSessionsDevices(): Observable<any[]> {
     const token = sessionStorage.getItem('account_token');
 
-    if(!token || token == null){
+    if (!token || token == null) {
       this.authService.redirectAccount();
       return new Observable();
     }
@@ -90,7 +90,7 @@ export class KeycloakService {
   public removerSessionsDevices(sessionId: string): Observable<any[]> {
     const token = sessionStorage.getItem('account_token');
 
-    if(!token || token == null){
+    if (!token || token == null) {
       this.authService.redirectAccount();
       return new Observable();
     }

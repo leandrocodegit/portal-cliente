@@ -71,29 +71,14 @@ export class KeycloakAccountSettingsComponent implements OnInit, OnChanges {
     this.keycloakService.listaCredenciais().subscribe(response => {
       this.configuredMethods = response;
       this.availableMethods = response;
-    });
+    }, error => console.log(error.status)
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['authenticators']) {
       // this.processAuthenticators();
     }
-  }
-
-  private processAuthenticators(): void {
-    if (!this.authenticators) {
-      this.configuredMethods = [];
-      this.availableMethods = [];
-      return;
-    }
-
-    this.configuredMethods = this.authenticators.filter(
-      auth => auth.userCredentialMetadatas && auth.userCredentialMetadatas.length > 0
-    );
-
-    this.availableMethods = this.authenticators.filter(
-      auth => !auth.userCredentialMetadatas || auth.userCredentialMetadatas.length === 0
-    );
   }
 
   protected getIconForType(type: string): string {

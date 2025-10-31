@@ -33,18 +33,18 @@ export class AuthInterceptor implements HttpInterceptor {
       return next.handle(req).pipe(
         catchError((error: HttpErrorResponse) => {
           sessionStorage.removeItem('account_token');
-          if (error.status === 401) {
-           this.authService.redirectAccount();
-          }else{
-            this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Algo deu errado ao executar essa ação!' });
+          if (this.oauthService.hasValidAccessToken()) {
+            this.authService.redirectAccount();
+          } else {
+            this.router.navigate(['/login']);
           }
           return throwError(() => error);
         }),
         tap(event => {
-        if (event instanceof HttpResponse && req.method !== 'GET' && req.method !== 'OPTIONS') {
-          this.messageService.add({ severity: 'success', summary: 'Concluido', detail: 'Salvo com sucesso' });
-        }
-      }),
+          if (event instanceof HttpResponse && req.method !== 'GET' && req.method !== 'OPTIONS') {
+            this.messageService.add({ severity: 'success', summary: 'Concluido', detail: 'Salvo com sucesso' });
+          }
+        }),
         finalize(() => {
           this.loadService.hide()
         })

@@ -273,7 +273,6 @@ export class AuthService {
     this.loadService.show();
     generateCodeChallenge().then(code => {
       window.location.href = this.getUrl(code);
-      this.loadService.hide();
     })
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { SelectModule } from 'primeng/select';
@@ -15,6 +15,7 @@ import { Protocolo } from '@/shared/models/protocolo.model';
 import { Subject } from 'rxjs';
 import { InputTextModule } from 'primeng/inputtext';
 import { PublicoService } from '@/shared/services/publicos.service';
+import { Separator } from '@/modulos/bpmn/formularios/criar-formulario-customizado/customForm/form-js-viewer/dist/types';
 
 @Component({
   selector: 'app-menu',
@@ -33,7 +34,7 @@ import { PublicoService } from '@/shared/services/publicos.service';
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.scss'
 })
-export class AppMenu implements OnInit {
+export class AppMenu implements AfterViewInit {
 
   protected tenants: any[] = [];
   protected tenant: any;
@@ -41,6 +42,7 @@ export class AppMenu implements OnInit {
     {
       order: 0,
       label: '',
+      expanded: true,
       items: [{ label: 'Meus Protocolos', icon: 'pi pi-fw pi-ticket', separator: false, routerLink: ['/'] }]
     },
 
@@ -64,11 +66,13 @@ export class AppMenu implements OnInit {
   ) {
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
 
     let servico = {
       order: 3,
       label: '',
+      active: true,
+      separator: false,
       items: [
         {
           label:
@@ -121,20 +125,6 @@ export class AppMenu implements OnInit {
 
         }]
     },)
-
-    this.filteredProtocolos.push({
-      "protocolo": {
-        "numeroProtocolo": "A00000071",
-        "tenant": "simod"
-      },
-      "dataCriacao": "2025-08-09T17:24:17.09017",
-      "servicoId": "Process_2:16:2f182afe-73ab-11f0-abf0-0242ac170007",
-      "id": "ad6d9aee-7545-11f0-abf0-0242ac170007",
-      "deploymentId": "2f0f2a4a-73ab-11f0-abf0-0242ac170007",
-      "descricaoServico": "Teste",
-      "vencimento": "2025-08-09T17:24:17.170551",
-      "configuracaoProtocolo": null
-    })
   }
 
   saveEvent(event: any) {

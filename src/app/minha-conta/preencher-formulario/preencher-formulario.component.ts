@@ -72,7 +72,6 @@ export class PreencherFormularioComponent {
   buscarFormularopTarefa(tarefaId: string) {
     this.publicoService.listaFormulariosTarefaAdicional(tarefaId).subscribe(response => {
       this.formulario = JSON.parse(response.value[0].schema);
-      console.log(this.formulario);
       this.listaVariaveis(tarefaId);
     });
 

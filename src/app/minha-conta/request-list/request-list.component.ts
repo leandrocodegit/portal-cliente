@@ -88,8 +88,6 @@ export class RequestListComponent implements OnInit {
   }
 
   iniciarServico(tarefa: any) {
-    console.log(tarefa);
-
     // this.router.navigate([`/tarefa/${servico.id}/${servico.formKey}`, {'redirect': 'http://localhost:5500/conta/lista'}]);
   }
 }

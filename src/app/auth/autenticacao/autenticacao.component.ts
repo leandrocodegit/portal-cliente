@@ -58,7 +58,6 @@ export class AutenticacaoComponent implements OnInit, OnDestroy {
         }
       }, 2000)
     } catch (error) {
-      console.log('Erro lançado', error);
       clearInterval(this.intervalo);
       this.router.navigate(['/login']);
     }
@@ -72,7 +71,6 @@ export class AutenticacaoComponent implements OnInit, OnDestroy {
         turnstile.render(this.turnstileElement.nativeElement, {
           sitekey: '0x4AAAAAABer05zX5CdsZSWY',
           callback: (token: string) => {
-            console.log('Token', token);
             this.http.post<any>(`https://challenges.cloudflare.com/turnstile/v0/siteverify`, {
               secret: "0x4AAAAAABer0yN9pJ6WbFuF1qL5sU5ENwk",
               response: token

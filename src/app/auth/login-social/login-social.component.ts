@@ -33,8 +33,6 @@ export class LoginSocialComponent implements OnInit {
     this.navigate.queryParamMap.subscribe(param => {
       this.oauthService.configure(authConfig);
       this.oauthService.loadDiscoveryDocumentAndTryLogin().then(() => {
-        console.log('param[returnUri]',param['returnUri']);
-
         this.oauthService.initLoginFlow(param['returnUri']);
       //  this.oauthService.setupAutomaticSilentRefresh();
       });

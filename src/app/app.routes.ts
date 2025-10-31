@@ -16,26 +16,29 @@ import { KeycloakSessionTokenAuthComponent } from './minha-conta/keycloak/keyclo
 
 export const routes: Routes = [
 
-    {
+  {
     path: '', component: AppLayout, canActivate: [AuthGuard], children: [
-      { path: '', component: RequestListComponent },
-      { path: 'lista', component: RequestListComponent },
-      { path: 'detalhes/:protocoloId', component: RequestTrackerComponent },
-      { path: 'servicos/:id', component: PublicoListaServicosComponent },
-      { path: 'tarefa/:servicoId/:tarefaId', component: PreencherFormularioComponent },
-       { path: 'servicos/:id', component: PublicoListaServicosComponent },
-      { path: 'servicos/formulario/:servico/:formulario', component: PreencherSolicitacaoServicoPublicoComponent },
-     ]
-  },
       {
-    path: 'conta', component: AppLayout, canActivate: [AuthGuard], children: [
-      { path: '', component: KeycloakAccountSettingsComponent },
-      { path: 'auth', component: KeycloakSessionTokenAuthComponent },
-      { path: 'sessions', component: KeycloakSessionsComponent },
-      { path: 'perfil', component: KeycloakUserProfileComponent },
-     ]
+        path: '', component: PainelRouteBaseComponent, canActivate: [AuthGuard], children: [
+          { path: '', component: RequestListComponent },
+          { path: 'lista', component: RequestListComponent },
+          { path: 'detalhes/:protocoloId', component: RequestTrackerComponent },
+          { path: 'servicos/:id', component: PublicoListaServicosComponent },
+          { path: 'tarefa/:servicoId/:tarefaId', component: PreencherFormularioComponent },
+          { path: 'servicos/:id', component: PublicoListaServicosComponent },
+          { path: 'servicos/formulario/:servico/:formulario', component: PreencherSolicitacaoServicoPublicoComponent },
+        ]
+      },
+      {
+        path: 'conta', component: PainelRouteBaseComponent, canActivate: [AuthGuard], children: [
+          { path: '', component: KeycloakAccountSettingsComponent },
+          { path: 'auth', component: KeycloakSessionTokenAuthComponent },
+          { path: 'sessions', component: KeycloakSessionsComponent },
+          { path: 'perfil', component: KeycloakUserProfileComponent },
+        ]
+      }
+    ]
   },
-
   {
     path: 'embedded', component: PainelRouteBaseComponent, children: [
       { path: 'servicos/:id', component: PublicoListaServicosComponent },
@@ -43,8 +46,8 @@ export const routes: Routes = [
       { path: 'formulario/:servico/:formulario/:protocolo', component: PreencherSolicitacaoServicoPublicoComponent }
     ]
   },
-    { path: 'login', component: LoginSocialComponent },
-      { path: 'auth', component: AutenticacaoComponent }
+  { path: 'login', component: LoginSocialComponent },
+  { path: 'auth', component: AutenticacaoComponent }
 
 
 ];

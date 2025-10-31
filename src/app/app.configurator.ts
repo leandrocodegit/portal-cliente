@@ -99,10 +99,15 @@ export class AppConfigurator {
   }
 
   setTemaUsuario() {
+    console.log('Tema');
+
     var tema: any = {
       color: localStorage.getItem('color') ?? 'gray',
       dark: localStorage.getItem('dark'),
     }
+
+    console.log(tema);
+
     if (tema?.color) {
       this.layoutService.layoutConfig.update((state) => ({ ...state, primary: tema?.color }));
       this.applyTheme('primary', tema?.color);

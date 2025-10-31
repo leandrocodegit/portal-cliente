@@ -2,7 +2,7 @@ import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
-import { PainelSidebarComponent } from './painel-sidebar/painel-sidebar.component';
+import { PainelSidebarComponent } from './painel-sidebar.component';
 import { AppSidebar } from './app.sidebar';
 import { PreloadComponent } from 'src/app/shared/components/preload/preload.component';
 import { LoadService } from 'src/app/shared/components/preload/load.service';

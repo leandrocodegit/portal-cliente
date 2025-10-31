@@ -48,6 +48,8 @@ export class TopBarComponent implements OnInit {
   }
 
   toggleDarkMode() {
+    console.log('');
+
     this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
     this.layoutService.setPreferencias();
   }

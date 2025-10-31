@@ -9,9 +9,13 @@ import { RouterModule } from '@angular/router';
     AppMenu,
     RouterModule
     ],
-  templateUrl: './painel-sidebar.component.html',
-  styleUrl: './painel-sidebar.component.scss'
-})
+  template: `
+  <div class="layout-sidebar">
+  <app-menu></app-menu>
+</div>
+
+  `
+ })
 export class PainelSidebarComponent {
   constructor(public el: ElementRef) { }
 }

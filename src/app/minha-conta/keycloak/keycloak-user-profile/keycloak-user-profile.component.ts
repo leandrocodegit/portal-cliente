@@ -103,7 +103,7 @@ export class KeycloakUserProfileComponent implements OnInit {
               key: input.name,
               id: input.name,
               readonly: input.readOnly,
-              validate: validate
+              validate: validate,
             });
         });
       }

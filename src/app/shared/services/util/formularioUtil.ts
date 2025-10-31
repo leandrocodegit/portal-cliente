@@ -3,7 +3,7 @@ import { formatarData } from "./DateUtil";
 export function gerarDataForm(data: any): FormData {
   const formData = new FormData();
 
-  if(data.formKey)
+  if (data.formKey)
     formData.append('formKey', data.formKey);
 
   for (const key in data.data) {
@@ -22,64 +22,58 @@ export function gerarDataForm(data: any): FormData {
 }
 
 export function gerarVariaveisForm(task: any, data: any): FormData {
-    var variaveis: any = {};
-    for (const key in data.data) {
-      const value = data.data[key];
+  var variaveis: any = {};
+  for (const key in data.data) {
+    const value = data.data[key];
 
-      if (typeof value === 'string' && value.startsWith("files::")) {
-        const file = data.files.get(value);
-        if (file) {
-          variaveis[key] = {
-            type: 'File',
-            value: `forms/${task.processInstanceId}/${file[0].name}`,
-            valueInfo: {
-              filename: file[0].name,
-              mimeType: file[0].type
-            }
-          };
-        }
-      }
-      else if (value !== null && value !== undefined) {
-        var dataValue = value;
-        if (data.tipagem.get(key) == 'Date')
-          dataValue = formatarData(new Date(value));
+    if (typeof value === 'string' && value.startsWith("files::")) {
+      const file = data.files.get(value);
+      if (file) {
         variaveis[key] = {
-          type: data.tipagem.get(key),
-          value: dataValue
+          type: 'File',
+          value: `forms/${task.processInstanceId}/${file[0].name}`,
+          valueInfo: {
+            filename: file[0].name,
+            mimeType: file[0].type
+          }
         };
       }
     }
+    else if (value !== null && value !== undefined) {
+      var dataValue = value;
+      if (data.tipagem.get(key) == 'Date')
+        dataValue = formatarData(new Date(value));
+      variaveis[key] = {
+        type: data.tipagem.get(key),
+        value: dataValue
+      };
+    }
+  }
   return variaveis;
 }
 
 export function extrairAttributesUsuario(data: any): FormData {
-    for (const key in data.attributes) {
-      const value = data.attributes[key];
-      if (value !== null && value !== undefined) {
-        data[key] = value[0];
-      }
+  for (const key in data.attributes) {
+    const value = data.attributes[key];
+    if (value !== null && value !== undefined) {
+      data[key] = value[0];
     }
+  }
   return data;
 }
 
 export function formatarDataUsuario(data: any, userData: any): FormData {
-  console.log(data);
 
-    for (const key in userData.attributes) {
-      const value = data[key];
-      console.log(key, value);
-
-      if (value !== null && value !== undefined) {
-        if(data[key] && userData?.attributes)
-          userData.attributes[key] = [value]
-        else userData['attributes'][key] = [value]
-      }
+  let attributes = {};
+  userData.userProfileMetadata.attributes.forEach(input => {
+    const key = input.name;
+    const value = data[key];
+    if (value !== null && value !== undefined) {
+      if (!userData[key])
+        attributes[key] = value;
+      else userData[key] = value;
     }
-    for (const key in userData) {
-      const value = data[key];
-      if (value !== null && value !== undefined) {
-         userData[key] = value
-      }
-    }
+  });
+  userData['attributes'] = attributes;
   return userData;
 }

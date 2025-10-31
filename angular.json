@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "portal-front": {
+    "portal-conta": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/portal-front",
+            "outputPath": "dist/portal-conta",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -103,10 +103,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "portal-front:build:production"
+              "buildTarget": "portal-conta:build:production"
             },
             "development": {
-              "buildTarget": "portal-front:build:development"
+              "buildTarget": "portal-conta:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -114,7 +114,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "portal-front:build"
+            "buildTarget": "portal-conta:build"
           }
         },
         "test": {

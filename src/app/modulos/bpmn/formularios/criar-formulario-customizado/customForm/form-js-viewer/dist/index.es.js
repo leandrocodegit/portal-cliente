@@ -5390,7 +5390,6 @@ function Phone(props) {
         onInput: onInputChange,
         onBlur: onInputBlur,
         onFocus: onInputFocus,
-        onkeyup:handlePhone(event),
         maxlength:"15",
         placeholder:"(99) 99999-9999",
         type: "tel",

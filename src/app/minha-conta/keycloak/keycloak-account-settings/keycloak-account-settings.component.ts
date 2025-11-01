@@ -7,8 +7,6 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { generateCodeChallenge, KeycloakService } from '@/shared/services/keycloak.service';
-import { ActivatedRoute } from '@angular/router';
-import { OAuthService } from 'angular-oauth2-oidc';
 import { ptBRTranslationMap } from '@/shared/models/constantes/translate';
 import { AuthService } from '@/auth/services/auth.service';
 

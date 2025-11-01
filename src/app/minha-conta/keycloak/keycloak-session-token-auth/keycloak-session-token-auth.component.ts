@@ -1,10 +1,13 @@
 import { KeycloakService } from '@/shared/services/keycloak.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ProgressSpinner } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-keycloak-session-token-auth',
-  imports: [],
+  imports: [
+    ProgressSpinner
+  ],
   templateUrl: './keycloak-session-token-auth.component.html',
   styleUrl: './keycloak-session-token-auth.component.scss'
 })

@@ -1,4 +1,11 @@
-<app-top-bar />
-<div class="card min-full !p-4 mt-[45px]">
-<router-outlet/>
+<div class="grid grid-cols-1 lg:grid-cols-2 p-2 lg:p-0 gap-4 w-full">
+  <div class="w-full">
+    <app-user-profile />
+  </div>
+  <div class="w-full">
+    <app-keycloak-account-settings />
+  </div>
+  <div class="w-full col-span-1 lg:col-span-2">
+    <app-keycloak-sessions />
+  </div>
 </div>

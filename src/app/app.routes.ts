@@ -13,6 +13,7 @@ import { KeycloakAccountSettingsComponent } from './minha-conta/keycloak/keycloa
 import { KeycloakSessionsComponent } from './minha-conta/keycloak/keycloak-sessions/keycloak-sessions.component';
 import { KeycloakUserProfileComponent } from './minha-conta/keycloak/keycloak-user-profile/keycloak-user-profile.component';
 import { KeycloakSessionTokenAuthComponent } from './minha-conta/keycloak/keycloak-session-token-auth/keycloak-session-token-auth.component';
+import { PainelContaComponent } from './minha-conta/painel-conta/painel-conta.component';
 
 export const routes: Routes = [
 
@@ -31,7 +32,7 @@ export const routes: Routes = [
       },
       {
         path: 'conta', component: PainelRouteBaseComponent, canActivate: [AuthGuard], children: [
-          { path: '', component: KeycloakAccountSettingsComponent },
+          { path: '', component: PainelContaComponent },
           { path: 'auth', component: KeycloakSessionTokenAuthComponent },
           { path: 'sessions', component: KeycloakSessionsComponent },
           { path: 'perfil', component: KeycloakUserProfileComponent },
